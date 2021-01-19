@@ -17,16 +17,16 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/images/image-20210119004603588.png">
 <meta property="og:image" content="http://example.com/images/image-20210119005930815.png">
-<meta property="og:image" content="http://example.com/2021/01/19/THM%E9%9D%B6%E6%9C%BA%E6%B8%97%E9%80%8F1/images%5Cimage-20210119010210381.png">
-<meta property="og:image" content="http://example.com/2021/01/19/THM%E9%9D%B6%E6%9C%BA%E6%B8%97%E9%80%8F1/images%5Cimage-20210119011006814.png">
-<meta property="og:image" content="http://example.com/2021/01/19/THM%E9%9D%B6%E6%9C%BA%E6%B8%97%E9%80%8F1/images%5Cimage-20210119021723486.png">
-<meta property="og:image" content="http://example.com/2021/01/19/THM%E9%9D%B6%E6%9C%BA%E6%B8%97%E9%80%8F1/images%5Cimage-20210119023439525.png">
-<meta property="og:image" content="http://example.com/2021/01/19/THM%E9%9D%B6%E6%9C%BA%E6%B8%97%E9%80%8F1/images%5Cimage-20210119024020600.png">
-<meta property="og:image" content="http://example.com/2021/01/19/THM%E9%9D%B6%E6%9C%BA%E6%B8%97%E9%80%8F1/images%5Cimage-20210119024349482.png">
-<meta property="og:image" content="http://example.com/2021/01/19/THM%E9%9D%B6%E6%9C%BA%E6%B8%97%E9%80%8F1/images%5Cimage-20210119031632107.png">
-<meta property="og:image" content="http://example.com/2021/01/19/THM%E9%9D%B6%E6%9C%BA%E6%B8%97%E9%80%8F1/images%5Cimage-20210119031934030.png">
+<meta property="og:image" content="http://example.com/images/image-20210119010210381.png">
+<meta property="og:image" content="http://example.com/images/image-20210119011006814.png">
+<meta property="og:image" content="http://example.com/images/image-20210119021723486.png">
+<meta property="og:image" content="http://example.com/images/image-20210119023439525.png">
+<meta property="og:image" content="http://example.com/images/image-20210119024020600.png">
+<meta property="og:image" content="http://example.com/images/image-20210119024349482.png">
+<meta property="og:image" content="http://example.com/images/image-20210119031632107.png">
+<meta property="og:image" content="http://example.com/images/image-20210119031934030.png">
 <meta property="article:published_time" content="2021-01-19T14:18:13.940Z">
-<meta property="article:modified_time" content="2021-01-19T14:43:29.181Z">
+<meta property="article:modified_time" content="2021-01-19T14:54:10.197Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/images/image-20210119004603588.png">
@@ -182,11 +182,11 @@
 <p>扫描结果如下图：<img src="/images/image-20210119005930815.png" alt="image-20210119005930815"></p>
 <p>接下来经典dirsearch目录扫描：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">python3 dirsearch.py -u http://10.10.44.68/ -e*</span><br><span class="line">//确保进入了dirsearch的文件夹中，用python3使用，且最后一个-e*命令表示扫描的页面为全部格式</span><br></pre></td></tr></table></figure>
-<p><img src="images%5Cimage-20210119010210381.png" alt="image-20210119010210381"></p>
+<p><img src="/images/image-20210119010210381.png" alt="image-20210119010210381"></p>
 <p>结果如上</p>
 <h2 id="强行查找用户密码"><a href="#强行查找用户密码" class="headerlink" title="强行查找用户密码"></a>强行查找用户密码</h2><p>第四问很离谱，没太搞懂，在网页端突然就要找用户密码什么的？QWQ</p>
 <p>反正先登录/develop目录康康，发现有两个.txt文件，保存了两个人的对话，复制下来放Deepl里翻译康康（原谅本人渣渣英语水平QAQ）得到一点信息应该是打入靶机后找/etc/shadow目录，里面有薄弱环节。</p>
-<p><img src="images%5Cimage-20210119011006814.png" alt="image-20210119011006814"></p>
+<p><img src="/images/image-20210119011006814.png" alt="image-20210119011006814"></p>
 <p>此时回过头来查看刚才nmap扫描结果发现对方开启了22端口ssh登录，猜测可能是要我们暴力枚举，考虑了hydra，但在不知道user的情况下爆破极为困难。</p>
 <p>参考了一款工具**<em>enum4linux**</em></p>
 <p>这里参考使用连接**<a target="_blank" rel="noopener" href="https://www.ctolib.com/topics-82798.html">我是连接</a>**</p>
@@ -197,25 +197,25 @@
 <blockquote>
 <p>妈妈我有钱了一定要换台牛逼的电脑玩渗透QAQ ！——记开Chrome和VMware内存占用92%</p>
 </blockquote>
-<p><img src="images%5Cimage-20210119021723486.png" alt="image-20210119021723486"></p>
+<p><img src="/images/image-20210119021723486.png" alt="image-20210119021723486"></p>
 <p>如图显然用户名为kay&amp;jan</p>
 <p>同时下题还有询问连接什么访问服务器，SSH哇！takedown   :)</p>
 <h2 id="爆破服务器ssh"><a href="#爆破服务器ssh" class="headerlink" title="爆破服务器ssh"></a>爆破服务器ssh</h2><p>得到user后祭出hydra傻瓜神器爆破（我爆我自己？）</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hydra -l jan -P /usr/share/wordlists/rockyou.txt ssh://10.10.89.207 </span><br><span class="line">//因为是默认22端口所以无需修改ssh爆破端口，同时这里使用了kali自带字典rockyou.txt，也可自己去github上嫖些密码字典</span><br></pre></td></tr></table></figure>
 <p>kali自带字典：</p>
-<p><img src="images%5Cimage-20210119023439525.png" alt="image-20210119023439525"></p>
+<p><img src="/images/image-20210119023439525.png" alt="image-20210119023439525"></p>
 <p>爆破开始，好家伙这所需时间把我吓哭了</p>
-<p><img src="images%5Cimage-20210119024020600.png" alt="image-20210119024020600"></p>
+<p><img src="/images/image-20210119024020600.png" alt="image-20210119024020600"></p>
 <p>但是也就一小会儿，哇！（黑人欢呼.jpg）</p>
-<p><img src="images%5Cimage-20210119024349482.png" alt="image-20210119024349482"></p>
+<p><img src="/images/image-20210119024349482.png" alt="image-20210119024349482"></p>
 <p>废话少说，ssh登录注入提权一条龙</p>
 <h2 id="打入服务器"><a href="#打入服务器" class="headerlink" title="打入服务器"></a>打入服务器</h2><p>连接上之后常规试探权限，注意到之前提到的/etc/shadow目录是个伏笔，测试了一圈全部permission denied。</p>
 <p>显然接下来传提权马，github上嫖了一个linux的本地提权脚本，接下来传上去</p>
-<p><img src="images%5Cimage-20210119031632107.png" alt="image-20210119031632107"></p>
+<p><img src="/images/image-20210119031632107.png" alt="image-20210119031632107"></p>
 <p>欧克马已上传</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp linpeas.sh jan@10.10.89.207:dev/shm</span><br></pre></td></tr></table></figure>
 <p>进入传输的文件夹后记得chmod增加权限</p>
-<p><img src="images%5Cimage-20210119031934030.png" alt="image-20210119031934030"></p>
+<p><img src="/images/image-20210119031934030.png" alt="image-20210119031934030"></p>
 <p>但是！出错了，脚本报错，为什么呢？因为这个脚本在github上被墙了我无法wget（我快气死了）所以我是手动复制粘贴的！今天只能到这儿了待续，明天继续打。</p>
 
       
