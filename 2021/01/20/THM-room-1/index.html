@@ -6,15 +6,31 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>Archives: 2021 | Isabellaの碎碎念</title>
+  <title>THM-room-1 | Isabellaの碎碎念</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Isabellaの碎碎念">
-<meta property="og:url" content="http://example.com/archives/2021/index.html">
+  <meta name="description" content="Try Hack Me(一)  [toc] Basic Pentesting Room部署靶机首先openvpn在kali机子上部署，命令行为 1sudo openvpn &#x2F;path&#x2F;xxx.opvn  部署成功如上图。 隐藏页面扫描部署成功后前两问显然攻破，接下来第三问询问该web的隐藏页面，老规矩先收集信息，nmap一波 12nmap -sC -sV 10.10.44.68 &gt; thmr">
+<meta property="og:type" content="article">
+<meta property="og:title" content="THM-room-1">
+<meta property="og:url" content="http://example.com/2021/01/20/THM-room-1/index.html">
 <meta property="og:site_name" content="Isabellaの碎碎念">
+<meta property="og:description" content="Try Hack Me(一)  [toc] Basic Pentesting Room部署靶机首先openvpn在kali机子上部署，命令行为 1sudo openvpn &#x2F;path&#x2F;xxx.opvn  部署成功如上图。 隐藏页面扫描部署成功后前两问显然攻破，接下来第三问询问该web的隐藏页面，老规矩先收集信息，nmap一波 12nmap -sC -sV 10.10.44.68 &gt; thmr">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/image-20210119004603588.png">
+<meta property="og:image" content="http://example.com/images/image-20210119005930815.png">
+<meta property="og:image" content="http://example.com/images/image-20210119010210381.png">
+<meta property="og:image" content="http://example.com/images/image-20210119011006814.png">
+<meta property="og:image" content="http://example.com/images/image-20210119021723486.png">
+<meta property="og:image" content="http://example.com/images/image-20210119023439525.png">
+<meta property="og:image" content="http://example.com/images/image-20210119024020600.png">
+<meta property="og:image" content="http://example.com/images/image-20210119024349482.png">
+<meta property="og:image" content="http://example.com/images/image-20210119031632107.png">
+<meta property="og:image" content="http://example.com/images/image-20210119031934030.png">
+<meta property="article:published_time" content="2021-01-20T12:54:01.000Z">
+<meta property="article:modified_time" content="2021-01-20T13:06:55.993Z">
 <meta property="article:author" content="John Doe">
+<meta property="article:tag" content="Try hack me">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/image-20210119004603588.png">
   
     <link rel="alternative" href="/atom.xml" title="Isabellaの碎碎念" type="application/atom+xml">
   
@@ -150,36 +166,102 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-THM-room-1" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2021" class="archive-year">2021</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/01/20/THM-room-1/" class="archive-article-date">
-  	<time datetime="2021-01-20T12:54:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-01-20</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/01/20/THM-room-1/">THM-room-1</a>
+    <h1 class="article-title" itemprop="name">
+      THM-room-1
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2021/01/20/THM-room-1/" class="archive-article-date">
+  	<time datetime="2021-01-20T12:54:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-01-20</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <center>Try Hack Me(一)</center>
+
+<p>[toc]</p>
+<h1 id="Basic-Pentesting-Room"><a href="#Basic-Pentesting-Room" class="headerlink" title="Basic Pentesting Room"></a>Basic Pentesting Room</h1><h2 id="部署靶机"><a href="#部署靶机" class="headerlink" title="部署靶机"></a>部署靶机</h2><p>首先openvpn在kali机子上部署，命令行为</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo openvpn /path/xxx.opvn</span><br></pre></td></tr></table></figure>
+<p><img src="/images/image-20210119004603588.png" alt="image-20210119004603588"></p>
+<p>部署成功如上图。</p>
+<h2 id="隐藏页面扫描"><a href="#隐藏页面扫描" class="headerlink" title="隐藏页面扫描"></a>隐藏页面扫描</h2><p>部署成功后前两问显然攻破，接下来第三问询问该web的隐藏页面，老规矩先收集信息，nmap一波</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">nmap -sC -sV 10.10.44.68 &gt; thmroom1.txt</span><br><span class="line">//该命令将10.10.44.68页面端口部署机器版本号及相关信息扫描完成后存入thmroom1.txt文件中方便后续查看</span><br></pre></td></tr></table></figure>
+<p>扫描结果如下图：<img src="/images/image-20210119005930815.png" alt="image-20210119005930815"></p>
+<p>接下来经典dirsearch目录扫描：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">python3 dirsearch.py -u http://10.10.44.68/ -e*</span><br><span class="line">//确保进入了dirsearch的文件夹中，用python3使用，且最后一个-e*命令表示扫描的页面为全部格式</span><br></pre></td></tr></table></figure>
+<p><img src="/images/image-20210119010210381.png" alt="image-20210119010210381"></p>
+<p>结果如上</p>
+<h2 id="强行查找用户密码"><a href="#强行查找用户密码" class="headerlink" title="强行查找用户密码"></a>强行查找用户密码</h2><p>第四问很离谱，没太搞懂，在网页端突然就要找用户密码什么的？QWQ</p>
+<p>反正先登录/develop目录康康，发现有两个.txt文件，保存了两个人的对话，复制下来放Deepl里翻译康康（原谅本人渣渣英语水平QAQ）得到一点信息应该是打入靶机后找/etc/shadow目录，里面有薄弱环节。</p>
+<p><img src="/images/image-20210119011006814.png" alt="image-20210119011006814"></p>
+<p>此时回过头来查看刚才nmap扫描结果发现对方开启了22端口ssh登录，猜测可能是要我们暴力枚举，考虑了hydra，但在不知道user的情况下爆破极为困难。</p>
+<p>参考了一款工具**<em>enum4linux**</em></p>
+<p>这里参考使用连接**<a target="_blank" rel="noopener" href="https://www.ctolib.com/topics-82798.html">我是连接</a>**</p>
+<p>kali上调出来enum4linux使用方法<code>./enum4linux.pl [options] ip</code>(但不知道到它绝对路径所以换了种输入)</p>
+<p>集合成命令行：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">enum4linux -a 10.10.44.68 | tee enum4linux.log//-a适合在什么都不知道的情况下使用</span><br></pre></td></tr></table></figure>
+<p>经过了漫长漫长的扫描等待环节，还有两次openvpn连接炸掉的事故后，终于扫出来了两人的名儿QAQ</p>
+<blockquote>
+<p>妈妈我有钱了一定要换台牛逼的电脑玩渗透QAQ ！——记开Chrome和VMware内存占用92%</p>
+</blockquote>
+<p><img src="/images/image-20210119021723486.png" alt="image-20210119021723486"></p>
+<p>如图显然用户名为kay&amp;jan</p>
+<p>同时下题还有询问连接什么访问服务器，SSH哇！takedown   :)</p>
+<h2 id="爆破服务器ssh"><a href="#爆破服务器ssh" class="headerlink" title="爆破服务器ssh"></a>爆破服务器ssh</h2><p>得到user后祭出hydra傻瓜神器爆破（我爆我自己？）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hydra -l jan -P /usr/share/wordlists/rockyou.txt ssh://10.10.89.207 </span><br><span class="line">//因为是默认22端口所以无需修改ssh爆破端口，同时这里使用了kali自带字典rockyou.txt，也可自己去github上嫖些密码字典</span><br></pre></td></tr></table></figure>
+<p>kali自带字典：</p>
+<p><img src="/images/image-20210119023439525.png" alt="image-20210119023439525"></p>
+<p>爆破开始，好家伙这所需时间把我吓哭了</p>
+<p><img src="/images/image-20210119024020600.png" alt="image-20210119024020600"></p>
+<p>但是也就一小会儿，哇！（黑人欢呼.jpg）</p>
+<p><img src="/images/image-20210119024349482.png" alt="image-20210119024349482"></p>
+<p>废话少说，ssh登录注入提权一条龙</p>
+<h2 id="打入服务器"><a href="#打入服务器" class="headerlink" title="打入服务器"></a>打入服务器</h2><p>连接上之后常规试探权限，注意到之前提到的/etc/shadow目录是个伏笔，测试了一圈全部permission denied。</p>
+<p>显然接下来传提权马，github上嫖了一个linux的本地提权脚本，接下来传上去</p>
+<p><img src="/images/image-20210119031632107.png" alt="image-20210119031632107"></p>
+<p>欧克马已上传</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp linpeas.sh jan@10.10.89.207:dev/shm</span><br></pre></td></tr></table></figure>
+<p>进入传输的文件夹后记得chmod增加权限</p>
+<p><img src="/images/image-20210119031934030.png" alt="image-20210119031934030"></p>
+<p>但是！出错了，脚本报错，为什么呢？因为这个脚本在github上被墙了我无法wget（我快气死了）所以我是手动复制粘贴的！今天只能到这儿了待续，明天继续打。</p>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -191,122 +273,106 @@
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2021/01/20/THM-room-1/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/01/20/Typora%E8%87%AA%E5%AD%A6%E6%95%99%E7%A8%8B/" class="archive-article-date">
-  	<time datetime="2021-01-20T12:49:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-01-20</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2021/01/20/Typora%E8%87%AA%E5%AD%A6%E6%95%99%E7%A8%8B/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Typora自学教程</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/01/20/Typora%E8%87%AA%E5%AD%A6%E6%95%99%E7%A8%8B/">Typora自学教程</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Typora</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/01/20/Google-Hack/" class="archive-article-date">
-  	<time datetime="2021-01-20T12:44:30.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-01-20</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/01/20/Google-Hack/">Google Hack</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Google Hack</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/01/19/my-first-blog/" class="archive-article-date">
-  	<time datetime="2021-01-19T13:53:53.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-01-19</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/01/19/my-first-blog/">my-first-blog</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
-  
-    </div></section>
-  
-
-    
 
 
           </div>
@@ -329,8 +395,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
