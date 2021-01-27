@@ -17,7 +17,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/images/image-20210126224027671.png">
 <meta property="article:published_time" content="2021-01-26T14:27:00.000Z">
-<meta property="article:modified_time" content="2021-01-26T15:15:50.826Z">
+<meta property="article:modified_time" content="2021-01-27T17:24:23.205Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="CTF">
 <meta name="twitter:card" content="summary">
@@ -186,6 +186,10 @@
 <h2 id="gif"><a href="#gif" class="headerlink" title="gif"></a>gif</h2><p>打开压缩包给了一连串黑白黑白的.jpg图片，这里参考了一下别人思路，发现是二进制，不想手动输入，写了一个python脚本。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">result=<span class="string">&quot;&quot;</span></span><br><span class="line">white=<span class="built_in">open</span>(<span class="string">&quot;E:\\0.jpg&quot;</span>,<span class="string">&quot;rb&quot;</span>).read()<span class="comment">#记录黑白的标志</span></span><br><span class="line">black=<span class="built_in">open</span>(<span class="string">&quot;E:\\1.jpg&quot;</span>,<span class="string">&quot;rb&quot;</span>).read()</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">104</span>):</span><br><span class="line">    ans=<span class="built_in">open</span>(<span class="string">&quot;E:\\&#123;x&#125;.jpg&quot;</span>.<span class="built_in">format</span>(x=i),<span class="string">&quot;rb&quot;</span>).read()<span class="comment">#循环打开，注意此时也可以用另一种写法</span></span><br><span class="line">    <span class="comment">#ans=open(&quot;E:\\%a.jpg&quot;%i,&quot;rb&quot;).read()</span></span><br><span class="line">    <span class="keyword">if</span>(ans==white):   </span><br><span class="line">        result=result+<span class="string">&quot;0&quot;</span><span class="comment">#为白则字符补0</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        result=result+<span class="string">&quot;1&quot;</span><span class="comment">#为黑则字符补1</span></span><br><span class="line">str1=<span class="string">&quot;&quot;</span></span><br><span class="line">numb=<span class="built_in">len</span>(result)//<span class="number">8</span>  <span class="comment">#以8为分隔，记录位数，每隔8位为一个二进制表示的字符</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span> (numb):</span><br><span class="line">    str1=str1+<span class="built_in">chr</span>(<span class="built_in">int</span>(result[i*<span class="number">8</span>:(i+<span class="number">1</span>)*<span class="number">8</span>],<span class="number">2</span>))<span class="comment">#这里就用上了前天补的切片知识，将二进制每隔8位切片，先转为十进制int(xxx,2)再利用ASCII码对应的十进制直接，chr转换即可</span></span><br><span class="line">print(str1)</span><br></pre></td></tr></table></figure>
 <p>即可得出结果。</p>
+<h2 id="ext3"><a href="#ext3" class="headerlink" title="ext3"></a>ext3</h2><p>磁盘分析题目，在linux环境下运行，先使用<code>strings ext3ctf | grep flag</code>发现存在<code>flag.txt</code>文件，参考了linux相关命令，得知磁盘需挂载，如下命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mount ext3ctf /mnt</span><br><span class="line">cd /mnt</span><br><span class="line">find . -name &quot;flag.txt&quot;</span><br></pre></td></tr></table></figure>
+<p>其中find的用法参考：<a target="_blank" rel="noopener" href="https://www.runoob.com/linux/linux-comm-find.html">我是链接</a></p>
+<p>该题也可通过<code>010editor</code>和<code>winhex</code>等工具打开，搜索<code>flag.txt</code>所在路径解压打开再base64解码可得。</p>
 <hr>
 <p>有些简单的misc并未记录，仅记录下有所收获的题目</p>
 <p>未完待续。。。</p>
@@ -463,11 +467,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Typora</a>
+                <a href="javascript:void(0)" class="js-tag color4">CTF</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">CTF</a>
+                <a href="javascript:void(0)" class="js-tag color2">Typora</a>
               </li>
              
               <li class="article-tag-list-item">

