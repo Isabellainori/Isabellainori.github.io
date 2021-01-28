@@ -35,8 +35,14 @@
 <meta property="og:image" content="http://example.com/images/image-20210127023519538.png">
 <meta property="og:image" content="http://example.com/images/image-20210127023549393.png">
 <meta property="og:image" content="http://example.com/images/image-20210127023904985.png">
+<meta property="og:image" content="http://example.com/images/image-20210129023448269.png">
+<meta property="og:image" content="http://example.com/images/image-20210129023743781.png">
+<meta property="og:image" content="http://example.com/images/image-20210129024018065.png">
+<meta property="og:image" content="http://example.com/images/image-20210129024637140.png">
+<meta property="og:image" content="http://example.com/images/image-20210129024850403.png">
+<meta property="og:image" content="http://example.com/images/image-20210129025501413.png">
 <meta property="article:published_time" content="2021-01-26T18:42:21.000Z">
-<meta property="article:modified_time" content="2021-01-26T18:47:24.301Z">
+<meta property="article:modified_time" content="2021-01-28T19:06:34.076Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="vulhub">
 <meta name="twitter:card" content="summary">
@@ -261,8 +267,34 @@
 <p><img src="/images/image-20210127023549393.png" alt="image-20210127023549393"></p>
 <p>于是我们登陆进来了。再其中的content模块中找到了flag3</p>
 <p><img src="/images/image-20210127023904985.png" alt="image-20210127023904985"></p>
+<h2 id="最后一个flag寻找"><a href="#最后一个flag寻找" class="headerlink" title="最后一个flag寻找"></a>最后一个flag寻找</h2><p>在flag3时我们看到了提示<code>/etc/shadow</code>和<code>/etc/passwd</code>这个路径下，我们打开看看</p>
+<p><img src="/images/image-20210129023448269.png" alt="image-20210129023448269"></p>
+<p><strong>QWQ！！！</strong></p>
+<p>一发就中，<code>/home/flag4</code>说明flag4是其一个用户，打开shadow文件康康保存的密码信息</p>
+<p><img src="/images/image-20210129023743781.png" alt="image-20210129023743781"></p>
+<p>$6$说明其采用的是SHA-512加密，好家伙，这基本上夭折了我反解密的路，虽然不抱希望还是试试cmd5</p>
+<p><img src="/images/image-20210129024018065.png" alt="image-20210129024018065"></p>
+<p>果然，那接下来就爆破吧，之前的22端口ssh服务就是个伏笔。<em>(:з」∠)</em></p>
+<p><img src="/images/image-20210129024637140.png" alt="image-20210129024637140"></p>
+<p><strong>HYDRA再立功！</strong></p>
+<p>直接登上去康康</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh flag4@192.168.1.9</span><br></pre></td></tr></table></figure>
+<p><img src="/images/image-20210129024850403.png" alt="image-20210129024850403"></p>
+<p>查了查flag，，，发现flag4我之前就找到了，无root情况下就找到了还能打开，，，那最后一个在哪。。。</p>
+<p>最后康了康<code>/root</code>文件夹，，，发现就在这里。。。</p>
+<p><img src="/images/image-20210129025501413.png" alt="image-20210129025501413"></p>
 <hr>
-<p>还剩下一个flag5我明天再打。。。</p>
+<h2 id="尾声"><a href="#尾声" class="headerlink" title="尾声"></a>尾声</h2><p>梳理一下整个过程，也觉得很奇怪hhh，为什么在meterpreter时候就可以直接康<code>/home/flag4</code>的内容？最后多跑一步爆破（虽然又爆出来了很开心），同时据说查看<code>thefinalflag.txt</code>也可以直接上传冰蝎的木马，虽然还没有尝试，但值得怀疑（因为/root需要权限，冰蝎马应该无法直接提权）。</p>
+<p>最后，就像flag里说的 <code>well down!!!!</code>。记得看到的一句话说的很对</p>
+<blockquote>
+<p>技术是无罪的，资本胁迫着开源的技术为其攫取利益。</p>
+</blockquote>
+<p>开源的的精神一直传递下来，我能从这个靶机里感受到先达者们设计的用心和对后来者的关心，总之，我玩的很开心。</p>
+<p>引用某个姐姐的一句话QWQ</p>
+<blockquote>
+<p>I hacked for fun, not for 饭</p>
+</blockquote>
+<p>加油！</p>
 
       
 
@@ -537,11 +569,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">CTF</a>
+                <a href="javascript:void(0)" class="js-tag color2">Typora</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Typora</a>
+                <a href="javascript:void(0)" class="js-tag color4">CTF</a>
               </li>
              
               <li class="article-tag-list-item">

