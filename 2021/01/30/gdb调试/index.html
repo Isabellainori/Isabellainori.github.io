@@ -8,12 +8,12 @@
   <link rel="dns-prefetch" href="http://example.com">
   <title>gdb调试 | Isabellaの碎碎念</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="gdb调试反汇编  补充知识这里参考了一篇极好的知乎回答： 我是链接  汇编语言需要掌握的知识点包括：  寄存器，包括栈寄存器rsp, rip, rbp；赋值寄存器：rdi、rsi等；返回值寄存器rax、rdx等。  赋值指令 mov, lea，移位指令sal, sar。  判断指令，cmp, test， 跳跃指令，je, jle, jne。以及构成条件语句和循环语句的方法。  区分寄存器存储的是">
+  <meta name="description" content="gdb调试反汇编  补充知识这里参考了一篇极好的知乎回答： 我是链接  汇编语言需要掌握的知识点包括：  寄存器，包括栈寄存器rsp, rip, rbp；赋值寄存器：rdi、rsi等；返回值寄存器rax、rdx等。 赋值指令 mov, lea，移位指令sal, sar。 判断指令，cmp, test， 跳跃指令，je, jle, jne。以及构成条件语句和循环语句的方法。 区分寄存器存储的是值还是">
 <meta property="og:type" content="article">
 <meta property="og:title" content="gdb调试">
 <meta property="og:url" content="http://example.com/2021/01/30/gdb%E8%B0%83%E8%AF%95/index.html">
 <meta property="og:site_name" content="Isabellaの碎碎念">
-<meta property="og:description" content="gdb调试反汇编  补充知识这里参考了一篇极好的知乎回答： 我是链接  汇编语言需要掌握的知识点包括：  寄存器，包括栈寄存器rsp, rip, rbp；赋值寄存器：rdi、rsi等；返回值寄存器rax、rdx等。  赋值指令 mov, lea，移位指令sal, sar。  判断指令，cmp, test， 跳跃指令，je, jle, jne。以及构成条件语句和循环语句的方法。  区分寄存器存储的是">
+<meta property="og:description" content="gdb调试反汇编  补充知识这里参考了一篇极好的知乎回答： 我是链接  汇编语言需要掌握的知识点包括：  寄存器，包括栈寄存器rsp, rip, rbp；赋值寄存器：rdi、rsi等；返回值寄存器rax、rdx等。 赋值指令 mov, lea，移位指令sal, sar。 判断指令，cmp, test， 跳跃指令，je, jle, jne。以及构成条件语句和循环语句的方法。 区分寄存器存储的是值还是">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/images/v2-6c941c7317a53244461229afe9b95c34_720w.jpg">
 <meta property="og:image" content="http://example.com/images/v2-46829cde5dcba2f101da2fe165eb7ea5_720w.jpg">
@@ -26,7 +26,7 @@
 <meta property="og:image" content="http://example.com/images/image-20210130031101287.png">
 <meta property="og:image" content="http://example.com/images/image-20210130033947511.png">
 <meta property="article:published_time" content="2021-01-29T16:48:20.000Z">
-<meta property="article:modified_time" content="2021-01-29T19:41:08.951Z">
+<meta property="article:modified_time" content="2021-01-29T19:46:33.942Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="Rce">
 <meta name="twitter:card" content="summary">
@@ -191,16 +191,11 @@
 <h2 id="补充知识"><a href="#补充知识" class="headerlink" title="补充知识"></a>补充知识</h2><p>这里参考了一篇极好的知乎回答： <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/259625135">我是链接</a></p>
 <p> 汇编语言需要掌握的知识点包括：</p>
 <ol>
-<li><p>寄存器，包括栈寄存器rsp, rip, rbp；赋值寄存器：rdi、rsi等；返回值寄存器rax、rdx等。</p>
-</li>
-<li><p>赋值指令 mov, lea，移位指令sal, sar。</p>
-</li>
-<li><p>判断指令，cmp, test， 跳跃指令，je, jle, jne。以及构成条件语句和循环语句的方法。</p>
-</li>
-<li><p>区分寄存器存储的是值还是地址，()为解地址符号，即得到内存地址中的数。</p>
-</li>
-<li><p>入栈，出栈指令push, pop，以及出栈入栈的原因。</p>
-</li>
+<li>寄存器，包括栈寄存器rsp, rip, rbp；赋值寄存器：rdi、rsi等；返回值寄存器rax、rdx等。</li>
+<li>赋值指令 mov, lea，移位指令sal, sar。</li>
+<li>判断指令，cmp, test， 跳跃指令，je, jle, jne。以及构成条件语句和循环语句的方法。</li>
+<li>区分寄存器存储的是值还是地址，()为解地址符号，即得到内存地址中的数。</li>
+<li>入栈，出栈指令push, pop，以及出栈入栈的原因。</li>
 </ol>
 <h3 id="常见指令"><a href="#常见指令" class="headerlink" title="常见指令"></a>常见指令</h3><p><strong>mov</strong>指令是赋值指令，即a=b等赋值操作：注意到对某寄存器rbp而言：rbp 表示<strong>取寄存器</strong>的值，（rbp）表示<strong>以rbp的值为地址在内存中取值</strong>，也就是所谓的指针解引用，根据指针地址取值。</p>
 <p><img src="/images/v2-6c941c7317a53244461229afe9b95c34_720w.jpg" alt="img"></p>
@@ -266,8 +261,7 @@
 <li><code>(gdb)c</code>          &lt;–继续</li>
 <li><code>(gdb)p n</code>      此时显示$3=0x65<strong>表示十六进制六十五，也就是十进制的101</strong></li>
 </ul>
-<p>接下来分析另一段代码</p>
-<p><img src="/images/TNB665P7%60%5B@MI2~V6NWQDB9.png" alt="image-20210130024739521"></p>
+<h3 id="接下来分析另一段代码"><a href="#接下来分析另一段代码" class="headerlink" title="接下来分析另一段代码"></a>接下来分析另一段代码</h3><p><img src="/images/TNB665P7%60%5B@MI2~V6NWQDB9.png" alt="image-20210130024739521"></p>
 <p>首先通过<code>(gdb)break func</code>在函数处设置断点，**gdb还支持if判断设置断点如<code>(gdb)break 7 if n==6</code>**，然后开始执行。</p>
 <p><img src="/images/image-20210130031101287.png" alt="image-20210130031101287"></p>
 <p>其中rsp<strong>寄存器，</strong>stack pointer, 它存储的值永远是栈顶的地址，所以它又被叫做<strong>栈顶指针</strong>。我们可以用(%rsp)来获取栈顶存储的值，通过a(%rsp),  其中a是任何一个整数，来获取地址是rsp存储的值加a处的内存单元的值。比如说，2(%rsp)就是栈顶上方（逻辑地址增大方向）2个字节处的值，-2(%rsp)就是栈顶下方（逻辑地址减小方向）2个字节处的值。</p>
