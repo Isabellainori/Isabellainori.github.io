@@ -6,22 +6,31 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>Typora自学教程 | Isabellaの碎碎念</title>
+  <title>gdb调试 | Isabellaの碎碎念</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Typora使用教程  目录输入  [toc]  后按下回车键，可自动提取标题生成目录，如下： [toc] 附带链接形式 常用快捷键 123456789101112Ctrl+1  一阶标题    Ctrl+B  字体加粗Ctrl+2  二阶标题    Ctrl+I  字体倾斜Ctrl+3  三阶标题    Ctrl+U  下划线Ctrl+4  四阶标题    Ctrl+Home   返回Typor">
+  <meta name="description" content="gdb调试反汇编  补充知识这里参考了一篇极好的知乎回答： 我是链接  汇编语言需要掌握的知识点包括：  寄存器，包括栈寄存器rsp, rip, rbp；赋值寄存器：rdi、rsi等；返回值寄存器rax、rdx等。  赋值指令 mov, lea，移位指令sal, sar。  判断指令，cmp, test， 跳跃指令，je, jle, jne。以及构成条件语句和循环语句的方法。  区分寄存器存储的是">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Typora自学教程">
-<meta property="og:url" content="http://example.com/2021/01/20/Typora%E8%87%AA%E5%AD%A6%E6%95%99%E7%A8%8B/index.html">
+<meta property="og:title" content="gdb调试">
+<meta property="og:url" content="http://example.com/2021/01/30/gdb%E8%B0%83%E8%AF%95/index.html">
 <meta property="og:site_name" content="Isabellaの碎碎念">
-<meta property="og:description" content="Typora使用教程  目录输入  [toc]  后按下回车键，可自动提取标题生成目录，如下： [toc] 附带链接形式 常用快捷键 123456789101112Ctrl+1  一阶标题    Ctrl+B  字体加粗Ctrl+2  二阶标题    Ctrl+I  字体倾斜Ctrl+3  三阶标题    Ctrl+U  下划线Ctrl+4  四阶标题    Ctrl+Home   返回Typor">
+<meta property="og:description" content="gdb调试反汇编  补充知识这里参考了一篇极好的知乎回答： 我是链接  汇编语言需要掌握的知识点包括：  寄存器，包括栈寄存器rsp, rip, rbp；赋值寄存器：rdi、rsi等；返回值寄存器rax、rdx等。  赋值指令 mov, lea，移位指令sal, sar。  判断指令，cmp, test， 跳跃指令，je, jle, jne。以及构成条件语句和循环语句的方法。  区分寄存器存储的是">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/images/6.jpg">
-<meta property="article:published_time" content="2021-01-20T12:49:57.000Z">
-<meta property="article:modified_time" content="2021-01-20T13:06:40.647Z">
+<meta property="og:image" content="http://example.com/images/v2-6c941c7317a53244461229afe9b95c34_720w.jpg">
+<meta property="og:image" content="http://example.com/images/v2-46829cde5dcba2f101da2fe165eb7ea5_720w.jpg">
+<meta property="og:image" content="http://example.com/images/v2-f2e9445a5a5e3af5b9e78558fcc87c87_720w.jpg">
+<meta property="og:image" content="http://example.com/images/v2-5ff8904872c7b557702d9e4d3090f02f_720w.jpg">
+<meta property="og:image" content="http://example.com/images/v2-29d48b081e00b2828fffd100ab35e995_720w.jpg">
+<meta property="og:image" content="http://example.com/images/image-20210130010329929.png">
+<meta property="og:image" content="http://example.com/images/image-20210130010947800.png">
+<meta property="og:image" content="http://example.com/images/TNB665P7%60%5B@MI2~V6NWQDB9.png">
+<meta property="og:image" content="http://example.com/images/image-20210130031101287.png">
+<meta property="og:image" content="http://example.com/images/image-20210130033947511.png">
+<meta property="article:published_time" content="2021-01-29T16:48:20.000Z">
+<meta property="article:modified_time" content="2021-01-29T19:41:08.951Z">
 <meta property="article:author" content="John Doe">
-<meta property="article:tag" content="Typora">
+<meta property="article:tag" content="Rce">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/images/6.jpg">
+<meta name="twitter:image" content="http://example.com/images/v2-6c941c7317a53244461229afe9b95c34_720w.jpg">
   
     <link rel="alternative" href="/atom.xml" title="Isabellaの碎碎念" type="application/atom+xml">
   
@@ -157,118 +166,122 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-Typora自学教程" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-gdb调试" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      Typora自学教程
+      gdb调试
     </h1>
   
 
         
-        <a href="/2021/01/20/Typora%E8%87%AA%E5%AD%A6%E6%95%99%E7%A8%8B/" class="archive-article-date">
-  	<time datetime="2021-01-20T12:49:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-01-20</time>
+        <a href="/2021/01/30/gdb%E8%B0%83%E8%AF%95/" class="archive-article-date">
+  	<time datetime="2021-01-29T16:48:20.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-01-30</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <center>Typora使用教程</center>
+        <center>gdb调试反汇编</center>
 
-<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><p>输入  <strong>[toc]</strong>  后按下回车键，可自动提取标题生成目录，如下：</p>
-<p>[toc]</p>
-<p>附带链接形式</p>
-<h2 id="常用快捷键"><a href="#常用快捷键" class="headerlink" title="常用快捷键"></a>常用快捷键</h2><blockquote>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Ctrl+<span class="number">1</span>  一阶标题    Ctrl+B  字体加粗</span><br><span class="line">Ctrl+<span class="number">2</span>  二阶标题    Ctrl+I  字体倾斜</span><br><span class="line">Ctrl+<span class="number">3</span>  三阶标题    Ctrl+U  下划线</span><br><span class="line">Ctrl+<span class="number">4</span>  四阶标题    Ctrl+Home   返回Typora顶部</span><br><span class="line">Ctrl+<span class="number">5</span>  五阶标题    Ctrl+End    返回Typora底部</span><br><span class="line">Ctrl+<span class="number">6</span>  六阶标题    Ctrl+T  创建表格</span><br><span class="line">Ctrl+L  选中某句话   Ctrl+K  创建超链接</span><br><span class="line">Ctrl+D  选中某个单词  Ctrl+F  搜索</span><br><span class="line">Ctrl+E  选中相同格式的文字   Ctrl+H  搜索并替换</span><br><span class="line">Alt+Shift+<span class="number">5</span> 删除线 Ctrl+Shift+I    插入图片</span><br><span class="line">Ctrl+Shift+M    公式块 Ctrl+Shift+Q    引用</span><br></pre></td></tr></table></figure>
-</blockquote>
-<h2 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h2><p>使用<strong>&gt; + 空格键+文字</strong>（注意要加“\”符号才能防止转意）或者使用快捷键  <strong>ctrl + shift + Q</strong> </p>
-<h2 id="有序列表"><a href="#有序列表" class="headerlink" title="有序列表"></a>有序列表</h2><p>使用<strong>1+.+空格键</strong>自动生成列表，同时<strong>回车</strong>自动下一行，最后按**右键–&gt;**跳出。</p>
+<h2 id="补充知识"><a href="#补充知识" class="headerlink" title="补充知识"></a>补充知识</h2><p>这里参考了一篇极好的知乎回答： <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/259625135">我是链接</a></p>
+<p> 汇编语言需要掌握的知识点包括：</p>
 <ol>
-<li>just</li>
-<li>like</li>
-<li>this</li>
+<li><p>寄存器，包括栈寄存器rsp, rip, rbp；赋值寄存器：rdi、rsi等；返回值寄存器rax、rdx等。</p>
+</li>
+<li><p>赋值指令 mov, lea，移位指令sal, sar。</p>
+</li>
+<li><p>判断指令，cmp, test， 跳跃指令，je, jle, jne。以及构成条件语句和循环语句的方法。</p>
+</li>
+<li><p>区分寄存器存储的是值还是地址，()为解地址符号，即得到内存地址中的数。</p>
+</li>
+<li><p>入栈，出栈指令push, pop，以及出栈入栈的原因。</p>
+</li>
 </ol>
-<h2 id="无序列表"><a href="#无序列表" class="headerlink" title="无序列表"></a>无序列表</h2><p>三个键可以创建  *<strong>**  或  **+</strong>  或者  <strong>-</strong>  都可以，同样要加<strong>空格键</strong></p>
-<ul>
-<li>just</li>
-<li>like</li>
-<li>this</li>
-</ul>
-<h2 id="插入代码"><a href="#插入代码" class="headerlink" title="插入代码"></a>插入代码</h2><p>三种方式：使用  <strong>```</strong>  (~键)加回车之后再选择语言即可</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">example</span>():</span></span><br><span class="line">	print(<span class="string">&quot;I love you&quot;</span>)</span><br></pre></td></tr></table></figure>
-<h2 id="数学表达式"><a href="#数学表达式" class="headerlink" title="数学表达式"></a>数学表达式</h2><p>使用  <strong>$$</strong>  再按回车键，最后末尾结束要补上  <strong>$$</strong>  (Latex写法)</p>
-<p>例子如下：<br>$$<br>\mathbf{V}_1\times\mathbf{V}_2 = \mathbf{V}^2_3<br>$$<br>代码如下：</p>
-<figure class="highlight latex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">$</span><span class="built_in">$</span></span><br><span class="line"><span class="keyword">\mathbf</span>&#123;V&#125;<span class="built_in">_</span>1<span class="keyword">\times</span><span class="keyword">\mathbf</span>&#123;V&#125;<span class="built_in">_</span>2 = <span class="keyword">\mathbf</span>&#123;V&#125;<span class="built_in">^</span>2<span class="built_in">_</span>3</span><br><span class="line"><span class="built_in">$</span><span class="built_in">$</span></span><br></pre></td></tr></table></figure>
-<h2 id="插入表格"><a href="#插入表格" class="headerlink" title="插入表格"></a>插入表格</h2><p>输入方式：**| ID | Password |**  例子如下：</p>
+<h3 id="常见指令"><a href="#常见指令" class="headerlink" title="常见指令"></a>常见指令</h3><p><strong>mov</strong>指令是赋值指令，即a=b等赋值操作：注意到对某寄存器rbp而言：rbp 表示<strong>取寄存器</strong>的值，（rbp）表示<strong>以rbp的值为地址在内存中取值</strong>，也就是所谓的指针解引用，根据指针地址取值。</p>
+<p><img src="/images/v2-6c941c7317a53244461229afe9b95c34_720w.jpg" alt="img"></p>
+<p><img src="/images/v2-46829cde5dcba2f101da2fe165eb7ea5_720w.jpg" alt="img"></p>
+<p><img src="/images/v2-f2e9445a5a5e3af5b9e78558fcc87c87_720w.jpg" alt="img"></p>
+<p><img src="/images/v2-5ff8904872c7b557702d9e4d3090f02f_720w.jpg" alt="img"></p>
+<p><img src="/images/v2-29d48b081e00b2828fffd100ab35e995_720w.jpg" alt="img"></p>
+<p><strong>lea</strong>是“load effective address”的缩写， lea指令可以用来将一个内存地址直接赋给目的操作数，例如：lea eax,[ebx+8]就是将<strong>ebx+8这个地址值</strong>直接赋给eax，而不解ebx+8的地址。mov指令则相反，例如：mov eax,[ebx+8]则是把<strong>内存地址为ebx+8处的数据</strong>赋给eax。</p>
+<blockquote>
+<p>个人的理解：lea eax,[ebx+8]表示，不改变eax的值，而直接将eax的地址变为eax+8;而mov eax,[ebx+8]表示将ebx+8这个地址上的数据给eax。</p>
+</blockquote>
+<p><strong>左移指令</strong>包含sal和shl，这两条指令的作用是相同的，空出来的位用0填充。<strong>右移指令</strong>将操作数的bit位向右移动n位，<strong>sar执行算术移位（填上符号位），而shr执行逻辑移位（填上0）</strong>.移位操作的目的操作数可以是一个寄存器或是一个存储器位置。</p>
+<h2 id="前期准备"><a href="#前期准备" class="headerlink" title="前期准备"></a>前期准备</h2><p>将相关test.c文件使用gcc编译器编译生成可执行文件，同时注意<strong>仅仅生成可执行文件是无法进行调试的</strong>，因为使用 GDB 调试某个可执行文件，该文件中必须包含必要的调试信息（比如各行代码所在的行号、包含程序中所有变量名称的列表（又称为符号表）等），而上面生成的 test.exe 则没有。</p>
+<p>所以使用<code>-g</code>命令，如</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc test.c -o test.exe -g</span><br></pre></td></tr></table></figure>
+<p>接下来输入<code>gdb test.exe</code>启动。**<em>输入<code>--silent</code>可以消掉前面免责条款**</em></p>
 <table>
 <thead>
 <tr>
-<th>ID</th>
-<th>Password</th>
+<th>调试指令</th>
+<th>作 用</th>
 </tr>
 </thead>
 <tbody><tr>
-<td></td>
-<td></td>
+<td>(gdb) break xxx  (gdb) b xxx</td>
+<td>在源代码指定的某一行设置断点，其中 xxx 用于指定具体打断点的位置。</td>
+</tr>
+<tr>
+<td>(gdb) run  (gdb) r</td>
+<td>执行被调试的程序，其会自动在第一个断点处暂停执行。</td>
+</tr>
+<tr>
+<td>(gdb) continue  (gdb) c</td>
+<td>当程序在某一断点处停止运行后，使用该指令可以继续执行，直至遇到下一个断点或者程序结束。</td>
+</tr>
+<tr>
+<td>(gdb) next  (gdb) n</td>
+<td>令程序一行代码一行代码的执行。</td>
+</tr>
+<tr>
+<td>(gdb) print xxx  (gdb) p xxx</td>
+<td>打印指定变量的值，其中 xxx 指的就是某一变量名。</td>
+</tr>
+<tr>
+<td>(gdb) list  (gdb) l</td>
+<td>显示源程序代码的内容，包括各行代码所在的行号。</td>
+</tr>
+<tr>
+<td>(gdb) quit  (gdb) q</td>
+<td>终止调试。</td>
 </tr>
 </tbody></table>
-<ol>
-<li><p>多列可用  <strong>|</strong>  符号隔开</p>
-</li>
-<li><p>对齐方式</p>
+<p><img src="/images/image-20210130010329929.png" alt="image-20210130010329929"></p>
+<p><code>l</code>显示带行号的源代码，默认显示10行，按回车继续显示。</p>
 <ul>
-<li>左对齐   </li>
-<li>右对齐</li>
-<li>居中对齐</li>
+<li><code>(gdb)b 7</code>      &lt;–设置断点，在第七行处</li>
+<li><code>(gdb)r</code>          &lt;–运行程序，遇到断点处停止</li>
 </ul>
-</li>
-<li><p>用  <strong>|</strong>  分隔不同单元行，用  <strong>-</strong>  来分割表头和行，例如(未实现)</p>
-</li>
-</ol>
-<h2 id="脚注"><a href="#脚注" class="headerlink" title="脚注"></a>脚注</h2><p>脚注加字母数字和下划线即可，如：</p>
-<p>啦啦啦我喜欢[^1]你哇</p>
-<p>具体为</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">啦啦啦我喜欢[^1]你哇</span><br></pre></td></tr></table></figure>
-<h2 id="删除线"><a href="#删除线" class="headerlink" title="删除线"></a>删除线</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~~我爱你~~</span><br></pre></td></tr></table></figure>
-<p><del>我爱你</del></p>
-<h2 id="超链接"><a href="#超链接" class="headerlink" title="超链接"></a>超链接</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[链接名称](url)</span><br></pre></td></tr></table></figure>
-<p><a href="justtolove.cf">我的博客</a></p>
-<h2 id="插入图片"><a href="#插入图片" class="headerlink" title="插入图片"></a>插入图片</h2><p><img src="/images/6.jpg" alt="alt 背景"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">![alt 属性文本](图片地址)</span><br><span class="line">还可以直接拖拽</span><br></pre></td></tr></table></figure>
-<h2 id="字体"><a href="#字体" class="headerlink" title="字体"></a>字体</h2><ol>
-<li><p>斜体</p>
+<p><img src="/images/image-20210130010947800.png" alt="image-20210130010947800"></p>
 <ul>
-<li><strong>*单星号*</strong>  或者  <strong>_单下划线_</strong>  如 <em>斜体</em></li>
+<li><code>(gdb)p n</code>     &lt;–表示查看此刻n的值</li>
+<li><code>(gdb)b 12</code>    &lt;–第十二行为断点</li>
+<li><code>(gdb)c</code>          &lt;–继续</li>
+<li><code>(gdb)p n</code>      此时显示$3=0x65<strong>表示十六进制六十五，也就是十进制的101</strong></li>
 </ul>
-</li>
-<li><p>加粗</p>
-<ul>
-<li><strong>两个星号</strong></li>
-</ul>
-</li>
-<li><p>加粗斜体</p>
-<ul>
-<li><strong><em>三个星号</em></strong></li>
-</ul>
-</li>
-</ol>
-<h2 id="代码标记"><a href="#代码标记" class="headerlink" title="代码标记"></a>代码标记</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#96;echo &quot;I love you&quot; &gt; &#x2F;home&#x2F;xxx&#x2F;test.txt&#96;</span><br></pre></td></tr></table></figure>
-<p><code>echo &quot;I love you&quot; &gt; /home/xxx/test.txt</code></p>
-<h2 id="下划线"><a href="#下划线" class="headerlink" title="下划线"></a>下划线</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Ctrl + U 或者 &lt;u&gt;内容&lt;&#x2F;u&gt;</span><br></pre></td></tr></table></figure>
-<p><u>我爱你</u></p>
-<h2 id="下标与上标"><a href="#下标与上标" class="headerlink" title="下标与上标"></a>下标与上标</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">内容&lt;sup&gt;上标&lt;&#x2F;sup&gt;</span><br></pre></td></tr></table></figure>
-<p>X<sup>2</sup></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">内容&lt;sub&gt;下标&lt;&#x2F;sup&gt;</span><br></pre></td></tr></table></figure>
-<p>CuSO<sub>4</sub></p>
-<h2 id="分割线"><a href="#分割线" class="headerlink" title="分割线"></a>分割线</h2><p>三个***或者三个—再加回车即可</p>
+<p>接下来分析另一段代码</p>
+<p><img src="/images/TNB665P7%60%5B@MI2~V6NWQDB9.png" alt="image-20210130024739521"></p>
+<p>首先通过<code>(gdb)break func</code>在函数处设置断点，**gdb还支持if判断设置断点如<code>(gdb)break 7 if n==6</code>**，然后开始执行。</p>
+<p><img src="/images/image-20210130031101287.png" alt="image-20210130031101287"></p>
+<p>其中rsp<strong>寄存器，</strong>stack pointer, 它存储的值永远是栈顶的地址，所以它又被叫做<strong>栈顶指针</strong>。我们可以用(%rsp)来获取栈顶存储的值，通过a(%rsp),  其中a是任何一个整数，来获取地址是rsp存储的值加a处的内存单元的值。比如说，2(%rsp)就是栈顶上方（逻辑地址增大方向）2个字节处的值，-2(%rsp)就是栈顶下方（逻辑地址减小方向）2个字节处的值。</p>
+<p><strong>以r开头的寄存器如rbp、rsp一般表示64位寄存器，而以e开头的寄存器如ebp、esp表示32位寄存器</strong>。一般不影响比较，即把rbp作用等同于ebp即可。</p>
+<p><strong>rbp</strong>寄存器：<strong>为基指针(Base Pointer)寄存器，通过它减去一定的偏移值，来访问栈中的元素；</strong></p>
+<p><strong>rax、rdx常作为函数返回值使用</strong></p>
+<p><strong>rdi、rsi、rdx、rcx、r8、r9等寄存器常用于存放函数参数</strong></p>
+<p><strong>rip</strong>作为指令指针存储着CPU下一条要执行的指令的地址<br> 一旦CPU读取一条指令，rip会自动指向下一条指令(存储下一条指令的地址)</p>
+<p><strong><em>如其中[rbp-0x8]就作为sum参数，被赋值了0</em></strong></p>
+<p>接下来逐条使用<code>(gdb)print i</code>，<code>(gdb)print n</code>，<code>(gdb)next</code>可以看到func函数中在底层的运行情况。</p>
+<p><img src="/images/image-20210130033947511.png" alt="image-20210130033947511"></p>
 <hr>
-<h2 id="尾声"><a href="#尾声" class="headerlink" title="尾声"></a>尾声</h2><p>大致就这些，应该够用了，<del>学了挺多的</del>，最后材料引用连接如下，感谢</p>
-<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/hider/p/11614688.html#fnref1">链接一</a></p>
-<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/148825412">连接二</a></p>
+<p>gdb调试，难得不是汇编语言，难得是逻辑分析QAQ</p>
+<p>今天先到这里，明天继续。</p>
 
       
 
@@ -313,7 +326,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Typora</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Rce</a>
         		</li>
       		
 		</ul>
@@ -369,7 +382,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2021/01/20/Typora%E8%87%AA%E5%AD%A6%E6%95%99%E7%A8%8B/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2021/01/30/gdb%E8%B0%83%E8%AF%95/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -383,18 +396,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2021/01/20/THM-room-1/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          THM-room-1
-        
-      </div>
-    </a>
   
-  
-    <a href="/2021/01/20/Google-Hack/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Google Hack</div>
+    <a href="/2021/01/28/web-1/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">web-1</div>
       <i class="icon-circle-right"></i>
     </a>
   
