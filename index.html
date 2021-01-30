@@ -659,9 +659,18 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mount ext3ctf /mnt</span><br><span class="line">cd /mnt</span><br><span class="line">find . -name &quot;flag.txt&quot;</span><br></pre></td></tr></table></figure>
 <p>其中find的用法参考：<a target="_blank" rel="noopener" href="https://www.runoob.com/linux/linux-comm-find.html">我是链接</a></p>
 <p>该题也可通过<code>010editor</code>和<code>winhex</code>等工具打开，搜索<code>flag.txt</code>所在路径解压打开再base64解码可得。</p>
-<hr>
-<p>有些简单的misc并未记录，仅记录下有所收获的题目</p>
-<p>未完待续。。。</p>
+<h2 id="stegano"><a href="#stegano" class="headerlink" title="stegano"></a>stegano</h2><p>文件为pdf格式，上来先扔进010editor搜索flag字符，</p>
+<p><img src="/images/image-20210130203052817.png" alt="image-20210130203052817"></p>
+<p>妙哇，有一个，后面的后缀等号显然base64，拿去反解康康</p>
+<p><img src="/images/image-20210130203209269.png" alt="image-20210130203209269"></p>
+<p>QAQ，好，恶趣味哈。然后打开pdf格式，f12慢慢康，</p>
+<p><img src="/images/image-20210130203353781.png" alt="image-20210130203353781"></p>
+<p>显然，那一串奇怪的字符就是了。康格式，想到了摩斯电码，思路有了，上python。</p>
+<p>贴出下列代码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">newstr1=<span class="string">&quot;BABA BBB BA BBA ABA AB B AAB ABAA AB B AA BBB BA AAA BBAABB AABA ABAA AB BBA BBBAAA ABBBB BA AAAB ABBBB AAAAA ABBBB BAAA ABAA AAABB BB AAABB AAAAA AAAAA AAAAB BBA AAABB&quot;</span></span><br><span class="line">newstr=newstr1.replace(<span class="string">&quot;B&quot;</span>,<span class="string">&quot;-&quot;</span>)</span><br><span class="line">newstr=newstr.replace(<span class="string">&quot;A&quot;</span>,<span class="string">&quot;.&quot;</span>)</span><br><span class="line">print(newstr.replace(<span class="string">&quot; &quot;</span>,<span class="string">&quot;/&quot;</span>)) <span class="comment">#将空格用斜杠分割，方便在线解密摩斯电码</span></span><br></pre></td></tr></table></figure>
+<p><img src="/images/image-20210130205252962.png" alt="image-20210130205252962"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">str1=<span class="string">&quot;1NV151BL3M3554G3&quot;</span></span><br><span class="line">print(str1.lower())</span><br></pre></td></tr></table></figure>
+<p>即可</p>
 
       
 
