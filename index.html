@@ -242,6 +242,13 @@
 <p><img src="/images/image-20210131015455851.png" alt="image-20210131015455851"></p>
 <p>末位地址为2012（同之后不知道怎么做了）补张IDA结果。</p>
 <p><img src="/images/image-20210131015603115.png" alt="image-20210131015603115"></p>
+<p>好家伙，结果直接出来了其实，<code>paSsw0rd</code>的地址指向的是<code>0x402012</code>转化为十进制为<code>4202514</code></p>
+<p><img src="/images/image-20210131111616482.png" alt="image-20210131111616482"></p>
+<h3 id="Cry-1"><a href="#Cry-1" class="headerlink" title="Cry-1"></a>Cry-1</h3><p>开头一段莫斯电码直接反解得到<code>86/109/108/110/90/87/53/108/99/109/85/116/84/71/108/114/97/84/112/57/86/109/116/116/100/107/112/105/73/84/70/89/100/69/70/52/90/83/70/111/99/69/48/120/101/48/48/114/79/88/104/120/101/110/74/85/</code></p>
+<p>ascii码转换</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">str1=<span class="string">&quot;86/109/108/110/90/87/53/108/99/109/85/116/84/71/108/114/97/84/112/57/86/109/116/116/100/107/112/105/73/84/70/89/100/69/70/52/90/83/70/111/99/69/48/120/101/48/48/114/79/88/104/120/101/110/74/85/&quot;</span></span><br><span class="line">str3=<span class="string">&quot;&quot;</span></span><br><span class="line">str2=<span class="string">&quot;&quot;</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> str1:</span><br><span class="line">    <span class="keyword">if</span> (i!=<span class="string">&quot;/&quot;</span>):</span><br><span class="line">        str2+=i</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        str3+=<span class="built_in">chr</span>(<span class="built_in">int</span>(str2))</span><br><span class="line">        str2=<span class="string">&quot;&quot;</span></span><br><span class="line">print(str3)</span><br></pre></td></tr></table></figure>
+<p>得到<code>VmlnZ00lcmUtTGlraTp9VmttdkpiITFYdEF4ZSFocE0xe00rOXhxenJU</code></p>
+<p>base64反解得到<code>Vigenere-Liki:&#125;VkmvJb!1XtAxe!hpM1&#123;M+9xqzrT</code>，可知采用的是Vigenere加密，采用别人的解密脚本解得密码<code>U K H H N Y Y J = M Q P P @ L C H B B V Y T J S I U O I</code></p>
 
       
 
@@ -1629,11 +1636,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Typora</a>
+                <a href="javascript:void(0)" class="js-tag color2">Try hack me</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Try hack me</a>
+                <a href="javascript:void(0)" class="js-tag color2">Typora</a>
               </li>
              
               <li class="article-tag-list-item">
