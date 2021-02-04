@@ -6,31 +6,27 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>gdb调试 | Isabellaの碎碎念</title>
+  <title>TJU-CTF-wp | Isabellaの碎碎念</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="gdb调试反汇编  补充知识这里参考了一篇极好的知乎回答： 我是链接  汇编语言需要掌握的知识点包括：  寄存器，包括栈寄存器rsp, rip, rbp；赋值寄存器：rdi、rsi等；返回值寄存器rax、rdx等。 赋值指令 mov, lea，移位指令sal, sar。 判断指令，cmp, test， 跳跃指令，je, jle, jne。以及构成条件语句和循环语句的方法。 区分寄存器存储的是值还是">
+  <meta name="description" content="TJU-CTF-WP(未完待续)  前言经过了48小时的CTF比赛，心态已爆，，，自己差的太多太多了，要补的还有好多好多，但是这个博客会一直继续下去，我也会一直学习下去，毕竟能找到一个自己真正感兴趣的东西，太难得了。 对学长感到抱歉，对十分照顾我的姐姐感到抱歉，自己差距太大太大，愧对他们的好意了。 数字推盘F12后查看调试器中的js代码中的main.js，直接搜索即可  套壳1直接使用IDA打开发">
 <meta property="og:type" content="article">
-<meta property="og:title" content="gdb调试">
-<meta property="og:url" content="http://example.com/2021/01/30/gdb%E8%B0%83%E8%AF%95/index.html">
+<meta property="og:title" content="TJU-CTF-wp">
+<meta property="og:url" content="http://example.com/2021/02/04/TJU-CTF-wp/index.html">
 <meta property="og:site_name" content="Isabellaの碎碎念">
-<meta property="og:description" content="gdb调试反汇编  补充知识这里参考了一篇极好的知乎回答： 我是链接  汇编语言需要掌握的知识点包括：  寄存器，包括栈寄存器rsp, rip, rbp；赋值寄存器：rdi、rsi等；返回值寄存器rax、rdx等。 赋值指令 mov, lea，移位指令sal, sar。 判断指令，cmp, test， 跳跃指令，je, jle, jne。以及构成条件语句和循环语句的方法。 区分寄存器存储的是值还是">
+<meta property="og:description" content="TJU-CTF-WP(未完待续)  前言经过了48小时的CTF比赛，心态已爆，，，自己差的太多太多了，要补的还有好多好多，但是这个博客会一直继续下去，我也会一直学习下去，毕竟能找到一个自己真正感兴趣的东西，太难得了。 对学长感到抱歉，对十分照顾我的姐姐感到抱歉，自己差距太大太大，愧对他们的好意了。 数字推盘F12后查看调试器中的js代码中的main.js，直接搜索即可  套壳1直接使用IDA打开发">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/images/v2-6c941c7317a53244461229afe9b95c34_720w.jpg">
-<meta property="og:image" content="http://example.com/images/v2-46829cde5dcba2f101da2fe165eb7ea5_720w.jpg">
-<meta property="og:image" content="http://example.com/images/v2-f2e9445a5a5e3af5b9e78558fcc87c87_720w.jpg">
-<meta property="og:image" content="http://example.com/images/v2-5ff8904872c7b557702d9e4d3090f02f_720w.jpg">
-<meta property="og:image" content="http://example.com/images/v2-29d48b081e00b2828fffd100ab35e995_720w.jpg">
-<meta property="og:image" content="http://example.com/images/image-20210130010329929.png">
-<meta property="og:image" content="http://example.com/images/image-20210130010947800.png">
-<meta property="og:image" content="http://example.com/images/TNB665P7%60%5B@MI2~V6NWQDB9.png">
-<meta property="og:image" content="http://example.com/images/image-20210130031101287.png">
-<meta property="og:image" content="http://example.com/images/image-20210130033947511.png">
-<meta property="article:published_time" content="2021-01-29T16:48:20.000Z">
-<meta property="article:modified_time" content="2021-01-29T19:46:33.942Z">
+<meta property="og:image" content="http://example.com/images/image-20210203124325846.png">
+<meta property="og:image" content="http://example.com/images/image-20210203124827399.png">
+<meta property="og:image" content="http://example.com/images/image-20210203125318557.png">
+<meta property="og:image" content="http://example.com/2021/02/04/TJU-CTF-wp/images/image-20210201174242866.png">
+<meta property="og:image" content="http://example.com/images/image-20210203130823270.png">
+<meta property="og:image" content="http://example.com/images/image-20210204183729368.png">
+<meta property="article:published_time" content="2021-02-04T10:21:33.000Z">
+<meta property="article:modified_time" content="2021-02-04T10:42:21.315Z">
 <meta property="article:author" content="John Doe">
-<meta property="article:tag" content="Rce">
+<meta property="article:tag" content="CTF">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/images/v2-6c941c7317a53244461229afe9b95c34_720w.jpg">
+<meta name="twitter:image" content="http://example.com/images/image-20210203124325846.png">
   
     <link rel="alternative" href="/atom.xml" title="Isabellaの碎碎念" type="application/atom+xml">
   
@@ -166,116 +162,55 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-gdb调试" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-TJU-CTF-wp" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      gdb调试
+      TJU-CTF-wp
     </h1>
   
 
         
-        <a href="/2021/01/30/gdb%E8%B0%83%E8%AF%95/" class="archive-article-date">
-  	<time datetime="2021-01-29T16:48:20.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-01-30</time>
+        <a href="/2021/02/04/TJU-CTF-wp/" class="archive-article-date">
+  	<time datetime="2021-02-04T10:21:33.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-02-04</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <center>gdb调试反汇编</center>
+        <center>TJU-CTF-WP(未完待续)</center>
 
-<h2 id="补充知识"><a href="#补充知识" class="headerlink" title="补充知识"></a>补充知识</h2><p>这里参考了一篇极好的知乎回答： <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/259625135">我是链接</a></p>
-<p> 汇编语言需要掌握的知识点包括：</p>
-<ol>
-<li>寄存器，包括栈寄存器rsp, rip, rbp；赋值寄存器：rdi、rsi等；返回值寄存器rax、rdx等。</li>
-<li>赋值指令 mov, lea，移位指令sal, sar。</li>
-<li>判断指令，cmp, test， 跳跃指令，je, jle, jne。以及构成条件语句和循环语句的方法。</li>
-<li>区分寄存器存储的是值还是地址，()为解地址符号，即得到内存地址中的数。</li>
-<li>入栈，出栈指令push, pop，以及出栈入栈的原因。</li>
-</ol>
-<h3 id="常见指令"><a href="#常见指令" class="headerlink" title="常见指令"></a>常见指令</h3><p><strong>mov</strong>指令是赋值指令，即a=b等赋值操作：注意到对某寄存器rbp而言：rbp 表示<strong>取寄存器</strong>的值，（rbp）表示<strong>以rbp的值为地址在内存中取值</strong>，也就是所谓的指针解引用，根据指针地址取值。</p>
-<p><img src="/images/v2-6c941c7317a53244461229afe9b95c34_720w.jpg" alt="img"></p>
-<p><img src="/images/v2-46829cde5dcba2f101da2fe165eb7ea5_720w.jpg" alt="img"></p>
-<p><img src="/images/v2-f2e9445a5a5e3af5b9e78558fcc87c87_720w.jpg" alt="img"></p>
-<p><img src="/images/v2-5ff8904872c7b557702d9e4d3090f02f_720w.jpg" alt="img"></p>
-<p><img src="/images/v2-29d48b081e00b2828fffd100ab35e995_720w.jpg" alt="img"></p>
-<p><strong>lea</strong>是“load effective address”的缩写， lea指令可以用来将一个内存地址直接赋给目的操作数，例如：lea eax,[ebx+8]就是将<strong>ebx+8这个地址值</strong>直接赋给eax，而不解ebx+8的地址。mov指令则相反，例如：mov eax,[ebx+8]则是把<strong>内存地址为ebx+8处的数据</strong>赋给eax。</p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>经过了48小时的CTF比赛，心态已爆，，，自己差的太多太多了，要补的还有好多好多，但是这个博客会一直继续下去，我也会一直学习下去，毕竟能找到一个自己真正感兴趣的东西，太难得了。</p>
+<p>对学长感到抱歉，对十分照顾我的姐姐感到抱歉，自己差距太大太大，愧对他们的好意了。</p>
+<h2 id="数字推盘"><a href="#数字推盘" class="headerlink" title="数字推盘"></a>数字推盘</h2><p><code>F12</code>后查看调试器中的js代码中的<code>main.js</code>，直接搜索即可</p>
+<p><img src="/images/image-20210203124325846.png" alt="image-20210203124325846"></p>
+<h2 id="套壳1"><a href="#套壳1" class="headerlink" title="套壳1"></a>套壳1</h2><p>直接使用IDA打开发现相关信息展示不全，分析后发现是套了UPX壳，下载了一个UPX脱壳工具进行脱壳后再打开直接就能看见flag。</p>
+<p><img src="/images/image-20210203124827399.png" alt="image-20210203124827399"></p>
+<h2 id="硬流量"><a href="#硬流量" class="headerlink" title="硬流量"></a>硬流量</h2><p>wireshark打开文件，发现是USB流量分析。</p>
+<p><img src="/images/image-20210203125318557.png" alt="image-20210203125318557"></p>
+<p>其中<code>Leftover Capture Data:0000120000000000</code>对应这相应的键位，即键盘输入，命令行运行如下命令将该信息保存下来</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tshark -r out.pcapng -T fields -e usb.capdata &gt; usbdata.txt #or</span><br><span class="line">shark -r out.pcapng -T fields -e usb.capdata | sed &#x27;/^\s*$/d&#x27; &gt; usbdata.txt #去空行</span><br></pre></td></tr></table></figure>
+<p>截着将文件每两个用冒号分割，取第六到第八个，跟映射表比较，结果如下，即为flag</p>
+<p><img src="images/image-20210201174242866.png" alt="image-20210201174242866"></p>
+<h2 id="wifihacker"><a href="#wifihacker" class="headerlink" title="wifihacker"></a>wifihacker</h2><p>根据提示构造字典如下**后提示要带上<code>tjuCTF&#123;&#125;</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">month=[<span class="string">&quot;01&quot;</span>,<span class="string">&quot;02&quot;</span>,<span class="string">&quot;03&quot;</span>,<span class="string">&quot;04&quot;</span>,<span class="string">&quot;05&quot;</span>,<span class="string">&quot;06&quot;</span>,<span class="string">&quot;07&quot;</span>,<span class="string">&quot;08&quot;</span>,<span class="string">&quot;09&quot;</span>,<span class="string">&quot;10&quot;</span>,<span class="string">&quot;11&quot;</span>,<span class="string">&quot;12&quot;</span>]</span><br><span class="line">str1=<span class="string">&quot;&quot;</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">2000</span>,<span class="number">2022</span>):</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> month:</span><br><span class="line">        <span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">32</span>):</span><br><span class="line">            <span class="keyword">if</span>(k&lt;<span class="number">10</span>):</span><br><span class="line">                str1=<span class="string">&quot;tjuCTF&#123;&quot;</span>+<span class="built_in">str</span>(i)+<span class="built_in">str</span>(j)+<span class="string">&quot;0&quot;</span>+<span class="built_in">str</span>(k)+<span class="string">&quot;&#125;&quot;</span></span><br><span class="line">                f=<span class="built_in">open</span>(<span class="string">&quot;E:dir.txt&quot;</span>,<span class="string">&quot;a&quot;</span>)</span><br><span class="line">                f.write(str1+<span class="string">&quot;\n&quot;</span>)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                str1=<span class="string">&quot;tjuCTF&#123;&quot;</span>+<span class="built_in">str</span>(i)+<span class="built_in">str</span>(j)+<span class="built_in">str</span>(k)+<span class="string">&quot;&#125;&quot;</span></span><br><span class="line">                f=<span class="built_in">open</span>(<span class="string">&quot;E:dir.txt&quot;</span>,<span class="string">&quot;a&quot;</span>)</span><br><span class="line">                f.write(str1+<span class="string">&quot;\n&quot;</span>)</span><br><span class="line">f.close()</span><br></pre></td></tr></table></figure>
+<p>接着用aircrack-ng爆破密码即为flag</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">aircrack-ng -w dir.txt wifi.cap</span><br></pre></td></tr></table></figure>
+<p><img src="/images/image-20210203130823270.png" alt="image-20210203130823270"></p>
+<h2 id="浏览器のSecret"><a href="#浏览器のSecret" class="headerlink" title="浏览器のSecret"></a>浏览器のSecret</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">binwalk -e xxx.jpg</span><br></pre></td></tr></table></figure>
+<p>将图片中隐藏的文件解压出来，一个flag2.jpg，一个hint.txt中是中文乱码，一个Secret.zip有密码其中有五个txt文本每个三字符。</p>
+<p>其中Secret.zip英文文本量较小，可以考虑<code>CRC32</code>碰撞，如下脚本贴出，结果如图</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> datetime</span><br><span class="line"><span class="keyword">import</span> binascii</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">showTime</span>():</span></span><br><span class="line">    <span class="built_in">print</span> datetime.datetime.now().strftime(<span class="string">&quot;%H:%M:%S&quot;</span>)</span><br><span class="line">str1=<span class="string">&quot;&quot;</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">crack</span>():</span></span><br><span class="line">    crcs = <span class="built_in">set</span>([<span class="number">0x17B6B9B8</span>,<span class="number">0x10E77928</span>,<span class="number">0xCFD6F056</span>,<span class="number">0xAFDFBD5D</span>,<span class="number">0x990144DC</span>])</span><br><span class="line">    r = xrange(<span class="number">10</span>,<span class="number">127</span>)</span><br><span class="line">    <span class="keyword">for</span> a <span class="keyword">in</span> r:</span><br><span class="line">        <span class="keyword">for</span> b <span class="keyword">in</span> r:</span><br><span class="line">            <span class="keyword">for</span> c <span class="keyword">in</span> r:</span><br><span class="line">                txt = <span class="built_in">chr</span>(a) + <span class="built_in">chr</span>(b) + <span class="built_in">chr</span>(c)</span><br><span class="line">                crc = binascii.crc32(txt)</span><br><span class="line">                <span class="keyword">if</span>(crc &amp; <span class="number">0xffffffff</span>) <span class="keyword">in</span> crcs:</span><br><span class="line">                    <span class="built_in">print</span> txt</span><br><span class="line">showTime()</span><br><span class="line">crack()</span><br><span class="line">showTime()</span><br></pre></td></tr></table></figure>
+<p><img src="/images/image-20210204183729368.png" alt="image-20210204183729368"></p>
+<p>其中hint的内容使用在线中文乱码恢复网站恢复发现为</p>
 <blockquote>
-<p>个人的理解：lea eax,[ebx+8]表示，不改变eax的值，而直接将eax的地址变为eax+8;而mov eax,[ebx+8]表示将ebx+8这个地址上的数据给eax。</p>
+<p>锘夸笉浼氱湡鏈変汉璁や负base鍙湁涓夌鎶?涓嶄細鍚т笉浼氬惂<br>不会真有人认为base只有三种?不会吧不会吧</p>
 </blockquote>
-<p><strong>左移指令</strong>包含sal和shl，这两条指令的作用是相同的，空出来的位用0填充。<strong>右移指令</strong>将操作数的bit位向右移动n位，<strong>sar执行算术移位（填上符号位），而shr执行逻辑移位（填上0）</strong>.移位操作的目的操作数可以是一个寄存器或是一个存储器位置。</p>
-<h2 id="前期准备"><a href="#前期准备" class="headerlink" title="前期准备"></a>前期准备</h2><p>将相关test.c文件使用gcc编译器编译生成可执行文件，同时注意<strong>仅仅生成可执行文件是无法进行调试的</strong>，因为使用 GDB 调试某个可执行文件，该文件中必须包含必要的调试信息（比如各行代码所在的行号、包含程序中所有变量名称的列表（又称为符号表）等），而上面生成的 test.exe 则没有。</p>
-<p>所以使用<code>-g</code>命令，如</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc test.c -o test.exe -g</span><br></pre></td></tr></table></figure>
-<p>接下来输入<code>gdb test.exe</code>启动。**<em>输入<code>--silent</code>可以消掉前面免责条款**</em></p>
-<table>
-<thead>
-<tr>
-<th>调试指令</th>
-<th>作 用</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>(gdb) break xxx  (gdb) b xxx</td>
-<td>在源代码指定的某一行设置断点，其中 xxx 用于指定具体打断点的位置。</td>
-</tr>
-<tr>
-<td>(gdb) run  (gdb) r</td>
-<td>执行被调试的程序，其会自动在第一个断点处暂停执行。</td>
-</tr>
-<tr>
-<td>(gdb) continue  (gdb) c</td>
-<td>当程序在某一断点处停止运行后，使用该指令可以继续执行，直至遇到下一个断点或者程序结束。</td>
-</tr>
-<tr>
-<td>(gdb) next  (gdb) n</td>
-<td>令程序一行代码一行代码的执行。</td>
-</tr>
-<tr>
-<td>(gdb) print xxx  (gdb) p xxx</td>
-<td>打印指定变量的值，其中 xxx 指的就是某一变量名。</td>
-</tr>
-<tr>
-<td>(gdb) list  (gdb) l</td>
-<td>显示源程序代码的内容，包括各行代码所在的行号。</td>
-</tr>
-<tr>
-<td>(gdb) quit  (gdb) q</td>
-<td>终止调试。</td>
-</tr>
-</tbody></table>
-<p><img src="/images/image-20210130010329929.png" alt="image-20210130010329929"></p>
-<p><code>l</code>显示带行号的源代码，默认显示10行，按回车继续显示。</p>
-<ul>
-<li><code>(gdb)b 7</code>      &lt;–设置断点，在第七行处</li>
-<li><code>(gdb)r</code>          &lt;–运行程序，遇到断点处停止</li>
-</ul>
-<p><img src="/images/image-20210130010947800.png" alt="image-20210130010947800"></p>
-<ul>
-<li><code>(gdb)p n</code>     &lt;–表示查看此刻n的值</li>
-<li><code>(gdb)b 12</code>    &lt;–第十二行为断点</li>
-<li><code>(gdb)c</code>          &lt;–继续</li>
-<li><code>(gdb)p n</code>      此时显示$3=0x65<strong>表示十六进制六十五，也就是十进制的101</strong></li>
-</ul>
-<h3 id="接下来分析另一段代码"><a href="#接下来分析另一段代码" class="headerlink" title="接下来分析另一段代码"></a>接下来分析另一段代码</h3><p><img src="/images/TNB665P7%60%5B@MI2~V6NWQDB9.png" alt="image-20210130024739521"></p>
-<p>首先通过<code>(gdb)break func</code>在函数处设置断点，**gdb还支持if判断设置断点如<code>(gdb)break 7 if n==6</code>**，然后开始执行。</p>
-<p><img src="/images/image-20210130031101287.png" alt="image-20210130031101287"></p>
-<p>其中rsp<strong>寄存器，</strong>stack pointer, 它存储的值永远是栈顶的地址，所以它又被叫做<strong>栈顶指针</strong>。我们可以用(%rsp)来获取栈顶存储的值，通过a(%rsp),  其中a是任何一个整数，来获取地址是rsp存储的值加a处的内存单元的值。比如说，2(%rsp)就是栈顶上方（逻辑地址增大方向）2个字节处的值，-2(%rsp)就是栈顶下方（逻辑地址减小方向）2个字节处的值。</p>
-<p><strong>以r开头的寄存器如rbp、rsp一般表示64位寄存器，而以e开头的寄存器如ebp、esp表示32位寄存器</strong>。一般不影响比较，即把rbp作用等同于ebp即可。</p>
-<p><strong>rbp</strong>寄存器：<strong>为基指针(Base Pointer)寄存器，通过它减去一定的偏移值，来访问栈中的元素；</strong></p>
-<p><strong>rax、rdx常作为函数返回值使用</strong></p>
-<p><strong>rdi、rsi、rdx、rcx、r8、r9等寄存器常用于存放函数参数</strong></p>
-<p><strong>rip</strong>作为指令指针存储着CPU下一条要执行的指令的地址<br> 一旦CPU读取一条指令，rip会自动指向下一条指令(存储下一条指令的地址)</p>
-<p><strong><em>如其中[rbp-0x8]就作为sum参数，被赋值了0</em></strong></p>
-<p>接下来逐条使用<code>(gdb)print i</code>，<code>(gdb)print n</code>，<code>(gdb)next</code>可以看到func函数中在底层的运行情况。</p>
-<p><img src="/images/image-20210130033947511.png" alt="image-20210130033947511"></p>
-<hr>
-<p>gdb调试，难得不是汇编语言，难得是逻辑分析QAQ</p>
-<p>今天先到这里，明天继续。</p>
+<p>结果至此已断联系不起来了。待续</p>
 
       
 
@@ -320,7 +255,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Rce</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">CTF</a>
         		</li>
       		
 		</ul>
@@ -376,7 +311,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2021/01/30/gdb%E8%B0%83%E8%AF%95/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2021/02/04/TJU-CTF-wp/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -390,18 +325,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2021/01/31/hgame-wp-%EF%BC%88%E4%B8%AA%E4%BA%BA%EF%BC%89/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          hgame-wp(个人）
-        
-      </div>
-    </a>
   
-  
-    <a href="/2021/01/28/web-1/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">web-1</div>
+    <a href="/2021/01/31/hgame-wp-%EF%BC%88%E4%B8%AA%E4%BA%BA%EF%BC%89/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">hgame-wp(个人）</div>
       <i class="icon-circle-right"></i>
     </a>
   
