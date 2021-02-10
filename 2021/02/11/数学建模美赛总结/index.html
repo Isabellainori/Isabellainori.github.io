@@ -6,15 +6,25 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>Tag: Rce | Isabellaの碎碎念</title>
+  <title>数学建模美赛总结 | Isabellaの碎碎念</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Isabellaの碎碎念">
-<meta property="og:url" content="http://example.com/tags/Rce/index.html">
+  <meta name="description" content="美赛总结  前言肝了四天的数学建模美赛终于结束，修正了一天后，决定趁着年前把学到的部分知识整理总结下来，之后继续网安和计算机的学习。 我们的选题主要为MCM的A题，偏向于数学方面，所以本文主要记录学到的matlab处理相关数据和建模分析。 数学建模知识多元线性回归方程我们将原本的多元非线性方程进行取对数处理，转化为多元线性方程，利用matlab几行代码即可快速给出所设参数，拟合图和残差图，下面贴出">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数学建模美赛总结">
+<meta property="og:url" content="http://example.com/2021/02/11/%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1%E7%BE%8E%E8%B5%9B%E6%80%BB%E7%BB%93/index.html">
 <meta property="og:site_name" content="Isabellaの碎碎念">
+<meta property="og:description" content="美赛总结  前言肝了四天的数学建模美赛终于结束，修正了一天后，决定趁着年前把学到的部分知识整理总结下来，之后继续网安和计算机的学习。 我们的选题主要为MCM的A题，偏向于数学方面，所以本文主要记录学到的matlab处理相关数据和建模分析。 数学建模知识多元线性回归方程我们将原本的多元非线性方程进行取对数处理，转化为多元线性方程，利用matlab几行代码即可快速给出所设参数，拟合图和残差图，下面贴出">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/kmeans.jpg">
+<meta property="og:image" content="http://example.com/images/sanjunchangqi.jpg">
+<meta property="og:image" content="http://example.com/images/yuanbaochushi.jpg">
+<meta property="og:image" content="http://example.com/images/yuanbaozuihou.jpg">
+<meta property="article:published_time" content="2021-02-10T16:51:46.000Z">
+<meta property="article:modified_time" content="2021-02-10T17:44:26.683Z">
 <meta property="article:author" content="John Doe">
+<meta property="article:tag" content="杂类">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/kmeans.jpg">
   
     <link rel="alternative" href="/atom.xml" title="Isabellaの碎碎念" type="application/atom+xml">
   
@@ -150,60 +160,197 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-数学建模美赛总结" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2021" class="archive-year">2021</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/01/30/gdb%E8%B0%83%E8%AF%95/" class="archive-article-date">
-  	<time datetime="2021-01-29T16:48:20.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-01-30</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/01/30/gdb%E8%B0%83%E8%AF%95/">gdb调试</a>
+    <h1 class="article-title" itemprop="name">
+      数学建模美赛总结
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2021/02/11/%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1%E7%BE%8E%E8%B5%9B%E6%80%BB%E7%BB%93/" class="archive-article-date">
+  	<time datetime="2021-02-10T16:51:46.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-02-11</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <center>美赛总结</center>
+
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>肝了四天的数学建模美赛终于结束，修正了一天后，决定趁着年前把学到的部分知识整理总结下来，之后继续网安和计算机的学习。</p>
+<p>我们的选题主要为MCM的A题，偏向于数学方面，所以本文主要记录学到的<code>matlab</code>处理相关数据和建模分析。</p>
+<h2 id="数学建模知识"><a href="#数学建模知识" class="headerlink" title="数学建模知识"></a>数学建模知识</h2><h3 id="多元线性回归方程"><a href="#多元线性回归方程" class="headerlink" title="多元线性回归方程"></a>多元线性回归方程</h3><p>我们将原本的<strong>多元非线性方程</strong>进行取对数处理，转化为<strong>多元线性方程</strong>，利用<code>matlab</code>几行代码即可快速给出所设参数，拟合图和残差图，下面贴出代码。</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">clear;clc;</span><br><span class="line"><span class="comment">%多元线性回归</span></span><br><span class="line">x1 = [<span class="number">7</span> <span class="number">1</span> <span class="number">11</span> <span class="number">11</span> <span class="number">7</span> <span class="number">11</span> <span class="number">3</span> <span class="number">1</span> <span class="number">2</span> <span class="number">21</span> <span class="number">1</span> <span class="number">11</span> <span class="number">10</span>];</span><br><span class="line">x2 = [<span class="number">26</span> <span class="number">29</span> <span class="number">56</span> <span class="number">31</span> <span class="number">52</span> <span class="number">55</span> <span class="number">71</span> <span class="number">31</span> <span class="number">54</span> <span class="number">47</span> <span class="number">40</span> <span class="number">66</span> <span class="number">68</span>];</span><br><span class="line">x3 = [<span class="number">6</span> <span class="number">15</span> <span class="number">8</span> <span class="number">8</span> <span class="number">6</span> <span class="number">9</span> <span class="number">17</span> <span class="number">31</span> <span class="number">54</span> <span class="number">47</span> <span class="number">40</span> <span class="number">66</span> <span class="number">68</span>];  </span><br><span class="line">x4 = [<span class="number">60</span> <span class="number">52</span> <span class="number">20</span> <span class="number">47</span> <span class="number">33</span> <span class="number">22</span> <span class="number">6</span> <span class="number">44</span> <span class="number">22</span> <span class="number">26</span> <span class="number">34</span> <span class="number">12</span> <span class="number">12</span>];</span><br><span class="line">y = [<span class="number">78.5</span> <span class="number">74.3</span> <span class="number">104.3</span> <span class="number">87.6</span> <span class="number">95.9</span> <span class="number">109.2</span> <span class="number">102.7</span> <span class="number">72.5</span> <span class="number">93.1</span> <span class="number">115.9</span> <span class="number">83.8</span> <span class="number">113.3</span> <span class="number">109.4</span>];</span><br><span class="line">X = [<span class="built_in">ones</span>(<span class="built_in">length</span>(y), <span class="number">1</span>),x1&#x27;,x2&#x27;,x3&#x27;,x4&#x27;]</span><br><span class="line">Y = y&#x27;</span><br><span class="line"></span><br><span class="line">[b,bint,r,rint,stats] = regress(Y,X);</span><br><span class="line">b,bint,stats</span><br><span class="line"></span><br><span class="line"><span class="comment">%残差图</span></span><br><span class="line"><span class="built_in">figure</span>(<span class="number">1</span>);</span><br><span class="line">rcoplot(r,rint)</span><br><span class="line"><span class="comment">%拟合图</span></span><br><span class="line"><span class="built_in">figure</span>(<span class="number">2</span>);</span><br><span class="line">z=b(<span class="number">1</span>)+b(<span class="number">2</span>)*x1+b(<span class="number">3</span>)*x2+b(<span class="number">4</span>)*x3+b(<span class="number">5</span>)*x4;</span><br><span class="line"><span class="built_in">plot</span>(X,y,<span class="string">&#x27;k+&#x27;</span>,X,z)</span><br></pre></td></tr></table></figure>
+<p>其中给出的是四元五个未知数的线性回归方程。用于解决形如<br>$$<br>\mathbf{y}=\mathbf{a}_0+\mathbf{a}_1\times\mathbf{x}_1+\mathbf{a}_2\times\mathbf{x}_2+\cdots \cdots +\mathbf{a}_n\times\mathbf{x}_n<br>$$<br>的式子。</p>
+<h3 id="K-means聚类分析"><a href="#K-means聚类分析" class="headerlink" title="K-means聚类分析"></a>K-means聚类分析</h3><p>该方法如其名描述，用于分析多种因素的变量，并将变量归为特定的簇数，多次迭代结果更加精准。</p>
+<p>给定一个随机的初始化中心，每次迭代中心变化为下式<br>$$<br>Center_k=\frac{1}{\left| C_k \right|}\sum_{X_i\in C_k}{X_i}<br>$$<br>同时用下式给出任意两点间的欧氏距离<br>$$<br>dist\left(X_i,Y_i \right) =\sqrt{\sum_{d=1}^D{\left(X_{i,d}-Y_{i,d} \right) ^2}}<br>$$<br>由此思路给出如下代码</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line">clc;</span><br><span class="line">clear;</span><br><span class="line">close all;</span><br><span class="line"></span><br><span class="line">data = [<span class="number">1.2</span> <span class="number">1.6</span>;</span><br><span class="line"><span class="number">1.5</span> <span class="number">1.9</span>;</span><br><span class="line">]<span class="comment">%格式可以用这种方法列举</span></span><br><span class="line"><span class="comment">%聚类 数值初始化</span></span><br><span class="line"><span class="comment">% scatter(data(:,1),data(:,2))</span></span><br><span class="line"><span class="comment">% axis([0.1 0.9 0 0.8])</span></span><br><span class="line">num = <span class="built_in">length</span>(data);    <span class="comment">%样本数</span></span><br><span class="line">fea_n=<span class="number">2</span>; <span class="comment">%特征数</span></span><br><span class="line">k = <span class="number">3</span>;  <span class="comment">%簇数</span></span><br><span class="line"></span><br><span class="line"><span class="comment">%如果各特征数值差异较大，需要归一化</span></span><br><span class="line"><span class="comment">% maxd = max(data,2);</span></span><br><span class="line"><span class="comment">% data(:,1:fea_n)=data(:,1:fea_n)./repmat(maxd(1,1:fea_n),num,1);</span></span><br><span class="line"><span class="comment">% totalMean = mean(data(:,1:fea_n));</span></span><br><span class="line"><span class="comment">%产生不相等随机数</span></span><br><span class="line"><span class="comment">% b = randperm(num);</span></span><br><span class="line"><span class="comment">% r = b(1:k);</span></span><br><span class="line"></span><br><span class="line">r = [<span class="number">6</span> <span class="number">12</span> <span class="number">24</span>];<span class="comment">%书中随机选取的初始化质心</span></span><br><span class="line"><span class="comment">%初始均值向量 u 1行 * k*fea_n列</span></span><br><span class="line">u = [data(r(<span class="number">1</span>,<span class="number">1</span>),<span class="number">1</span>:fea_n)];</span><br><span class="line"><span class="keyword">for</span> n = <span class="number">2</span>:k</span><br><span class="line">    u = [u , data(r(<span class="number">1</span>,n),<span class="number">1</span>:fea_n)];</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">count = <span class="number">1</span>;<span class="comment">%迭代次数</span></span><br><span class="line">flag = <span class="number">1</span>;</span><br><span class="line">cellshape([<span class="number">1</span>:k],<span class="number">1</span>) = fea_n;</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span>(flag&amp;count&lt;=<span class="number">4</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> count == <span class="number">1</span> <span class="comment">%第迭代循环初始化</span></span><br><span class="line">        old_u = u;</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">   </span><br><span class="line">    difer = (<span class="built_in">repmat</span>(data(:,<span class="number">1</span>:fea_n),<span class="number">1</span>,k) - <span class="built_in">repmat</span>(old_u,num,<span class="number">1</span>)); </span><br><span class="line">    cell = mat2cell((difer.*difer),[num],cellshape); <span class="comment">%按簇划分子块</span></span><br><span class="line">    distcell = cell2mat(<span class="built_in">cellfun</span>(@(x) sum(x,<span class="number">2</span>).^<span class="number">0.5</span>, cell,<span class="string">&#x27;UniformOutput&#x27;</span>,<span class="built_in">false</span>)&#x27;); <span class="comment">%计算距离</span></span><br><span class="line">    dist=<span class="built_in">reshape</span>(distcell,[],k);</span><br><span class="line">    [mini,lambda] = <span class="built_in">min</span>(dist,[],<span class="number">2</span>);     <span class="comment">%找到最近似的矩阵</span></span><br><span class="line">    data = [data(:,<span class="number">1</span>:fea_n),lambda]; <span class="comment">%标记数据</span></span><br><span class="line">    data = <span class="built_in">sortrows</span>(data,<span class="number">3</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">%各簇内记录的数量</span></span><br><span class="line">    <span class="keyword">for</span> n = <span class="number">1</span>:k</span><br><span class="line">        len(<span class="number">1</span>,n) = <span class="built_in">length</span>(<span class="built_in">find</span>(lambda==n));</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    </span><br><span class="line">    datacell = mat2cell(data(:,<span class="number">1</span>:fea_n)&#x27;,[fea_n],len);</span><br><span class="line">    new_u = cell2mat(<span class="built_in">cellfun</span>(@(x) <span class="built_in">mean</span>(x,<span class="number">2</span>),datacell,<span class="string">&#x27;UniformOutput&#x27;</span>,<span class="built_in">false</span>)&#x27;)&#x27;;</span><br><span class="line">    flag = <span class="built_in">length</span>(<span class="built_in">find</span>(new_u-old_u~=<span class="number">0</span>)); </span><br><span class="line">    old_u = new_u;</span><br><span class="line">    count=count+<span class="number">1</span>;</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">%画出分类结果</span></span><br><span class="line"> Color_map = hsv(k);</span><br><span class="line"> Label = data(:,fea_n+<span class="number">1</span>);</span><br><span class="line"> Color_Label = Color_map(Label,:);</span><br><span class="line"> </span><br><span class="line"> <span class="built_in">figure</span>(<span class="number">1</span>),clf</span><br><span class="line"> C=<span class="built_in">reshape</span>(new_u&#x27;,<span class="number">2</span>,[])&#x27;;</span><br><span class="line"> <span class="built_in">plot</span>(C(:,<span class="number">1</span>),C(:,<span class="number">2</span>),<span class="string">&#x27;kx&#x27;</span>,<span class="string">&#x27;MarkerSize&#x27;</span>,<span class="number">10</span>,<span class="string">&#x27;LineWidth&#x27;</span>,<span class="number">3</span>)</span><br><span class="line"> <span class="built_in">hold</span> on;</span><br><span class="line"> <span class="built_in">scatter</span>(data(:,<span class="number">1</span>),data(:,<span class="number">2</span>),<span class="number">40</span>,Color_Label,<span class="string">&#x27;filled&#x27;</span>)</span><br><span class="line"> xlabel(<span class="string">&#x27;Y&#x27;</span>)</span><br><span class="line"> ylabel(<span class="string">&#x27;lnX&#x27;</span>)<span class="comment">%自己设定，X,Y和title</span></span><br><span class="line"> title(<span class="string">&#x27;After the fourth iteration&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p>在我们的数据中，成图如下</p>
+<p><img src="/images/kmeans.jpg" alt="kmeans"></p>
+<h3 id="多元微分方程"><a href="#多元微分方程" class="headerlink" title="多元微分方程"></a>多元微分方程</h3><p>这里涉及到一个中间竞争模型，我们知道种群数量的增长符合<code>logistic</code>增长（高中知识），其增长曲线是由一个微分方程给出的，如下。<br>$$<br>\frac{dy\left( t \right)}{dt}=r\cdot y\cdot \left( 1-\frac{y}{N} \right)<br>$$<br>其中<code>r</code>为<strong>种群增长率</strong>，<code>N</code>为<strong>环境容纳量</strong>，该图像即我们常见的<code>S</code>性增长曲线。好，接下来我们引入多种群，考虑种群竞争的结果，我们的式子将变为：<br>$$<br>\left{ \begin{array}{l}<br>    \frac{dy_1}{dt}=r_1\cdot y_1\cdot \left( 1-\frac{y_1}{N_1}-\alpha <em>{21}\cdot \frac{y_2}{N_2}-\cdots -\alpha <em>{n1}\cdot \frac{y_n}{N_n} \right)\<br>    \frac{dy_2}{dt}=r_2\cdot y_2\cdot \left( 1-\frac{y_2}{N_2}-\alpha _{12}\cdot \frac{y_1}{N_1}-\cdots -\alpha _{n2}\cdot \frac{y_n}{N_n} \right)\<br>    ,,\vdots ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\ \ \ \ \ \ \ ,,\vdots ,,\<br>    \text{<br>}\frac{dy_n}{dt}=r_n\cdot y_n\cdot \left( 1-\frac{y_n}{N_n}-\alpha _{1n}\cdot \frac{y_1}{N_1}-\cdots -\alpha _{\left( n-1 \right) n}\cdot \frac{y</em>{n-1}}{N</em>{n-1}} \right)\<br>\end{array} \right.<br>$$<br>这里解释一下<br>$$<br>\alpha_{ij}<br>$$<br>的意思，**<code>i</code>种群消耗的资源是<code>j</code>种群消耗资源的倍数<strong>。对于我们上述已经进行了</strong>K-means聚类分析**，所以这里取三个种群，利用<code>matlab</code>构造解并给出图像</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">dy</span>=<span class="title">zhongqun3</span><span class="params">(t,y)</span></span></span><br><span class="line">r1=<span class="number">2.407</span>;r2=<span class="number">3.899</span>;r3=<span class="number">3.698</span>;n1=<span class="number">100</span>;n2=<span class="number">150</span>;n3=<span class="number">150</span>;</span><br><span class="line"><span class="comment">%s1=0.81;s2=0.69;s3=0.7;</span></span><br><span class="line">dy=[<span class="number">0</span>;<span class="number">0</span>;<span class="number">0</span>];<span class="comment">%返回的dy是三维的列向量</span></span><br><span class="line">dy(<span class="number">1</span>)=r1*y(<span class="number">1</span>)*(<span class="number">1</span>-(y(<span class="number">1</span>)/n1)<span class="number">-0.85</span>*(y(<span class="number">2</span>)/n2)<span class="number">-0.80</span>*(y(<span class="number">3</span>)/n3));</span><br><span class="line">dy(<span class="number">2</span>)=r2*y(<span class="number">2</span>)*(<span class="number">1</span><span class="number">-0.75</span>*(y(<span class="number">1</span>)/n1)-(y(<span class="number">2</span>)/n2)<span class="number">-0.8</span>*(y(<span class="number">3</span>)/n3));</span><br><span class="line">dy(<span class="number">3</span>)=r3*y(<span class="number">3</span>)*(<span class="number">1</span><span class="number">-0.75</span>*(y(<span class="number">1</span>)/n1)<span class="number">-0.85</span>(y(<span class="number">2</span>)/n2)-(y(<span class="number">3</span>)/n3));</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">clc;clear;</span><br><span class="line">x0=<span class="number">10</span>;y0=<span class="number">10</span>;z0=<span class="number">10</span>;</span><br><span class="line">options=odeset(<span class="string">&#x27;RelTol&#x27;</span>,<span class="number">1E-4</span>,<span class="string">&#x27;AbsTol&#x27;</span>,[<span class="number">1E-5</span>,<span class="number">1E-5</span>,<span class="number">1E-5</span>]);<span class="comment">%给定三个量的误差</span></span><br><span class="line">[T,XY]=ode45(<span class="string">&#x27;zhongqun3&#x27;</span>,[<span class="number">0</span>,<span class="number">150</span>],[x0,y0,z0],options);<span class="comment">%[0,150]是时间范围，[x0,y0,z0]是三量的起始值</span></span><br><span class="line"><span class="built_in">plot</span>(T,XY(:,<span class="number">1</span>),<span class="string">&#x27;color&#x27;</span>,[<span class="number">1</span> <span class="number">0</span> <span class="number">0</span>],<span class="string">&#x27;LineWidth&#x27;</span>,<span class="number">2.5</span>);</span><br><span class="line"><span class="built_in">hold</span> on</span><br><span class="line"><span class="built_in">plot</span>(T,XY(:,<span class="number">2</span>),<span class="string">&#x27;color&#x27;</span>,[<span class="number">0</span> <span class="number">1</span> <span class="number">0</span>],<span class="string">&#x27;LineWidth&#x27;</span>,<span class="number">2.5</span>);</span><br><span class="line"><span class="built_in">hold</span> on</span><br><span class="line"><span class="built_in">plot</span>(T,XY(:,<span class="number">3</span>),<span class="string">&#x27;color&#x27;</span>,[<span class="number">0</span> <span class="number">0</span> <span class="number">1</span>],<span class="string">&#x27;LineWidth&#x27;</span>,<span class="number">2.5</span>);<span class="comment">%颜色的rgb表示</span></span><br><span class="line"><span class="built_in">legend</span>(<span class="string">&#x27;L Fungi&#x27;</span>,<span class="string">&#x27;H Fungi&#x27;</span>,<span class="string">&#x27;M Funji&#x27;</span>);</span><br><span class="line">grid on <span class="comment">%画出表格</span></span><br><span class="line">xlabel(<span class="string">&#x27;t&#x27;</span>)</span><br><span class="line">ylabel(<span class="string">&#x27;P&#x27;</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>运行结果如下</p>
+<p><img src="/images/sanjunchangqi.jpg" alt="sanjunchangqi"></p>
+<p>这里我们给每个量前引入了两个正弦变化量来衡量温度和湿度的变化，所以才回达到上述的周期效果，结果很明显**<em>L菌的波动范围最小，应对变化能力最强；H菌相反**</em></p>
+<h3 id="元胞自动机模型"><a href="#元胞自动机模型" class="headerlink" title="元胞自动机模型"></a>元胞自动机模型</h3><p>希望通过元胞自动机模型来给出一个模拟真菌竞争繁衍的状况，同时校准模型，这里直接贴运行结果图，代码暂不贴出</p>
+<p><img src="/images/yuanbaochushi.jpg" alt="yuanbaochushi"></p>
+<p><img src="/images/yuanbaozuihou.jpg" alt="yuanbaozuihou"></p>
+<h3 id="Latex写作方法"><a href="#Latex写作方法" class="headerlink" title="Latex写作方法"></a>Latex写作方法</h3><p>这次美赛也体会到了什么叫Latex一天从不会到入门，挖个坑，到时候总结一下Latex写作方法</p>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>天冷了，可以请我一杯奶茶么QAQ<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/images/1.jpg">
+                      <span class="reward-type">支付宝</span>
+                    </div>
+                    
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/images/2.jpg">
+                      <span class="reward-type">微信</span>
+                    </div>
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Rce</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">杂类</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2021/02/11/%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1%E7%BE%8E%E8%B5%9B%E6%80%BB%E7%BB%93/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
   
   
-    </div></section>
+    <a href="/2021/02/04/CTF-wp/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">TJU-CTF-wp</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+  
+  
   
 
-    
+  
+
+  
+
+  
 
 
           </div>
@@ -226,9 +373,9 @@
 	var yiliaConfig = {
 		mathjax: true,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,
