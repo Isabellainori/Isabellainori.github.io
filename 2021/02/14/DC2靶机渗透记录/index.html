@@ -6,15 +6,42 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>Archives: 2021 | Isabellaの碎碎念</title>
+  <title>DC2靶机渗透记录 | Isabellaの碎碎念</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Isabellaの碎碎念">
-<meta property="og:url" content="http://example.com/archives/2021/page/2/index.html">
+  <meta name="description" content="DC-2渗透记录  信息收集同样，基本操作，netdiscover发现VMware类型的ip地址，即为目标靶机  接下来祭出nmap扫描  斯巴拉西，得到了一个重要信息WordPress的站，还有其对应的版本，可以有针对性的利用已知漏洞打击，先存着，先访问其http页面（80端口）得到进一步信息。 就在页面很轻松能发现第一个flag。  flag给了我们提示，需要登录，并且需要cewl而且提示常用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DC2靶机渗透记录">
+<meta property="og:url" content="http://example.com/2021/02/14/DC2%E9%9D%B6%E6%9C%BA%E6%B8%97%E9%80%8F%E8%AE%B0%E5%BD%95/index.html">
 <meta property="og:site_name" content="Isabellaの碎碎念">
+<meta property="og:description" content="DC-2渗透记录  信息收集同样，基本操作，netdiscover发现VMware类型的ip地址，即为目标靶机  接下来祭出nmap扫描  斯巴拉西，得到了一个重要信息WordPress的站，还有其对应的版本，可以有针对性的利用已知漏洞打击，先存着，先访问其http页面（80端口）得到进一步信息。 就在页面很轻松能发现第一个flag。  flag给了我们提示，需要登录，并且需要cewl而且提示常用">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/image-20210213024907862.png">
+<meta property="og:image" content="http://example.com/images/image-20210213025133938.png">
+<meta property="og:image" content="http://example.com/images/image-20210213025648878.png">
+<meta property="og:image" content="http://example.com/images/image-20210213030100762.png">
+<meta property="og:image" content="http://example.com/images/image-20210214002259955.png">
+<meta property="og:image" content="http://example.com/images/image-20210214003751217.png">
+<meta property="og:image" content="http://example.com/images/image-20210214011240025.png">
+<meta property="og:image" content="http://example.com/images/image-20210214010701970.png">
+<meta property="og:image" content="http://example.com/images/image-20210214011455745.png">
+<meta property="og:image" content="http://example.com/images/image-20210214012228481.png">
+<meta property="og:image" content="http://example.com/images/image-20210214012725346.png">
+<meta property="og:image" content="http://example.com/images/image-20210214013355889.png">
+<meta property="og:image" content="http://example.com/images/image-20210214013704428.png">
+<meta property="og:image" content="http://example.com/images/image-20210214013803467.png">
+<meta property="og:image" content="http://example.com/images/image-20210214014445162.png">
+<meta property="og:image" content="http://example.com/images/image-20210214014621562.png">
+<meta property="og:image" content="http://example.com/images/image-20210214014905308.png">
+<meta property="og:image" content="http://example.com/images/image-20210214015026394.png">
+<meta property="og:image" content="http://example.com/images/image-20210214015519144.png">
+<meta property="og:image" content="http://example.com/images/image-20210214015543045.png">
+<meta property="og:image" content="http://example.com/images/image-20210214020933513.png">
+<meta property="article:published_time" content="2021-02-13T18:12:01.000Z">
+<meta property="article:modified_time" content="2021-02-13T18:16:28.324Z">
 <meta property="article:author" content="John Doe">
+<meta property="article:tag" content="vulhub">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/image-20210213024907862.png">
   
     <link rel="alternative" href="/atom.xml" title="Isabellaの碎碎念" type="application/atom+xml">
   
@@ -150,90 +177,274 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-DC2靶机渗透记录" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2021" class="archive-year">2021</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/01/20/Google-Hack/" class="archive-article-date">
-  	<time datetime="2021-01-20T12:44:30.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-01-20</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/01/20/Google-Hack/">Google Hack</a>
+    <h1 class="article-title" itemprop="name">
+      DC2靶机渗透记录
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2021/02/14/DC2%E9%9D%B6%E6%9C%BA%E6%B8%97%E9%80%8F%E8%AE%B0%E5%BD%95/" class="archive-article-date">
+  	<time datetime="2021-02-13T18:12:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-02-14</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <center>DC-2渗透记录</center>
+
+<h2 id="信息收集"><a href="#信息收集" class="headerlink" title="信息收集"></a>信息收集</h2><p>同样，基本操作，<code>netdiscover</code>发现VMware类型的ip地址，即为目标靶机</p>
+<p><img src="/images/image-20210213024907862.png" alt="image-20210213024907862"></p>
+<p>接下来祭出<code>nmap</code>扫描</p>
+<p><img src="/images/image-20210213025133938.png" alt="image-20210213025133938"></p>
+<p>斯巴拉西，得到了一个重要信息<code>WordPress</code>的站，还有其对应的版本，可以有针对性的利用已知漏洞打击，先存着，先访问其http页面（80端口）得到进一步信息。</p>
+<p>就在页面很轻松能发现第一个flag。</p>
+<p><img src="/images/image-20210213025648878.png" alt="image-20210213025648878"></p>
+<p>flag给了我们提示，需要登录，并且需要<code>cewl</code>而且提示常用wordlists可能并不起作用，所以我们需要有针对性的设计（那不就是社工字典吗QAQ）。我们先<code>dirsearch</code>一波，看能不能跑出来登录框</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 dirsearch.py -u http://dc-2/ -e* &gt; /home/xxx/DC-2/DC2web.txt</span><br></pre></td></tr></table></figure>
+
+
+<p><img src="/images/image-20210213030100762.png" alt="image-20210213030100762"></p>
+<p>信息还是蛮多的，登录窗口也扫出来了（wp的后台管理窗口也就那个名儿。。。），根据flag1提示，查了一下<code>Cewl</code>的使用。<a target="_blank" rel="noopener" href="https://www.freebuf.com/articles/network/190128.html">我是链接</a></p>
+<blockquote>
+<p>Cewl是以爬虫模式在指定URL上收集单词的工具，并将其制作成密码字典，以提高密码破解工具的成功率。</p>
+</blockquote>
+<p>针对该网站生成特定的社工字典结果如下图。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cewl -w DC2-pwd.txt http://dc-2/</span><br></pre></td></tr></table></figure>
+<p><img src="/images/image-20210214002259955.png" alt="image-20210214002259955"></p>
+<p>因为网站是<code>wordpress</code>，所以肯定是<code>wpscan</code>啦。先扫描可用漏洞。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wpscan --url http://dc-2 &gt; dc-2.txt</span><br></pre></td></tr></table></figure>
+
+
+<blockquote>
+<p>WPScan是一个扫描 WordPress 漏洞的黑盒子扫描器，可以扫描敏感文件、获取站点用户名，获取安装的所有插件、主题，以及存在漏洞的插件、主题，并提供漏洞信息。</p>
+<p>参数：<br> –url 扫描网站<br> -e 枚举<br> u 枚举用户名，默认从1-10<br> p 枚举插件<br> t 枚举主题信息</p>
+</blockquote>
+<p>接下来枚举用户名信息</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wpscan --url http://dc-2 -e u</span><br></pre></td></tr></table></figure>
+<p>用户信息处有惊喜，发现了<code>admin</code>，<code>jerry</code>and<code>tom</code>三个账号</p>
+<p><img src="/images/image-20210214003751217.png" alt="image-20210214003751217"></p>
+<h2 id="web渗透"><a href="#web渗透" class="headerlink" title="web渗透"></a>web渗透</h2><p>自然而然的考虑用<code>burpsuite</code>爆破账号密码。。。</p>
+<p><img src="/images/image-20210214011240025.png" alt="image-20210214011240025"></p>
+<p>burp为防止封ip所以速度非常慢，换成hydra，，，参考burp的爆破格式构造：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hydra -t 3 -l tom -P DC2-pwd.txt -o out.txt -f dc-2 http-form-post &#x27;/wp-login.php:log=^USER^&amp;pwd=^PASS^&amp;wp-submit=Log+In&amp;testcookie=1:S=location&#x27; </span><br></pre></td></tr></table></figure>
+<p><code>-t 3</code> 控制线程数 无此选项默认12线程，经过测试这个服务端线程开太多会无响应，所以在这里制定为1（大家应该自行尝试最佳线程数）。</p>
+<ul>
+<li><code>-l tom</code> 指定单个用户名“root”。（可替换成<code>-L 字典.txt</code>来指定一系列用户名）</li>
+<li><code>-P DC2-pwd.txt</code> 指定密码字典（可替换成<code>-p 密码</code> 指定单个密码，一般不常用</li>
+<li><code>-o out.txt</code> 将尝试过程与结果保存到out.txt</li>
+<li> <code>-vV</code>显示详细过程</li>
+<li> <code>-f</code> 找到一个结果后停止</li>
+<li> <code>dc-2</code> 目标域名</li>
+<li> <code>http-post-form</code> 使用http协议下的post方法进行破解</li>
+<li><code>/wp-login.php:log=^USER^&amp;pwd=^PASS^&amp;wp-submit=Log+In&amp;testcookie=1:S=location</code>登录位置在目录<code>/wp-login.php</code>处，其余参考burp。</li>
+</ul>
+<p><img src="/images/image-20210214010701970.png" alt="image-20210214010701970"></p>
+<p>这里亲测哈，hydra牛逼！！！</p>
+<p>统计一下，只爆出来了两个</p>
+<ol>
+<li><code>jerry:adipiscing</code></li>
+<li><code>tom:parturient</code></li>
+</ol>
+<p>用我们拿到的账号密码登录上去会发现<code>flag2</code>，考虑了意思后放弃了msf搜索exp，，，因为写的很清楚，如果从版本的漏洞来打，估计需要自己构造。</p>
+<p><img src="/images/image-20210214011455745.png" alt="image-20210214011455745"></p>
+<p>试了试传马getshell，发现有保护，也无法常规绕过。</p>
+<p><img src="/images/image-20210214012228481.png" alt="image-20210214012228481"></p>
+<p>神奇的是，打了一个xss出来，但可惜没什么用，因为这是靶机，admin不会登陆。。。</p>
+<p><img src="/images/image-20210214012725346.png" alt="image-20210214012725346"></p>
+<p>一时间思路断了呜呜呜，，后来检查了一遍nmap信息发现，因为使用的命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmap -A 192.168.1.11</span><br></pre></td></tr></table></figure>
+<p>这里的端口扫描似乎只会扫前1000个端口！所以万一迁移了什么端口，就会把这重要信息给漏过去！</p>
+<p>重新构造</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmap -A 192.168.1.11 -p 1-10000</span><br></pre></td></tr></table></figure>
+<p>果然，发现了7744端口的ssh登录</p>
+<p><img src="/images/image-20210214013355889.png" alt="image-20210214013355889"></p>
+<h2 id="连入服务器"><a href="#连入服务器" class="headerlink" title="连入服务器"></a>连入服务器</h2><p>来一波ssh连接。</p>
+<p>试了几次发现，<code>jerry</code>没有这个su，有的是<code>tom</code>的，于是登录tom</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh tom@192.168.1.11 -p 7744</span><br></pre></td></tr></table></figure>
+<p><img src="/images/image-20210214013704428.png" alt="image-20210214013704428"></p>
+<p>但是！很无语，受限制的shell。这里给个参考，<a target="_blank" rel="noopener" href="https://www.freebuf.com/articles/system/188989.html">我是链接</a></p>
+<blockquote>
+<p>rbash是Restricted Shell，即受限的shell，它与一般标准shell的区别在于会限制执行一些行为。</p>
+</blockquote>
+<p><img src="/images/image-20210214013803467.png" alt="image-20210214013803467"></p>
+<p>可以手动添加环境来绕过shell限制</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">BASH_CMDS[a]=/bin/sh;a</span><br><span class="line"><span class="meta">$</span><span class="bash"> /bin/bash</span></span><br><span class="line">export PATH=$PATH:/bin/</span><br><span class="line">export PATH=$PATH:/usr/bin</span><br></pre></td></tr></table></figure>
+<p><img src="/images/image-20210214014445162.png" alt="image-20210214014445162"></p>
+<p>所以我们要换用<code>su</code>来换shell。</p>
+<p><img src="/images/image-20210214014621562.png" alt="image-20210214014621562"></p>
+<p>这时候再输入上次爆破出来的密码就能换了，但是！权限不够。。。</p>
+<p>随便试了一些命令瞎转，居然又发现了<code>flag.txt</code>XD，而且，嘴上说着没有提示，身体还是挺老实的嘛。<strong>Git</strong></p>
+<p><img src="/images/image-20210214014905308.png" alt="image-20210214014905308"></p>
+<p><img src="/images/image-20210214015026394.png" alt="image-20210214015026394"></p>
+<p>git命令无需root权限即可使用，那就是利用git来进行提权。sudo后，以root身份调用/bin/bash</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo git -p help</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">!/bin/bash</span><br></pre></td></tr></table></figure>
+<p><img src="/images/image-20210214015519144.png" alt="image-20210214015519144"></p>
+<p><img src="/images/image-20210214015543045.png" alt="image-20210214015543045"></p>
+<p>至此全部结束XD！！！</p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>很开心，但还是有点小瑕疵</p>
+<ol>
+<li>CMS的admin账号密码，还没有找到，不知道有什么。</li>
+<li>挺想知道如何利用wp的版本漏洞直接getshell，可惜也没找到</li>
+</ol>
+<p>以上XD</p>
+<p><img src="/images/image-20210214020933513.png" alt="image-20210214020933513"></p>
+<p>喵的，查了一下passwd才发现，这个站似乎没有admin哇？还有那个mysql怎么回事？nonexistent?</p>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>天冷了，可以请我一杯奶茶么QAQ<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/images/1.jpg">
+                      <span class="reward-type">支付宝</span>
+                    </div>
+                    
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/images/2.jpg">
+                      <span class="reward-type">微信</span>
+                    </div>
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Google Hack</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">vulhub</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2021/02/14/DC2%E9%9D%B6%E6%9C%BA%E6%B8%97%E9%80%8F%E8%AE%B0%E5%BD%95/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/01/19/my-first-blog/" class="archive-article-date">
-  	<time datetime="2021-01-19T13:53:53.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-01-19</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2021/02/11/%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1%E7%BE%8E%E8%B5%9B%E6%80%BB%E7%BB%93/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">数学建模美赛总结</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/01/19/my-first-blog/">my-first-blog</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
   
 
-    
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/archives/2021/">&amp;laquo; Prev</a><a class="page-number" href="/archives/2021/">1</a><span class="page-number current">2</span>
-    </nav>
+  
+
   
 
 
@@ -257,8 +468,8 @@
 	var yiliaConfig = {
 		mathjax: true,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
