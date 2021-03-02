@@ -152,6 +152,359 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-python爬虫" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/03/02/python%E7%88%AC%E8%99%AB/">python爬虫</a>
+    </h1>
+  
+
+        
+        <a href="/2021/03/02/python%E7%88%AC%E8%99%AB/" class="archive-article-date">
+  	<time datetime="2021-03-02T11:51:43.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-03-02</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <center>Python爬虫篇</center>
+
+<blockquote>
+<p>此内容包含简单的基础知识准备，以及爬虫，仅为个人笔记</p>
+</blockquote>
+<h2 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h2><p><strong>type()</strong></p>
+<p>判断括号中的变量类型</p>
+<p><strong>%s，%d，%c</strong></p>
+<p>在字符串中分别表示字符串类型，int类型和char类型，如下例子</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">a=<span class="string">&quot;hello&quot;</span></span><br><span class="line">print(<span class="string">&quot;我叫&#123;0&#125;&quot;</span>.<span class="built_in">format</span>(a))</span><br><span class="line"><span class="comment">#或者</span></span><br><span class="line">print(<span class="string">&quot;我叫%s&quot;</span>%a)</span><br></pre></td></tr></table></figure>
+<p>两者结果一致</p>
+<p>字符中多次出现可以用</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>,<span class="number">9</span>):</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>,i+<span class="number">1</span>):</span><br><span class="line">        print(<span class="string">&quot;%d + %d = %d&quot;</span>%(i+<span class="number">1</span>,j+<span class="number">1</span>,(i+<span class="number">1</span>)*(j+<span class="number">1</span>)))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<p><strong>位运算符</strong></p>
+<p>假设a=60,b=13</p>
+<table>
+<thead>
+<tr>
+<th>运算符</th>
+<th>描述</th>
+<th>实例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&amp;</td>
+<td>与运算符：参与运算的两个值，如果相应位都为1，则该位的结果为1，否则为0</td>
+<td>(a&amp;b)输出结果为12，二进制解释为00001100</td>
+</tr>
+<tr>
+<td>|</td>
+<td>或运算符：只要对应两个二进制有一个为1时，结果就为1</td>
+<td>(a|b)结果为61，二进制解释为00111101</td>
+</tr>
+<tr>
+<td>^</td>
+<td>异或运算符：当对应的两个二进制位相异时，结果为1</td>
+<td>(a^b)结果为49，二进制解释为00110001</td>
+</tr>
+<tr>
+<td>~</td>
+<td>取反运算符：对数据的每个二进制位取反，即把1变成0,0变成1.~x类似与-x-1</td>
+<td>(~a)结果为-61，二进制解释为11000011，在一个有符号二进制数的补码形式</td>
+</tr>
+<tr>
+<td>&lt;&lt;</td>
+<td>左移动运算符：运算数的二进位全部左移若干位，由”&lt;&lt;”右边数字指定移动位数，高位丢弃，低位补0。</td>
+<td>a&lt;&lt;2输出结果240，二进制解释为11110000</td>
+</tr>
+<tr>
+<td>&gt;&gt;</td>
+<td>右移动运算符：同上</td>
+<td>a&gt;&gt;2结果为15，二进制解释为00001111</td>
+</tr>
+</tbody></table>
+<p><strong>进制转换</strong></p>
+<p>比如将二进制数0b111100转为十进制，则命令为</p>
+<p><code>int(&#39;0b111100&#39;,2)</code>参考int(‘number’,base=number)</p>
+<h2 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a>正则表达式</h2><p>这里给出一个非常棒的博客链接，写的非常详细</p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/fozero/p/7868687.html">史上最全正则表达式大全</a></p>
+<table>
+<thead>
+<tr>
+<th>操作符</th>
+<th>说明</th>
+<th>实例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>.</td>
+<td>表示任何单个字符</td>
+<td></td>
+</tr>
+<tr>
+<td>[ ]</td>
+<td>字符集对单个字符给出取值范围</td>
+<td>[abc]表示a, b, c, [a-z]表示a到z单个字符</td>
+</tr>
+<tr>
+<td>[^ ]</td>
+<td>非字符集，对单个字符给出排除范围</td>
+<td>[^abc]表示非a或b或c的单个字符</td>
+</tr>
+<tr>
+<td>*</td>
+<td>前一个字符0次或无限次扩展</td>
+<td>abc*表示ab, abc, abcc, abccc等等</td>
+</tr>
+<tr>
+<td>+</td>
+<td>前一个字符1次或无限次扩展</td>
+<td>abc+表示abc, abcc, abccc等等</td>
+</tr>
+<tr>
+<td>?</td>
+<td>前一个字符0次或1次扩展</td>
+<td>abc?表示ab, abc</td>
+</tr>
+<tr>
+<td>|</td>
+<td>左右表达式任意一个</td>
+<td>abc|def 表示 abc、def</td>
+</tr>
+<tr>
+<td>{m}</td>
+<td>扩展前一个字符m次</td>
+<td>ab{2}c表示abbc</td>
+</tr>
+<tr>
+<td>{m,n}</td>
+<td>扩展前一个字符m至n次(含n)</td>
+<td>ab{1,2}c表示abc、abbc</td>
+</tr>
+<tr>
+<td>^</td>
+<td>匹配字符串开头</td>
+<td>^abc表示abc且在一个字符串的开头</td>
+</tr>
+<tr>
+<td>$</td>
+<td>匹配字符串结尾</td>
+<td>abc$表示abc且在一个字符串的结尾</td>
+</tr>
+<tr>
+<td>( )</td>
+<td>分组标记，内部只能使用 | 操作符</td>
+<td>(abc)表示abc，(abc|def)表示abc、def</td>
+</tr>
+<tr>
+<td>\d</td>
+<td>数字，等价于[0-9]</td>
+<td></td>
+</tr>
+<tr>
+<td>\w</td>
+<td>单词字符，等价于[A-Za-z0-9_]</td>
+<td>只能包含，数字0-9，大小写字母a-z,A-Z以及下划线</td>
+</tr>
+</tbody></table>
+<p><code>\w</code>的要求所以很多用户名密码不允许出现汉字和其他字符但允许下划线</p>
+<p>在python中的re库里的功能有</p>
+<table>
+<thead>
+<tr>
+<th>函数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>re.search()</td>
+<td>在一个字符串中搜索匹配正则表达式的第一个位置，返回match对象</td>
+</tr>
+<tr>
+<td>re.match()</td>
+<td>从一个字符串的开始位置起匹配正则表达式，返回match对象</td>
+</tr>
+<tr>
+<td>re.findall()</td>
+<td>搜索字符串，以列表类型范围全部能匹配的子串</td>
+</tr>
+<tr>
+<td>re.split()</td>
+<td>将一个字符串按照正则表达式匹配结果进行分割，返回列表类型</td>
+</tr>
+<tr>
+<td>re.finditer()</td>
+<td>搜索字符串，返回一个匹配结果的迭代类型，每个迭代元素是match对象</td>
+</tr>
+<tr>
+<td>re.sub()</td>
+<td>在一个字符串中替换所有匹配正则表达式的子串，返回替换后的字符串</td>
+</tr>
+</tbody></table>
+<p>正则表达式可以包含一些可选标志修饰符来控制匹配模式。修饰符被指定为一个可选的标志。多个标志可以按位OR(|)来指定。如re.l | re,M 被设置成 I 和 M标志：</p>
+<table>
+<thead>
+<tr>
+<th>修饰符</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>re.I</td>
+<td>使匹配对大小写不敏感</td>
+</tr>
+<tr>
+<td>re.L</td>
+<td>做本地化识别(locale-aware)匹配</td>
+</tr>
+<tr>
+<td>re.M</td>
+<td>多行匹配，影响^和$</td>
+</tr>
+<tr>
+<td>re.S</td>
+<td>使 . 匹配包括换行在内的所有字符</td>
+</tr>
+<tr>
+<td>re.U</td>
+<td>根据Unicode字符解析字符。这个标志影响\w, \W, \b, \B</td>
+</tr>
+<tr>
+<td>re.X</td>
+<td>该标志通过给予你更灵活的格式以便你将正则表达式写的更易于理解。</td>
+</tr>
+</tbody></table>
+<p>给出几个例子</p>
+<h3 id="search"><a href="#search" class="headerlink" title="search()"></a>search()</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> re</span><br><span class="line">pat = re.<span class="built_in">compile</span>(<span class="string">&quot;AA&quot;</span>)<span class="comment">#AA为正则表达式，用来验证其他字符串</span></span><br><span class="line">s_list=[<span class="string">&quot;NBA&quot;</span>,<span class="string">&quot;ILOVE&quot;</span>,<span class="string">&quot;miaao&quot;</span>,<span class="string">&quot;LALAAa&quot;</span>,<span class="string">&quot;dsAAajvAAAdjiw&quot;</span>]</span><br><span class="line"><span class="keyword">for</span> item <span class="keyword">in</span> s_list:</span><br><span class="line">    result=pat.search(item)</span><br><span class="line">    print(result)</span><br></pre></td></tr></table></figure>
+<p><img src="/images/image-20210302161902430.png" alt="image-20210302161902430"></p>
+<p>运行结果如上，无结果返回<code>None</code>，有结果返回对应位置，前闭后开，且只会匹配第一个出现的</p>
+<p>也可以简写<code>m=re.search(&quot;AA&quot;,item)</code>（前面为正则匹配规则，后面为查找内容）</p>
+<h3 id="findall"><a href="#findall" class="headerlink" title="findall()"></a>findall()</h3><p>再如，找出字符串中的所有大写字母</p>
+<p><code>re.findall(&quot;[A-Z]&quot;,&quot;ajsSAsdfjlaEifSAKLvioawhS)</code>: 结果[‘S’, ‘A’, ‘E’, ‘S’, ‘A’, ‘K’, ‘L’, ‘S’]</p>
+<p><code>re.findall(&quot;[A-Z]+&quot;,&quot;ajsSAsdfjlaEifSAKLvioawhS)</code>: 结果[‘SA’, ‘E’, ‘SAKL’, ‘S’]</p>
+<p>输出结果会将字符串中的所有大写字母<strong>单个摘出组成列表返回</strong></p>
+<h3 id="sub"><a href="#sub" class="headerlink" title="sub()"></a>sub()</h3><p><code>re,sub(&quot;a&quot;,&quot;A&quot;,&quot;jfdasjASfowihegdFJwqEJFsdfoahewhfHEH&quot;)</code>: <strong>找到a，使用A替换</strong></p>
+<p>所以<code>print(re.sub(&quot;[a-z]&#123;2,5&#125;&quot;,&quot;A&quot;,&quot;jfdasjASfowihegdFJwqEJFsdfoahewhfHEH&quot;))</code>意思为连续二到五个小写字母会被替换为A。因此结果为<code>AjASAAFJAEJFAAHEH</code></p>
+<p><strong><em>建议在正则表达式中被比较的字符串前加上r，因此不用担心转义字符的问题</em></strong></p>
+<h3 id="保存数据（xlwt使用）"><a href="#保存数据（xlwt使用）" class="headerlink" title="保存数据（xlwt使用）"></a>保存数据（xlwt使用）</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> xlwt</span><br><span class="line">workbook=xlwt.Workbook(encoding=<span class="string">&quot;utf-8&quot;</span>)	<span class="comment">#创建workbook对象</span></span><br><span class="line">worksheet=workbook.add_sheet(<span class="string">&quot;sheet1&quot;</span>)		<span class="comment">#创建工作表</span></span><br><span class="line">worksheet.write(<span class="number">0</span>,<span class="number">0</span>,<span class="string">&quot;hello&quot;</span>)			   <span class="comment">#写入数据，第一个参数为行，第二个为列，第三个为内容</span></span><br><span class="line">workbook.save(<span class="string">&quot;test.xls&quot;</span>)				   <span class="comment">#保存格式</span></span><br></pre></td></tr></table></figure>
+
+
+<h2 id="爬虫部分"><a href="#爬虫部分" class="headerlink" title="爬虫部分"></a>爬虫部分</h2><h3 id="Get方式发送请求"><a href="#Get方式发送请求" class="headerlink" title="Get方式发送请求"></a>Get方式发送请求</h3> <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> urllib.request</span><br><span class="line"><span class="comment">#get方式发送请求</span></span><br><span class="line">response=urllib.request.urlopen(<span class="string">&quot;http://www.baidu.com&quot;</span>)<span class="comment">#返回的response是一个class类，所以下句用.read()读取,并且不知道为什么www不能省略</span></span><br><span class="line">print(response.read().decode(<span class="string">&#x27;utf-8&#x27;</span>))<span class="comment">#防止中文乱码故使用utf-8进行解码</span></span><br></pre></td></tr></table></figure>
+<h3 id="Post方式发送请求"><a href="#Post方式发送请求" class="headerlink" title="Post方式发送请求"></a>Post方式发送请求</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> urllib.request</span><br><span class="line">data=<span class="built_in">bytes</span>(urllib.parse.urlencode(&#123;<span class="string">&quot;hello&quot;</span>:<span class="string">&quot;world&quot;</span>&#125;),encoding=<span class="string">&quot;utf-8&quot;</span>)<span class="comment">#将要发送的post信息二进制加密,utf-8加密</span></span><br><span class="line">response=urllib.request.urlopen(<span class="string">&quot;http://httpbin.org/post&quot;</span>,data=data)<span class="comment">#data为传递的post参数</span></span><br><span class="line">print(response.read().decode(<span class="string">&quot;utf-8&quot;</span>))</span><br></pre></td></tr></table></figure>
+<h3 id="超时处理"><a href="#超时处理" class="headerlink" title="超时处理"></a>超时处理</h3><p>在真实爬虫过程中，为防止各种情况出现的请求超时（如被拦截，发现等等），需要做好准备，可用<code>try···except</code>进行过滤</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> urllib.request</span><br><span class="line"><span class="comment">#发送get请求</span></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">	response=urllib.request.urlopen(<span class="string">&quot;http://httpbin.org/get&quot;</span>,timeout=<span class="number">0.1</span>)<span class="comment">#设置时间，如果超出响应时间就为URLError</span></span><br><span class="line">	print(response.read().decode(<span class="string">&quot;utf-8&quot;</span>))</span><br><span class="line"><span class="keyword">except</span> urllib.error.URLError <span class="keyword">as</span> e:</span><br><span class="line">    print(<span class="string">&quot;time out!&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>其中可用<code>print(response.status)</code>来查看相应的状态码，*<strong>注意418状态码意味着对方发现你是一个爬虫**</strong></p>
+<p>响应头可用<code>print(response.getheader())</code>来得到，括号中可添加具体想得到的内容名儿</p>
+<h3 id="请求头伪装"><a href="#请求头伪装" class="headerlink" title="请求头伪装"></a>请求头伪装</h3><p>伪装正常浏览器的参数达到爬取的目的</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> urllib.request</span><br><span class="line">url=<span class="string">&quot;https://httpbin.org/post&quot;</span></span><br><span class="line">headers=&#123;</span><br><span class="line">    <span class="string">&quot;User-Agent&quot;</span>:<span class="string">&quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Firefox/86.0&quot;</span></span><br><span class="line">&#125;<span class="comment">#此处只伪造了UA，为更像可以构造更多的信息，注意其中为:隔开，类似构造字典</span></span><br><span class="line">data=<span class="built_in">bytes</span>(urllib.parse.urlencode&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;isabella&quot;</span>&#125;,encoding=<span class="string">&quot;utf-8&quot;</span>)</span><br><span class="line">req=urllib.request.Request(url=url,data=data,headers=headers,method=<span class="string">&quot;POST&quot;</span>)<span class="comment">#注意两个request的写法</span></span><br><span class="line">response=urllib.request.urlopen(req)</span><br><span class="line">print(response.read().decode(<span class="string">&quot;utf-8&quot;</span>))</span><br></pre></td></tr></table></figure>
+<p><img src="/images/image-20210301233223138.png" alt="image-20210301233223138"></p>
+<p>正确返回的结果如上</p>
+<h3 id="数据解析"><a href="#数据解析" class="headerlink" title="数据解析"></a>数据解析</h3><p>beautifulsoup的使用</p>
+<p>将html分成四个可用节点</p>
+<ol>
+<li>Tag: 标签</li>
+<li>NavigableString: 标签里的字符串内容</li>
+<li>BeautifulSoup: 分析好的类</li>
+<li>Comment</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line">file=<span class="built_in">open</span>(<span class="string">&quot;./baidu.html&quot;</span>,<span class="string">&quot;rb&quot;</span>)<span class="comment">#将读取到的html文件打开，rb为读取，二进制写入内存</span></span><br><span class="line">html=file.read()</span><br><span class="line">bs=BeautifulSoup(html,<span class="string">&quot;html.parser&quot;</span>)<span class="comment">#使用html.parser解析器将读取到的html文件解析，方面后续爬虫特定读取</span></span><br><span class="line">print(bs.title)<span class="comment">#读取title，（&lt;title&gt;百度一下你就知道&lt;/title&gt;）</span></span><br><span class="line"><span class="comment">#可以用bs.a   bs.head等等读取第一个出现的标签及其内容</span></span><br></pre></td></tr></table></figure>
+<p>注意，<strong>只能读取第一个标签以及内容</strong></p>
+<p><code>bs.title.string</code>可以省略&lt;title&gt;，而只打印内容也即“百度一下，你就知道”</p>
+<h3 id="文档的遍历"><a href="#文档的遍历" class="headerlink" title="文档的遍历"></a>文档的遍历</h3><p><code>print(bs.head.contents)</code>可以打印读取html的头部的内容</p>
+<p><code>print(bs.head.contents[1])</code>因为返回的内容是一个列表，所以用[1]来特定读取</p>
+<h3 id="文档的搜索"><a href="#文档的搜索" class="headerlink" title="文档的搜索"></a>文档的搜索</h3><ol>
+<li>find_all</li>
+</ol>
+<p><code>t_list=bs.find_all(&quot;a&quot;)</code>: 找到所有a标签，并返回一个列表</p>
+<ol start="2">
+<li>正则表达式搜索</li>
+</ol>
+<p><code>search()</code>方法来进行比配内容</p>
+<p><code>t_list=bs.find_all(re.compile(&quot;a&quot;))</code>: 需要引入re库，使用正则匹配找到的所有内容中含有a字符的内容（如head也含有a字符）</p>
+<p><code>t_list=bs.find_all(re.compile(&quot;\d&quot;))</code>: 应用正则表达式将所有数字内容（标签里的自字符串）找出来</p>
+<ol start="3">
+<li>根据函数的要求来搜索</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">name_is_exists</span>(<span class="params">tag</span>):</span></span><br><span class="line">	<span class="keyword">return</span> tag.has_attr(<span class="string">&quot;name&quot;</span>)<span class="comment">#将标签中含有name字符或者属性的找出来</span></span><br><span class="line">t_list=bs.find_all(name_is_exists)<span class="comment">#可以传入写入函数方式进行查找</span></span><br><span class="line">print(t_list)</span><br><span class="line"><span class="comment">#对于列表的输出，下面的方式更好看</span></span><br><span class="line"><span class="keyword">for</span> item <span class="keyword">in</span> t_list:</span><br><span class="line">    print(item)</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>参数搜索</li>
+</ol>
+<p><code>t_list=bs.find_all(class_=True)</code>: 找出所有带class属性及其子内容<strong>注意class后面接一个下划线_</strong></p>
+<p><code>t_list=bs.find_all(href=&quot;http://news.baidu.com&quot;)</code>: 同上，链接参数</p>
+<p><code>t_list=bs.find_all(text=&quot;hao123&quot;)</code>: 查找特定内容，<strong>可以传入列表，即text=[“1”,”2”,”3”]</strong></p>
+<p><code>t_list=bs.find_all(&quot;a&quot;,limit=3)</code>: 限定查找多少个</p>
+<ol start="5">
+<li>CSS选择器查找</li>
+</ol>
+<p><code>t_list=bs.select(&quot;title&quot;)</code>: 通过标签筛选</p>
+<p><code>t_list=bs.select(&quot;.mnav&quot;)</code>: 通过类名筛选</p>
+<p><code>t_list=bs.select(&quot;#u1&quot;)</code>: 通过ID筛选</p>
+<p>还可以</p>
+<p><code>t_list=bs.select(&quot;a[class=&#39;bri&#39;]&quot;)</code>: 来筛选特定a属性中的特定class类</p>
+<p><code>t_list=bs.select(&quot;.mnav ~ .bri&quot;)</code>: mnav标签中的bri子标签内容<code>print(t_list[0].get_text())</code>得到文本，第一个元素的文本内容</p>
+<h3 id="爬虫实例"><a href="#爬虫实例" class="headerlink" title="爬虫实例"></a>爬虫实例</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup </span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> urllib.request</span><br><span class="line"><span class="keyword">import</span> urllib.error</span><br><span class="line"><span class="keyword">import</span> xlwt</span><br><span class="line"></span><br><span class="line"><span class="comment">#影片链接</span></span><br><span class="line">findlink=re.<span class="built_in">compile</span>(<span class="string">r&#x27;&lt;a href=&quot;(.*?)&quot;&gt;&#x27;</span>) <span class="comment">#创建正则表达式的匹配规则,r防止转义</span></span><br><span class="line"><span class="comment">#图片链接</span></span><br><span class="line">findimages=re.<span class="built_in">compile</span>(<span class="string">r&#x27;&lt;img.*src=&quot;(.*?)&quot;&#x27;</span>,re.S)<span class="comment">#(.*?)括号为一组，.为单个字符，*多次出现，？该组出现0次或1次，re.S防止换行符的出现</span></span><br><span class="line"><span class="comment">#片名</span></span><br><span class="line">findname=re.<span class="built_in">compile</span>(<span class="string">r&#x27;&lt;span class=&quot;title&quot;&gt;(.*)&lt;/span&gt;&#x27;</span>)</span><br><span class="line"><span class="comment">#影片评分</span></span><br><span class="line">findscore=re.<span class="built_in">compile</span>(<span class="string">r&#x27;&lt;span class=&quot;rating_num&quot; property=&quot;v:average&quot;&gt;(.*)&lt;/span&gt;&#x27;</span>)</span><br><span class="line"><span class="comment">#评价人数</span></span><br><span class="line">findpeople=re.<span class="built_in">compile</span>(<span class="string">r&#x27;&lt;span&gt;(\d*)人评价&lt;/span&gt;&#x27;</span>)</span><br><span class="line"><span class="comment">#概况</span></span><br><span class="line">findinq=re.<span class="built_in">compile</span>(<span class="string">r&#x27;&lt;span class=&quot;inq&quot;&gt;(.*)&lt;/span&gt;&#x27;</span>)</span><br><span class="line"><span class="comment">#找到影片的相关内容</span></span><br><span class="line">findcontent=re.<span class="built_in">compile</span>(<span class="string">r&#x27;&lt;p class=&quot;&quot;&gt;(.*?)&lt;/p&gt;&#x27;</span>,re.S)<span class="comment">#？0次到1次出现</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span>():</span></span><br><span class="line">    baseurl=<span class="string">&quot;https://movie.douban.com/top250?start=&quot;</span></span><br><span class="line">    datalist=getData(baseurl)</span><br><span class="line">    savepath=<span class="string">&quot;E:\\\Python\\豆瓣电影top250.xls&quot;</span></span><br><span class="line">    savedata(datalist,savepath)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getData</span>(<span class="params">baseurl</span>):</span>   <span class="comment">#得到响应并处理</span></span><br><span class="line">  datalist=[]</span><br><span class="line">  <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>,<span class="number">10</span>):</span><br><span class="line">    url=baseurl+<span class="built_in">str</span>(i*<span class="number">25</span>)</span><br><span class="line">    html=askURL(url)  <span class="comment">#嵌套一个请求函数见下方</span></span><br><span class="line">    <span class="comment">#解析响应，处理数据部分</span></span><br><span class="line">    soup=BeautifulSoup(html,<span class="string">&quot;html.parser&quot;</span>)</span><br><span class="line">    <span class="keyword">for</span> item <span class="keyword">in</span> soup.find_all(<span class="string">&#x27;div&#x27;</span>,class_=<span class="string">&quot;item&quot;</span>):<span class="comment">#查找符合要求的字符串</span></span><br><span class="line">        <span class="comment">#print(item)</span></span><br><span class="line">        data=[] <span class="comment">#保存一部电影的信息</span></span><br><span class="line">        item=<span class="built_in">str</span>(item)</span><br><span class="line">        <span class="comment">#影片各信息</span></span><br><span class="line">        link=re.findall(findlink,item)[<span class="number">0</span>]<span class="comment">#re库通过正则表达式查找指定的字符串,只要第一个</span></span><br><span class="line">        data.append(link)</span><br><span class="line">        imgsrc=re.findall(findimages,item)[<span class="number">0</span>]</span><br><span class="line">        data.append(imgsrc)</span><br><span class="line">        title=re.findall(findname,item)</span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">len</span>(title)==<span class="number">2</span>):</span><br><span class="line">            ctitle=title[<span class="number">0</span>]</span><br><span class="line">            data.append(ctitle)         <span class="comment">#添加中文名</span></span><br><span class="line">            otitle=title[<span class="number">1</span>].replace(<span class="string">&quot;/&quot;</span>,<span class="string">&quot;&quot;</span>)<span class="comment">#去掉斜杠</span></span><br><span class="line">            data.append(otitle)         <span class="comment">#添加外文名儿</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            ctitle=title[<span class="number">0</span>]</span><br><span class="line">            data.append(ctitle)</span><br><span class="line">            data.append(<span class="string">&quot;无&quot;</span>)           <span class="comment">#保证导入表格后能够对齐</span></span><br><span class="line">        rating=re.findall(findscore,item)[<span class="number">0</span>]</span><br><span class="line">        data.append(rating)             <span class="comment">#评分</span></span><br><span class="line">        people_number=re.findall(findpeople,item)[<span class="number">0</span>]</span><br><span class="line">        data.append(people_number)</span><br><span class="line">        inq=re.findall(findinq,item)</span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">len</span>(inq)!=<span class="number">0</span>):</span><br><span class="line">          data.append(inq[<span class="number">0</span>].replace(<span class="string">&quot;。&quot;</span>,<span class="string">&quot;&quot;</span>))</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">          data.append(<span class="string">&quot;无概述&quot;</span>)</span><br><span class="line">        Content=re.findall(findcontent,item)[<span class="number">0</span>]</span><br><span class="line">        db=re.sub(<span class="string">&#x27;&lt;br(\s+)?/&gt;(\s+)?&#x27;</span>,<span class="string">&quot;&quot;</span>,Content)</span><br><span class="line">        db=db.replace(<span class="string">&quot;/&quot;</span>,<span class="string">&quot;&quot;</span>)</span><br><span class="line">        data.append(db.strip())     <span class="comment">#去掉空格</span></span><br><span class="line">        datalist.append(data)       <span class="comment">#添加一部电影信息到datalist中</span></span><br><span class="line">  <span class="comment">#print(datalist)</span></span><br><span class="line">  <span class="keyword">return</span> datalist</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">savedata</span>(<span class="params">datalist,savepath</span>):</span></span><br><span class="line">    print(<span class="string">&quot;*********saving**********&quot;</span>)</span><br><span class="line">    excel=xlwt.Workbook(encoding=<span class="string">&quot;utf-8&quot;</span>,style_compression=<span class="number">0</span>)<span class="comment">#创建表格，utf-8解码</span></span><br><span class="line">    sheet=excel.add_sheet(<span class="string">&quot;豆瓣电影top250&quot;</span>,cell_overwrite_ok=<span class="literal">True</span>)<span class="comment">#每个单元可以覆盖</span></span><br><span class="line">    titles=(<span class="string">&quot;电影详情连接&quot;</span>,<span class="string">&quot;电影图片链接&quot;</span>,<span class="string">&quot;电影中文名&quot;</span>,<span class="string">&quot;电影外文名&quot;</span>,<span class="string">&quot;电影评分&quot;</span>,<span class="string">&quot;评分人数&quot;</span>,<span class="string">&quot;概述&quot;</span>,<span class="string">&quot;影片信息&quot;</span>)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>,<span class="number">8</span>):</span><br><span class="line">        sheet.write(<span class="number">0</span>,i,titles[i])</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>,<span class="number">250</span>):</span><br><span class="line">        print(<span class="string">&quot;正在写入第%d条数据&quot;</span>%(i+<span class="number">1</span>))</span><br><span class="line">        data=datalist[i]</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>,<span class="number">8</span>):</span><br><span class="line">          sheet.write(i+<span class="number">1</span>,j,data[j])</span><br><span class="line">    excel.save(savepath)</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">askURL</span>(<span class="params">url</span>):</span></span><br><span class="line">  head=&#123;</span><br><span class="line">    <span class="string">&quot;User-Agent&quot;</span>:<span class="string">&quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Firefox/86.0&quot;</span></span><br><span class="line">  &#125;</span><br><span class="line">  request=urllib.request.Request(url,headers=head)</span><br><span class="line">  html=<span class="string">&quot;&quot;</span></span><br><span class="line">  <span class="keyword">try</span>:</span><br><span class="line">    response=urllib.request.urlopen(request)</span><br><span class="line">    html=response.read().decode(<span class="string">&quot;utf-8&quot;</span>)</span><br><span class="line">    <span class="comment">#print(html)</span></span><br><span class="line">  <span class="keyword">except</span> urllib.error.URLError <span class="keyword">as</span> fail: <span class="comment">#将回传错误信息定为fail</span></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">hasattr</span>(fail,<span class="string">&quot;code&quot;</span>): <span class="comment">#判断fail里是否有&quot;code&quot;字符，如果有，输出，没有，继续</span></span><br><span class="line">      print(fail.code)</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">hasattr</span>(fail,<span class="string">&quot;reason&quot;</span>):<span class="comment">#判断fail里是否有&quot;reason&quot;字符，如果有，输出，没有，继续</span></span><br><span class="line">      print(fail.reason)</span><br><span class="line">  <span class="keyword">return</span> html</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__==<span class="string">&quot;__main__&quot;</span>:  <span class="comment">#主函数入口</span></span><br><span class="line">    main()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>实际保存效果</p>
+<p><img src="/images/image-20210302194929380.png" alt="image-20210302194929380"></p>
+<hr>
+<p>[toc]</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">python.学习篇</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/03/02/python%E7%88%AC%E8%99%AB/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-DC9靶机渗透记录" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1404,169 +1757,6 @@ include($_GET[test]);
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2021/02/04/CTF-wp/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-gdb调试" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/01/30/gdb%E8%B0%83%E8%AF%95/">gdb调试</a>
-    </h1>
-  
-
-        
-        <a href="/2021/01/30/gdb%E8%B0%83%E8%AF%95/" class="archive-article-date">
-  	<time datetime="2021-01-29T16:48:20.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-01-30</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <center>gdb调试反汇编</center>
-
-<h2 id="补充知识"><a href="#补充知识" class="headerlink" title="补充知识"></a>补充知识</h2><p>这里参考了一篇极好的知乎回答： <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/259625135">我是链接</a></p>
-<p> 汇编语言需要掌握的知识点包括：</p>
-<ol>
-<li>寄存器，包括栈寄存器rsp, rip, rbp；赋值寄存器：rdi、rsi等；返回值寄存器rax、rdx等。</li>
-<li>赋值指令 mov, lea，移位指令sal, sar。</li>
-<li>判断指令，cmp, test， 跳跃指令，je, jle, jne。以及构成条件语句和循环语句的方法。</li>
-<li>区分寄存器存储的是值还是地址，()为解地址符号，即得到内存地址中的数。</li>
-<li>入栈，出栈指令push, pop，以及出栈入栈的原因。</li>
-</ol>
-<h3 id="常见指令"><a href="#常见指令" class="headerlink" title="常见指令"></a>常见指令</h3><p><strong>mov</strong>指令是赋值指令，即a=b等赋值操作：注意到对某寄存器rbp而言：rbp 表示<strong>取寄存器</strong>的值，（rbp）表示<strong>以rbp的值为地址在内存中取值</strong>，也就是所谓的指针解引用，根据指针地址取值。</p>
-<p><img src="/images/v2-6c941c7317a53244461229afe9b95c34_720w.jpg" alt="img"></p>
-<p><img src="/images/v2-46829cde5dcba2f101da2fe165eb7ea5_720w.jpg" alt="img"></p>
-<p><img src="/images/v2-f2e9445a5a5e3af5b9e78558fcc87c87_720w.jpg" alt="img"></p>
-<p><img src="/images/v2-5ff8904872c7b557702d9e4d3090f02f_720w.jpg" alt="img"></p>
-<p><img src="/images/v2-29d48b081e00b2828fffd100ab35e995_720w.jpg" alt="img"></p>
-<p><strong>lea</strong>是“load effective address”的缩写， lea指令可以用来将一个内存地址直接赋给目的操作数，例如：lea eax,[ebx+8]就是将<strong>ebx+8这个地址值</strong>直接赋给eax，而不解ebx+8的地址。mov指令则相反，例如：mov eax,[ebx+8]则是把<strong>内存地址为ebx+8处的数据</strong>赋给eax。</p>
-<blockquote>
-<p>个人的理解：lea eax,[ebx+8]表示，不改变eax的值，而直接将eax的地址变为eax+8;而mov eax,[ebx+8]表示将ebx+8这个地址上的数据给eax。</p>
-</blockquote>
-<p><strong>左移指令</strong>包含sal和shl，这两条指令的作用是相同的，空出来的位用0填充。<strong>右移指令</strong>将操作数的bit位向右移动n位，<strong>sar执行算术移位（填上符号位），而shr执行逻辑移位（填上0）</strong>.移位操作的目的操作数可以是一个寄存器或是一个存储器位置。</p>
-<h2 id="前期准备"><a href="#前期准备" class="headerlink" title="前期准备"></a>前期准备</h2><p>将相关test.c文件使用gcc编译器编译生成可执行文件，同时注意<strong>仅仅生成可执行文件是无法进行调试的</strong>，因为使用 GDB 调试某个可执行文件，该文件中必须包含必要的调试信息（比如各行代码所在的行号、包含程序中所有变量名称的列表（又称为符号表）等），而上面生成的 test.exe 则没有。</p>
-<p>所以使用<code>-g</code>命令，如</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc test.c -o test.exe -g</span><br></pre></td></tr></table></figure>
-<p>接下来输入<code>gdb test.exe</code>启动。**<em>输入<code>--silent</code>可以消掉前面免责条款**</em></p>
-<table>
-<thead>
-<tr>
-<th>调试指令</th>
-<th>作 用</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>(gdb) break xxx  (gdb) b xxx</td>
-<td>在源代码指定的某一行设置断点，其中 xxx 用于指定具体打断点的位置。</td>
-</tr>
-<tr>
-<td>(gdb) run  (gdb) r</td>
-<td>执行被调试的程序，其会自动在第一个断点处暂停执行。</td>
-</tr>
-<tr>
-<td>(gdb) continue  (gdb) c</td>
-<td>当程序在某一断点处停止运行后，使用该指令可以继续执行，直至遇到下一个断点或者程序结束。</td>
-</tr>
-<tr>
-<td>(gdb) next  (gdb) n</td>
-<td>令程序一行代码一行代码的执行。</td>
-</tr>
-<tr>
-<td>(gdb) print xxx  (gdb) p xxx</td>
-<td>打印指定变量的值，其中 xxx 指的就是某一变量名。</td>
-</tr>
-<tr>
-<td>(gdb) list  (gdb) l</td>
-<td>显示源程序代码的内容，包括各行代码所在的行号。</td>
-</tr>
-<tr>
-<td>(gdb) quit  (gdb) q</td>
-<td>终止调试。</td>
-</tr>
-</tbody></table>
-<p><img src="/images/image-20210130010329929.png" alt="image-20210130010329929"></p>
-<p><code>l</code>显示带行号的源代码，默认显示10行，按回车继续显示。</p>
-<ul>
-<li><code>(gdb)b 7</code>      &lt;–设置断点，在第七行处</li>
-<li><code>(gdb)r</code>          &lt;–运行程序，遇到断点处停止</li>
-</ul>
-<p><img src="/images/image-20210130010947800.png" alt="image-20210130010947800"></p>
-<ul>
-<li><code>(gdb)p n</code>     &lt;–表示查看此刻n的值</li>
-<li><code>(gdb)b 12</code>    &lt;–第十二行为断点</li>
-<li><code>(gdb)c</code>          &lt;–继续</li>
-<li><code>(gdb)p n</code>      此时显示$3=0x65<strong>表示十六进制六十五，也就是十进制的101</strong></li>
-</ul>
-<h3 id="接下来分析另一段代码"><a href="#接下来分析另一段代码" class="headerlink" title="接下来分析另一段代码"></a>接下来分析另一段代码</h3><p><img src="/images/TNB665P7%60%5B@MI2~V6NWQDB9.png" alt="image-20210130024739521"></p>
-<p>首先通过<code>(gdb)break func</code>在函数处设置断点，**gdb还支持if判断设置断点如<code>(gdb)break 7 if n==6</code>**，然后开始执行。</p>
-<p><img src="/images/image-20210130031101287.png" alt="image-20210130031101287"></p>
-<p>其中rsp<strong>寄存器，</strong>stack pointer, 它存储的值永远是栈顶的地址，所以它又被叫做<strong>栈顶指针</strong>。我们可以用(%rsp)来获取栈顶存储的值，通过a(%rsp),  其中a是任何一个整数，来获取地址是rsp存储的值加a处的内存单元的值。比如说，2(%rsp)就是栈顶上方（逻辑地址增大方向）2个字节处的值，-2(%rsp)就是栈顶下方（逻辑地址减小方向）2个字节处的值。</p>
-<p><strong>以r开头的寄存器如rbp、rsp一般表示64位寄存器，而以e开头的寄存器如ebp、esp表示32位寄存器</strong>。一般不影响比较，即把rbp作用等同于ebp即可。</p>
-<p><strong>rbp</strong>寄存器：<strong>为基指针(Base Pointer)寄存器，通过它减去一定的偏移值，来访问栈中的元素；</strong></p>
-<p><strong>rax、rdx常作为函数返回值使用</strong></p>
-<p><strong>rdi、rsi、rdx、rcx、r8、r9等寄存器常用于存放函数参数</strong></p>
-<p><strong>rip</strong>作为指令指针存储着CPU下一条要执行的指令的地址<br> 一旦CPU读取一条指令，rip会自动指向下一条指令(存储下一条指令的地址)</p>
-<p><strong><em>如其中[rbp-0x8]就作为sum参数，被赋值了0</em></strong></p>
-<p>接下来逐条使用<code>(gdb)print i</code>，<code>(gdb)print n</code>，<code>(gdb)next</code>可以看到func函数中在底层的运行情况。</p>
-<p><img src="/images/image-20210130033947511.png" alt="image-20210130033947511"></p>
-<hr>
-<p>gdb调试，难得不是汇编语言，难得是逻辑分析QAQ</p>
-<p>今天先到这里，明天继续。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Rce</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/01/30/gdb%E8%B0%83%E8%AF%95/">展开全文 >></a>
         </p>
       
 
